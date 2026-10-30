@@ -70,7 +70,7 @@
 2. `bird_fly` — активный взмах крыльев (6 кадров)
 
 ## Структура проекта
-
+'''
 sense-walk/
 ├── assets/
 │   ├── sprites/
@@ -107,7 +107,7 @@ sense-walk/
 │   └── WindZone.gd
 ├── .gitignore
 └── README.md
-
+'''
 ### 1. `scripts/PlayerController.gd`
 Главный менеджер игрока (CharacterBody2D). Управляет переключением состояний движения, коллизиями и передачей ввода текущему скрипту формы.
 * **Основные переменные:**
@@ -138,23 +138,21 @@ sense-walk/
 ### 3. `scripts/MovementDog.gd`
 Модуль физики для формы Собаки (скорость и прыгучесть).
 * **Переменные физики:**
-  * `SPEED = 320.0`
-  * `JUMP_VELOCITY = -520.0`
-  * `ACCELERATION = 800.0`
+  * `SPEED = ...`
+  * `JUMP_VELOCITY = ...`
+  * `ACCELERATION = ...`
 * **Функционал и функции:**
   * `move(player: CharacterBody2D, delta: float)` — быстрый бег с инерцией и вычисление траектории высокого прыжка.
   * `check_obstacle_break()` — проверка столкновения с разрушаемыми деревянными коробками на высокой скорости.
 
 ### 4. `scripts/MovementBird.gd`
-Модуль физики для формы Ворона (полная свобода полета без гравитации по оси Y).
 * **Переменные физики:**
-  * `FLY_SPEED = 220.0`
-  * `WIND_RESISTANCE = 0.85`
-  * `vertical_velocity: float`
+  * `FLY_SPEED = ...`
+  * `WIND_RESISTANCE = ...`
+  * `vertical_velocity: ...`
 * **Функционал и функции:**
-  * `move(player: CharacterBody2D, delta: float)` — обработка движения по обеим осям $X$ и $Y$ (`UI_UP`, `UI_DOWN`, `UI_LEFT`, `UI_RIGHT`).
+  * `move(player: CharacterBody2D, delta: float)` — обработка движения по оси $X$ (`UI_UP`, `UI_DOWN`, `UI_LEFT`, `UI_RIGHT`).
   * `apply_wind_force(force: Vector2)` — начисление смещения при попадании в зону ветрового потока.
-  * `glide()` — переключение на анимацию планирования `bird_glide` при отсутствии ввода по оси Y.
 
 ### 5. `scripts/ShapeShiftManager.gd`
 Глобальный синглтон (Autoload) или менеджер уровней для обработки смены форм.
