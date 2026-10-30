@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b0w34kqsj1wnr"
+path="res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-0879c827c9571b43368b8b05c2f2ed5b.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3"
+dest_files=["res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-0879c827c9571b43368b8b05c2f2ed5b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

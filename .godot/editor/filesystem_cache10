@@ -1,0 +1,26 @@
+fc8a56933c4b1c8d796fdb8f7a9f9475
+::res://::1793385889
+README.md::TextFile::-1::1793385711::0::1::::<><><>0<>0<><>::
+::res://assets/::1793382671
+::res://assets/audio/::1793386317
+The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3::AudioStreamMP3::4188310499835213251::1793386317::1793386317::1::::<><><>0<>0<>1eb3c1f6743863c076caa517548c45e7<>res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-0879c827c9571b43368b8b05c2f2ed5b.mp3str::
+::res://assets/environment/::1793382622
+::res://assets/sprites/::1793382658
+::res://assets/sprites/bird/::1793382282
+::res://assets/sprites/cat/::1793382264
+::res://assets/sprites/dog/::1793382273
+::res://scenes/::1793382575
+Level_Bird_Rooftops.tscn::PackedScene/PackedScene::6004837055652858567::1793382575::0::1::::<><><>0<>0<><>::
+Level_Cat_Cemetry.tscn::PackedScene/PackedScene::3458655312812261215::1793382477::0::1::::<><><>0<>0<><>::
+Level_Dog_Park.tscn::PackedScene/PackedScene::23052414478975220::1793382500::0::1::::<><><>0<>0<><>::
+MainMenu.tscn::PackedScene/PackedScene::6313870575222179617::1793382451::0::1::::<><><>0<>0<><>::
+::res://scripts/::1793386285
+GhostVisionShader.gd::GDScript/GDScript::6399785834969133131::1793382911::0::1::::<>Node<><>0<>0<><>::
+MovementBird.gd::GDScript/GDScript::2534313446941324071::1793382866::0::1::::<>Node<><>0<>0<><>::
+MovementCat.gd::GDScript/GDScript::4853698055858262450::1793382801::0::1::::<>Node<><>0<>0<><>::
+MovementDog.gd::GDScript/GDScript::4972865552926259342::1793382826::0::1::::<>Node<><>0<>0<><>::
+Obstacle.gd::GDScript/GDScript::8653508799994477731::1793382920::0::1::::<>Node<><>0<>0<><>::
+PlayerController.gd::GDScript/GDScript::4847812251221830020::1793382777::0::1::::<>Node<><>0<>0<><>::
+ShapeShiftManager.gd::GDScript/GDScript::5864266011401073210::1793382898::0::1::::<>Node<><>0<>0<><>::
+The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3::AudioStreamMP3::5862787933061114029::1793386285::1793386285::1::::<><><>0<>0<>3237b93a4a5632be7695158031e6b669<>res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-3a11be079898e21dd91eb00d3d68eb7c.mp3str::
+WindZone.gd::GDScript/GDScript::474598161301315228::1793382931::0::1::::<>Node<><>0<>0<><>::
