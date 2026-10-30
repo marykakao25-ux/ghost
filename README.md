@@ -70,44 +70,46 @@
 2. `bird_fly` — активный взмах крыльев (6 кадров)
 
 ## Структура проекта
-'''
+
+```
 sense-walk/
 ├── assets/
 │   ├── sprites/
 │   │   ├── cat/
 │   │   │   ├── cat_idle.png
-│   │   │   ├── cat_run.png
+│   │   │   ├── cat_walk.png
 │   │   │   ├── cat_crawling.png
 │   │   │   └── cat_jump.png
 │   │   ├── dog/
 │   │   │   ├── dog_idle.png
 │   │   │   ├── dog_run.png
 │   │   │   └── dog_jump_high.png
-│   │   └── bird/
-│   │       ├── bird_idle.png
-│   │       └── bird_fly.png
+│   │   └── bat/
+│   │       ├── bat_idle.png
+│   │       └── bat_fly.png
 │   ├── environment/
-│   │   ├── halloween_props.png (тыковки, гробы, фонари)
+│   │   ├── halloween_props.png
 │   │   └── tileset_spooky.png
 │   └── audio/
-│       └── music/ 
+│       └── music/
 ├── scenes/
 │   ├── MainMenu.tscn
 │   ├── Level_Cat_Cemetery.tscn
 │   ├── Level_Dog_Park.tscn
-│   └── Level_Bird_Rooftops.tscn
+│   └── Level_Bat_Rooftops.tscn
 ├── scripts/
 │   ├── PlayerController.gd
 │   ├── MovementCat.gd
 │   ├── MovementDog.gd
-│   ├── MovementBird.gd
+│   ├── MovementBat.gd
 │   ├── ShapeShiftManager.gd
 │   ├── GhostVisionShader.gd
 │   ├── Obstacle.gd
 │   └── WindZone.gd
 ├── .gitignore
 └── README.md
-'''
+```
+
 ### 1. `scripts/PlayerController.gd`
 Главный менеджер игрока (CharacterBody2D). Управляет переключением состояний движения, коллизиями и передачей ввода текущему скрипту формы.
 * **Основные переменные:**
