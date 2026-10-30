@@ -84,9 +84,9 @@ sense-walk/
 │   │   │   ├── dog_idle.png
 │   │   │   ├── dog_run.png
 │   │   │   └── dog_jump_high.png
-│   │   └── bat/
-│   │       ├── bat_idle.png
-│   │       └── bat_fly.png
+│   │   └── bird/
+│   │       ├── bird_idle.png
+│   │       └── bird_fly.png
 │   ├── environment/
 │   │   ├── halloween_props.png
 │   │   └── tileset_spooky.png
@@ -96,12 +96,12 @@ sense-walk/
 │   ├── MainMenu.tscn
 │   ├── Level_Cat_Cemetery.tscn
 │   ├── Level_Dog_Park.tscn
-│   └── Level_Bat_Rooftops.tscn
+│   └── Level_Bird_Rooftops.tscn
 ├── scripts/
 │   ├── PlayerController.gd
 │   ├── MovementCat.gd
 │   ├── MovementDog.gd
-│   ├── MovementBat.gd
+│   ├── MovementBird.gd
 │   ├── ShapeShiftManager.gd
 │   ├── GhostVisionShader.gd
 │   ├── Obstacle.gd
