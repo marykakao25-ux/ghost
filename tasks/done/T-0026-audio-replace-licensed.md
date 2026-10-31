@@ -1,7 +1,7 @@
 ---
 id: T-0026
 title: Заменить аудио без лицензии на свободные треки
-status: claimed
+status: done
 form: audio
 priority: medium
 owner: mixey1201
@@ -48,3 +48,4 @@ created: 2026-10-31
 - [ ] Запуск MainMenu и одного уровня — звук есть, в консоли нет ошибок загрузки stream
 
 ## Заметки и история
+- 2026-10-31T18:54:15Z — работа завершена владельцем mixey1201, ветка task/T-0026-audio-replace-licensed, ожидает PR
