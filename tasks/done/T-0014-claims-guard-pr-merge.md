@@ -31,14 +31,15 @@ API: `GET /repos/{owner}/{repo}/commits/{sha}/pulls` — для merge-комми
 
 ## Acceptance criteria
 
-- [ ] Push с associated merged PR не создаёт issue
-- [ ] Прямой push без PR по-прежнему создаёт issue
-- [ ] Отката коммитов по-прежнему нет (наблюдательный режим)
+- [x] Push с associated merged PR не создаёт issue
+- [x] Прямой push без PR по-прежнему создаёт issue
+- [x] Отката коммитов по-прежнему нет (наблюдательный режим)
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
-- [ ] Ревью diff workflow в PR
+- [x] `pwsh -File scripts/agent/verify.ps1`
+- [x] Ревью diff workflow в PR
 
 ## Заметки и история
 - 2026-10-31T15:50:01Z — работа завершена владельцем mixey1201, ветка task/T-0014-claims-guard-pr-merge, ожидает PR
+- 2026-10-31 — влито PR #24. После bot-check: `GET /commits/{sha}/pulls`; при `merged_at` issue не создаём. Permission `pull-requests: read`.

@@ -31,13 +31,14 @@ created: 2026-10-31
 
 ## Acceptance criteria
 
-- [ ] Все новые пути из `e2f65ab` описаны в таблице ASSETS.md
-- [ ] Секция «Структура, требуемая задачей» согласована с закрытыми T-0010/T-0011
-- [ ] `pwsh -File scripts/agent/verify.ps1` зелёный
+- [x] Все новые пути из `e2f65ab` описаны в таблице ASSETS.md
+- [x] Секция «Структура, требуемая задачей» согласована с закрытыми T-0010/T-0011
+- [x] `pwsh -File scripts/agent/verify.ps1` зелёный
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
+- [x] `pwsh -File scripts/agent/verify.ps1`
 
 ## Заметки и история
 - 2026-10-31T15:45:53Z — работа завершена владельцем mixey1201, ветка task/T-0013-assets-docs, ожидает PR
+- 2026-10-31 — влито PR #22. Строки для dog/bird/gg/`*_location.png` в таблице ASSETS.md.
