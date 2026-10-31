@@ -214,11 +214,22 @@ func _test_pause_menu() -> void:
 	await process_frame
 	_check(paused, "Пауза не включилась")
 	_check(_player.get_node_or_null("PauseOverlay") != null, "Нет оверлея паузы")
-	var menu: Node = _player.get_node("PauseOverlay/Menu")
+	var menu: Node = _player.get_node("PauseOverlay/MenuCenter/Menu")
 	_check(menu.get_child_count() >= 6, "В паузе мало пунктов")
+	# T-0035: панель центрирована относительно фактического viewport,
+	# а не жёсткими координатами 1800x800.
+	var menu_control: Control = menu as Control
+	var viewport_center: Vector2 = _player.get_viewport_rect().size * 0.5
+	var panel_center: Vector2 = menu_control.global_position + menu_control.size * 0.5
+	_check(
+		absf(panel_center.x - viewport_center.x) < 2.0 and absf(panel_center.y - viewport_center.y) < 2.0,
+		"Меню паузы не отцентровано в viewport (уехало)"
+	)
+	_check(menu.get_child(1) is Button and (menu.get_child(1) as Control).has_focus(), "Первая кнопка паузы не фокусируется")
 	_player._on_pause_resume()
 	await process_frame
 	_check(not paused, "Пауза не снялась")
+	_check(not _player.get_node("PauseOverlay").visible, "Оверлей паузы виден после Продолжить")
 
 
 func _test_atmosphere() -> void:

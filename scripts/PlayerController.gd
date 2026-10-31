@@ -106,6 +106,10 @@ func _toggle_pause() -> void:
 	get_tree().paused = not get_tree().paused
 	_owns_pause = get_tree().paused
 	_pause_layer.visible = get_tree().paused
+	if get_tree().paused:
+		var menu: Node = _pause_layer.get_node_or_null("MenuCenter/Menu")
+		if menu != null and menu.get_child_count() > 1:
+			(menu.get_child(1) as Control).grab_focus()
 	_sync_atmosphere()
 
 
@@ -120,14 +124,21 @@ func _create_pause_overlay() -> void:
 	shade.color = Color(0.0, 0.0, 0.0, 0.72)
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_pause_layer.add_child(shade)
+	var panel_size := Vector2(320.0, 280.0)
+	var center: CenterContainer = CenterContainer.new()
+	center.name = "MenuCenter"
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pause_layer.add_child(center)
 	var panel: VBoxContainer = VBoxContainer.new()
 	panel.name = "Menu"
 	panel.alignment = BoxContainer.ALIGNMENT_CENTER
 	panel.add_theme_constant_override("separation", 12)
-	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	panel.custom_minimum_size = Vector2(320.0, 280.0)
-	panel.position = Vector2(740.0, 220.0)
-	_pause_layer.add_child(panel)
+	panel.custom_minimum_size = panel_size
+	# CenterContainer на весь viewport центрирует фактический размер панели:
+	# меню не «уезжает» при разрешениях, отличных от 1800x800, и когда
+	# содержимое больше custom_minimum_size.
+	center.add_child(panel)
 	var title: Label = Label.new()
 	title.text = "Пауза"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -178,7 +189,7 @@ func _on_pause_effects() -> void:
 	_sync_atmosphere()
 	if _pause_layer == null:
 		return
-	var menu: Node = _pause_layer.get_node_or_null("Menu")
+	var menu: Node = _pause_layer.get_node_or_null("MenuCenter/Menu")
 	if menu == null or menu.get_child_count() < 5:
 		return
 	var effects_button: Button = menu.get_child(4) as Button
