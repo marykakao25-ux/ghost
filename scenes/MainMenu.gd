@@ -1,6 +1,6 @@
 extends Node2D
 
-const CAT_LEVEL_PATH: String = "res://scenes/Level_Cat_Cemetry.tscn"
+const INTRO_PATH: String = "res://scenes/Intro.tscn"
 
 @onready var _music: AudioStreamPlayer = $AudioStreamPlayer
 @onready var _play_button: Button = $CanvasLayer/UI/Center/Buttons/PlayButton
@@ -36,7 +36,7 @@ func _notification(what: int) -> void:
 func _on_play_pressed() -> void:
 	## Музыку между сценами без Autoload не удержать — останавливаем явно.
 	_release_music()
-	get_tree().change_scene_to_file(CAT_LEVEL_PATH)
+	get_tree().change_scene_to_file(INTRO_PATH)
 
 
 func _on_quit_pressed() -> void:

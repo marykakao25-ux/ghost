@@ -10,10 +10,11 @@ const ACCELERATION: float = 1200.0
 const FRICTION: float = 1400.0
 const GRAVITY: float = 980.0
 
-const STAND_RADIUS: float = 16.0
-const STAND_HEIGHT: float = 44.0
-const CRAWL_RADIUS: float = 11.0
-const CRAWL_HEIGHT: float = 22.0
+const STAND_RADIUS: float = 36.0
+const STAND_HEIGHT: float = 88.0
+const CRAWL_RADIUS: float = 24.0
+const CRAWL_HEIGHT: float = 16.0
+
 
 const _ANIM_IDLE := preload("res://assets/sprites/cat/anim_cat_idle.tscn")
 const _ANIM_WALK := preload("res://assets/sprites/cat/anim_cat_walk.tscn")

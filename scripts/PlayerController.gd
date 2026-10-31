@@ -5,11 +5,13 @@ signal form_changed(form: Form)
 
 enum Form { CAT, DOG, BIRD }
 
-const CAT_CAPSULE_RADIUS: float = 16.0
-const CAT_CAPSULE_HEIGHT: float = 44.0
-const DOG_CAPSULE_RADIUS: float = 21.0
-const DOG_CAPSULE_HEIGHT: float = 64.0
-const BIRD_CIRCLE_RADIUS: float = 22.0
+## Высота экрана 800: кот/пёс ≈ 1/5, ворон ≈ 1/6 (капсула: height + 2*radius).
+const CAT_CAPSULE_RADIUS: float = 36.0
+const CAT_CAPSULE_HEIGHT: float = 88.0
+const DOG_CAPSULE_RADIUS: float = 40.0
+const DOG_CAPSULE_HEIGHT: float = 80.0
+const BIRD_CIRCLE_RADIUS: float = 66.0
+const SCREEN_HEIGHT: float = 800.0
 const MAIN_MENU_PATH: String = "res://scenes/MainMenu.tscn"
 
 const _MOVEMENT_SCRIPTS: Dictionary = {
@@ -234,19 +236,22 @@ func _update_visual() -> void:
 		return
 	if not _texture_bounds.has(texture):
 		var image: Image = texture.get_image()
-		_texture_bounds[texture] = Rect2(image.get_used_rect())
+		var used: Rect2 = Rect2(image.get_used_rect()) if image != null else Rect2()
+		if not used.has_area():
+			used = Rect2(Vector2.ZERO, texture.get_size())
+		_texture_bounds[texture] = used
 	var bounds: Rect2 = _texture_bounds[texture]
 	if not bounds.has_area():
-		return
-	var target: Vector2 = Vector2(64.0, 44.0)
-	if current_form == Form.DOG:
-		target = Vector2(84.0, 64.0)
-	elif current_form == Form.BIRD:
-		target = Vector2(68.0, 48.0)
-	var ratio: float = minf(target.x / bounds.size.x, target.y / bounds.size.y)
+		bounds = Rect2(Vector2.ZERO, texture.get_size())
+	var target_h: float = SCREEN_HEIGHT / 5.0
+	if current_form == Form.BIRD:
+		target_h = SCREEN_HEIGHT / 6.0
+	# Масштаб по высоте силуэта — доля экрана (кот/пёс 1/5, ворон 1/6).
+	var ratio: float = target_h / maxf(bounds.size.y, 1.0)
 	animated_sprite.scale = Vector2(ratio, ratio)
-	if current_form == Form.CAT and collision_shape.shape.get_rect().size.y < 30.0:
-		animated_sprite.scale.y *= 0.5
+	# Ползущий кот ниже стоячего коллайдера — слегка прижимаем спрайт.
+	if current_form == Form.CAT and collision_shape.shape.get_rect().size.y < 100.0:
+		animated_sprite.scale.y *= 0.55
 	# У PNG разные поля и размеры: выравниваем непрозрачные пиксели, а не весь холст.
 	var offset: Vector2 = texture.get_size() * 0.5 - bounds.get_center()
 	if animated_sprite.flip_h:

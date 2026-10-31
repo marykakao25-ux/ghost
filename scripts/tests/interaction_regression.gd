@@ -29,8 +29,9 @@ func _load_level(path: String) -> void:
 func _step(count: int) -> void:
 	for frame: int in range(count):
 		await physics_frame
-		_player.current_movement.move(_player, 1.0 / 60.0)
-		_player._update_visual()
+		if _player != null and _player.current_movement != null:
+			_player.current_movement.move(_player, 1.0 / 60.0)
+			_player._update_visual()
 
 
 func _run() -> void:
@@ -60,8 +61,11 @@ func _run() -> void:
 
 
 func _test_crawl_idle() -> void:
-	_player.global_position = Vector2(250.0, 498.0)
+	_player.global_position = Vector2(250.0, 400.0)
+	_player.velocity = Vector2(0.0, 400.0)
+	await _step(20)
 	_player.velocity = Vector2.ZERO
+	await _step(4)
 	Input.action_press("crawl")
 	await _step(8)
 	Input.action_release("crawl")
@@ -106,19 +110,34 @@ func _test_atmosphere() -> void:
 
 
 func _test_ghost_visible() -> void:
+	_player.global_position = Vector2(250.0, 400.0)
+	_player.velocity = Vector2(0.0, 400.0)
+	await _step(16)
+	_player.velocity = Vector2.ZERO
+	await _step(4)
 	_manager.unlock_form(1)
 	_check(_manager.change_form(1), "Не сменилась форма")
 	await process_frame
 	var pivot: Node2D = _player.get_node("FormPivot")
 	_check(pivot.get_node_or_null("PossessionGhost") != null, "Призрак не появился при смене")
 	_check(_player.animated_sprite.visible, "Форма скрыта после вселения")
+	var ghost: Sprite2D = pivot.get_node_or_null("PossessionGhost") as Sprite2D
+	if ghost != null and ghost.texture != null:
+		var img: Image = ghost.texture.get_image()
+		var used_h: float = float(img.get_used_rect().size.y) if img != null else ghost.texture.get_size().y
+		var gh: float = used_h * ghost.scale.y
+		_check(gh >= 150.0 and gh <= 250.0, "Призрак не ~1/4 экрана")
 	_player.set_form(0)
 	await _step(4)
 
 
 func _test_dog_push_break() -> void:
 	await _load_level("res://scenes/Level_Dog_Park.tscn")
-	_player.global_position = Vector2(470.0, 488.0)
+	_manager.unlock_form(1)
+	_player.set_form(1)
+	_player.global_position = Vector2(470.0, 400.0)
+	_player.velocity = Vector2(0.0, 400.0)
+	await _step(20)
 	_player.velocity = Vector2.ZERO
 	await _step(8)
 	Input.action_press("move_right")

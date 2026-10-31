@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/LevelExit.gd" id="1_e2d68"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vul8o"]
-size = Vector2(64, 120)
+size = Vector2(140, 180)
 
 [node name="LevelExit" type="Area2D" unique_id=1474334457]
 collision_layer = 0

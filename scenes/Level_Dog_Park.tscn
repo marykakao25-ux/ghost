@@ -15,7 +15,7 @@
 size = Vector2(1900, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_log"]
-size = Vector2(160, 52)
+size = Vector2(160, 36)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jump_sensor"]
 size = Vector2(160, 80)
@@ -183,7 +183,8 @@ shape = SubResource("RectangleShape2D_hazard")
 position = Vector2(1730, 460)
 next_scene = "res://scenes/Level_Bird_Rooftops.tscn"
 unlock_form = 2
-exit_text = "К крышам →"
+host_form = 2
+exit_text = "Вселиться в ворона →"
 
 [node name="WallLeft" type="StaticBody2D" parent="."]
 position = Vector2(-20, 400)
