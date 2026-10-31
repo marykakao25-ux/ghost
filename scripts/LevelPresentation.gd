@@ -86,7 +86,7 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_player):
 		_progress.value = _player.global_position.x
 		var names: Array[String] = ["Кот", "Пёс", "Ворон"]
-		_form_label.text = names[_player.current_form] + "  /  Q · 1 · 2 · 3 — открытые формы"
+		_form_label.text = names[_player.current_form]
 	_message_seconds = maxf(0.0, _message_seconds - delta)
 	_message.visible = _message_seconds > 0.0
 	_update_atmosphere_visibility()

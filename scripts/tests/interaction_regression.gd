@@ -55,6 +55,7 @@ func _run() -> void:
 	await _test_real_input_movement()
 	await _test_always_switched_forms()
 	await _test_desync_selfheal()
+	await _test_manual_shapeshift_removed()
 	await _test_crawl_idle()
 	await _test_pause_menu()
 	await _test_atmosphere()
@@ -205,6 +206,20 @@ func _test_desync_selfheal() -> void:
 	_check(_manager.change_form(1), "change_form съедает смену формы при рассинхроне")
 	_check(int(_player.current_form) == 1, "Игрок не сменил форму после рассинхрона")
 	_check(_player.current_movement != null, "После смены из рассинхрона игрок без компонента движения")
+	_player.set_form(0)
+	await _step(2)
+
+
+func _test_manual_shapeshift_removed() -> void:
+	# T-0036: Q и 1/2/3 больше не меняют форму; автосмена менеджером работает.
+	_manager.unlock_form(1)
+	for action: String in ["shapeshift", "shapeshift_cat", "shapeshift_dog", "shapeshift_bird"]:
+		var synthetic := InputEventAction.new()
+		synthetic.action = action
+		synthetic.pressed = true
+		_player._unhandled_input(synthetic)
+		_check(int(_player.current_form) == 0, "Ручное переключение ещё работает: %s" % action)
+	_check(_manager.change_form(1), "Сломана автоматическая смена формы менеджером")
 	_player.set_form(0)
 	await _step(2)
 

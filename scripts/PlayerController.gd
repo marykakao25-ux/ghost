@@ -70,34 +70,11 @@ func _exit_tree() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if ShapeShiftManager.get_player() != self:
 		return
+	# Ручная смена формы (Q / 1 / 2 / 3) убрана в T-0036: формы меняются
+	# только вселением при переходах (Intro, LevelExit) и директором уровня.
 	if event.is_action_pressed("pause"):
 		_toggle_pause()
 		get_viewport().set_input_as_handled()
-		return
-	if get_tree().paused:
-		return
-	var requested_form: Form = current_form
-	if event.is_action_pressed("shapeshift_cat"):
-		requested_form = Form.CAT
-	elif event.is_action_pressed("shapeshift_dog"):
-		requested_form = Form.DOG
-	elif event.is_action_pressed("shapeshift_bird"):
-		requested_form = Form.BIRD
-	elif event.is_action_pressed("shapeshift"):
-		requested_form = _get_next_unlocked_form()
-	else:
-		return
-	get_viewport().set_input_as_handled()
-	if ShapeShiftManager.is_form_unlocked(requested_form):
-		ShapeShiftManager.change_form(requested_form)
-
-
-func _get_next_unlocked_form() -> Form:
-	for offset: int in range(1, Form.size()):
-		var candidate: Form = ((int(current_form) + offset) % Form.size()) as Form
-		if ShapeShiftManager.is_form_unlocked(candidate):
-			return candidate
-	return current_form
 
 
 func _toggle_pause() -> void:
