@@ -1,12 +1,12 @@
 ---
 id: T-0032
 title: Ветки из фона, воздух и фонари на уровне ворона
-status: todo
+status: claimed
 form: bird
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T00:27:36Z
+branch: task/T-0032-bird-props-interactions
 paths:
   - scenes/Level_Bird_Rooftops.tscn
   - scripts/WindZone.gd
