@@ -1,7 +1,7 @@
 ---
 id: T-0012
 title: Меню и главная сцена (MainMenu, пауза)
-status: claimed
+status: done
 form: infra
 priority: medium
 owner: mixey1201
@@ -41,3 +41,4 @@ created: 2026-10-31
 - [ ] `godot --path . scenes/MainMenu.tscn`
 
 ## Заметки и история
+- 2026-10-31T16:18:03Z — работа завершена владельцем mixey1201, ветка task/T-0012-main-menu, ожидает PR
