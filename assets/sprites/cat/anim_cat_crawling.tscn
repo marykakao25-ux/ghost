@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://chg8d05642b86"]
+
+[ext_resource type="Texture2D" uid="uid://bun3l4xxuarhh" path="res://assets/sprites/cat/cat_crawling1.png" id="1_wixa0"]
+[ext_resource type="Texture2D" uid="uid://ygw44rhcatfn" path="res://assets/sprites/cat/cat_crawling2.png" id="2_3hl12"]
+[ext_resource type="Texture2D" uid="uid://bgn004d2llw63" path="res://assets/sprites/cat/cat_crawling3.png" id="3_7p671"]
+[ext_resource type="Texture2D" uid="uid://bnij25j8m5ywr" path="res://assets/sprites/cat/cat_crawling4.png" id="4_b6mkd"]
+[ext_resource type="Texture2D" uid="uid://clrdwligk3oyf" path="res://assets/sprites/cat/cat_crawling5.png" id="5_gswyi"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_65lwm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_wixa0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_3hl12")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_7p671")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_b6mkd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_gswyi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[node name="anim_cat_crawling" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_65lwm")
+frame = 1
+frame_progress = 0.720846

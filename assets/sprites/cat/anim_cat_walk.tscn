@@ -1,0 +1,37 @@
+[gd_scene load_steps=8 format=3 uid="uid://b8p78hwlbe50f"]
+
+[ext_resource type="Texture2D" uid="uid://bs7wx6xsq86tk" path="res://assets/sprites/cat/cat_walk1.png" id="1_8sj1w"]
+[ext_resource type="Texture2D" uid="uid://d2kxyf55ih2kc" path="res://assets/sprites/cat/cat_walk2.png" id="2_jecix"]
+[ext_resource type="Texture2D" uid="uid://dh1cwbnq8wmi4" path="res://assets/sprites/cat/cat_walk3.png" id="3_f80e8"]
+[ext_resource type="Texture2D" uid="uid://pvd6da53m0rh" path="res://assets/sprites/cat/cat_walk4.png" id="4_6wmsc"]
+[ext_resource type="Texture2D" uid="uid://drowmrcowetay" path="res://assets/sprites/cat/cat_walk5.png" id="5_tk860"]
+[ext_resource type="Texture2D" uid="uid://cc08rhfxij6vw" path="res://assets/sprites/cat/cat_walk6.png" id="6_f28am"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_k3q77"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8sj1w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_jecix")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_f80e8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_6wmsc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_tk860")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f28am")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[node name="anim_cat_walk" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_k3q77")

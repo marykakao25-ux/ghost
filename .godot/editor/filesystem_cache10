@@ -1,19 +1,51 @@
 fc8a56933c4b1c8d796fdb8f7a9f9475
-::res://::1793385889
-README.md::TextFile::-1::1793385711::0::1::::<><><>0<>0<><>::
+::res://::1793404974
+README.md::TextFile::-1::1793404973::0::1::::<><><>0<>0<><>::
 ::res://assets/::1793382671
-::res://assets/audio/::1793386317
-The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3::AudioStreamMP3::4188310499835213251::1793386317::1793386317::1::::<><><>0<>0<>1eb3c1f6743863c076caa517548c45e7<>res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-0879c827c9571b43368b8b05c2f2ed5b.mp3str::
-::res://assets/environment/::1793382622
-::res://assets/sprites/::1793382658
+::res://assets/audio/::1793389791
+The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3::AudioStreamMP3/AudioStreamMP3::4188310499835213251::1793386317::1793389780::1::::<><><>0<>0<>b7fbef27d36c0503113064a167fa4f4d<>res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-0879c827c9571b43368b8b05c2f2ed5b.mp3str::
+Звук сверчков живой звук на природе.mp3::AudioStreamMP3::7129677189002225178::1793388483::1793389791::1::::<><><>0<>0<>38589b00930c2f593ba3e1d1f0be56ad<>res://.godot/imported/Звук сверчков живой звук на природе.mp3-6f489155f4c0f06b398c617b92d62e6d.mp3str::
+::res://assets/environment/::1793386879
+::res://assets/environment/halloween_props/::1793386857
+::res://assets/environment/tileset_spooky/::1793419042
+air.png::CompressedTexture2D::7608370376120700161::1793419042::1793419047::1::::<><><>0<>0<>008f1e04bf1987ebfe0424784a273e88<>res://.godot/imported/air.png-eccb4da0f198fd8dcd5ed592bb8f8920.ctex::
+bench.png::CompressedTexture2D::7568092483844614566::1793406799::1793406841::1::::<><><>0<>0<>59c2ebb1fac618770b45c30ccf2d6596<>res://.godot/imported/bench.png-4d97eee1bf66ba5f395da32e9f9b385c.ctex::
+box_to_cat.png::CompressedTexture2D::6844824185414484619::1793418832::1793418855::1::::<><><>0<>0<>dfb70029a9e4384c16caf47493c260b3<>res://.godot/imported/box_to_cat.png-5fd4e5b6dbaabaa0971de7b98fa281ad.ctex::
+box_to_dog.png::CompressedTexture2D::1936733328413742872::1793418963::1793418982::1::::<><><>0<>0<>6f7e43ce6acde59d1025a406c8896ff8<>res://.godot/imported/box_to_dog.png-beabeee6c46b5ca3697967c1cc96544c.ctex::
+branch.png::CompressedTexture2D::2002313554582298372::1793419020::1793419036::1::::<><><>0<>0<>e33dc2ddd47f362aa1f681dbfcc6712c<>res://.godot/imported/branch.png-b4fcbf18dc5d4533c5c2e62fcc8663a7.ctex::
+grass.png::CompressedTexture2D::9003403293657641102::1793404266::1793404269::1::::<><><>0<>0<>bbe3d834cd5a6e190dd87dd2d8fc1635<>res://.godot/imported/grass.png-4228f0de30e14d85afd879a95191e36a.ctex::
+grass_to_dog.png::CompressedTexture2D::2455531021725353612::1793418896::1793418922::1::::<><><>0<>0<>f44e67dcc57cc289f7719ec9bd9a193a<>res://.godot/imported/grass_to_dog.png-9b1fe267ff7607105335feac74e2a9ab.ctex::
+lantern.png::CompressedTexture2D::7171853168619835337::1793418991::1793419011::1::::<><><>0<>0<>e992e49ade92432482372a8fcae7921e<>res://.godot/imported/lantern.png-172680f33ea5383e25b459132ef5b3fb.ctex::
+log.png::CompressedTexture2D::1892746159288792397::1793418935::1793418982::1::::<><><>0<>0<>b97e579bc1bd1c6169ad395eec45b819<>res://.godot/imported/log.png-da16efa53c3bf1571454632fd582f1e5.ctex::
+pit.png::CompressedTexture2D::5464628495996339621::1793407706::1793409293::1::::<><><>0<>0<>54b7cacb740dafac5ecdd13f39a0c400<>res://.godot/imported/pit.png-0432938d14d2ee7ab60ea44732c1fb5f.ctex::
+puddle.png::CompressedTexture2D::7955136395199707238::1793418871::1793418922::1::::<><><>0<>0<>0019187bf479eb8277d88cabe9fb7dd9<>res://.godot/imported/puddle.png-10e1f75e3a8e0197cb79fa3583377e6d.ctex::
+tile.png::CompressedTexture2D::8761143490871056350::1793404228::1793404269::1::::<><><>0<>0<>cf00cd302fe8247685f29ee08d2ddcaa<>res://.godot/imported/tile.png-62bc0f11545560dfa024004b9e8ce9af.ctex::
+::res://assets/sprites/::1793386879
 ::res://assets/sprites/bird/::1793382282
-::res://assets/sprites/cat/::1793382264
+::res://assets/sprites/cat/::1793404974
+cat_crawling1.png::CompressedTexture2D::3818755746566357785::1793401312::1793401417::1::::<><><>0<>0<>8d2619e34424d71b4c0d5e70b79d385d<>res://.godot/imported/cat_crawling1.png-5e818934c439e2267bd343d28a7853c3.ctex::
+cat_crawling2.png::CompressedTexture2D::1698307625460812099::1793401333::1793401417::1::::<><><>0<>0<>32ec8c558d0b56dff1df806ad646ab24<>res://.godot/imported/cat_crawling2.png-9ceb350d46c9bc6f9bd93a49d7b95fd4.ctex::
+cat_crawling3.png::CompressedTexture2D::2835954755044338874::1793401354::1793401417::1::::<><><>0<>0<>5f425cfba487299f14d2036d9e6442e5<>res://.godot/imported/cat_crawling3.png-240a5750af73fedbb88db89f23f87bd3.ctex::
+cat_crawling4.png::CompressedTexture2D::3315986933510687341::1793401376::1793401417::1::::<><><>0<>0<>795203da503e7d63e769cf57e8390a48<>res://.godot/imported/cat_crawling4.png-9f436b3115ab18195bf06f23b3dbf734.ctex::
+cat_crawling5.png::CompressedTexture2D::5580235098070161965::1793401414::1793401417::1::::<><><>0<>0<>dc691c26ad0952362302306aeef01c20<>res://.godot/imported/cat_crawling5.png-ef04800541aa07d7ba372ad627784ac8.ctex::
+cat_idle1.png::CompressedTexture2D::5492979324546146019::1793394081::1793394127::1::::<><><>0<>0<>5d0a58640b967576a847bf975a77fe24<>res://.godot/imported/cat_idle1.png-d59ae69a8c2a9deb6bad46e704a49d40.ctex::
+cat_idle2.png::CompressedTexture2D::1732747892192861356::1793394123::1793394127::1::::<><><>0<>0<>f7776877a5c107bddf22eebdb8f6479a<>res://.godot/imported/cat_idle2.png-b5dbcc927cf404d1c3044b7b7114b4ba.ctex::
+anim_cat_idle.tscn::PackedScene::6797689342715197770::1793394236::0::1::::<><><>0<>0<><>::uid://cki3tjnbusiid::::res://assets/sprites/cat/cat_idle1.png<>uid://yxmds7isfqt5::::res://assets/sprites/cat/cat_idle2.png
+cat_walk1.png::CompressedTexture2D::3717258469003180180::1793398476::1793398654::1::::<><><>0<>0<>fb799670cfd4c29a4034637913d5e75c<>res://.godot/imported/cat_walk1.png-f41ac5e84773aa2ccdfce03e28d62ed0.ctex::
+cat_walk2.png::CompressedTexture2D::9076444267069064762::1793398518::1793398654::1::::<><><>0<>0<>bfb3da6606938915e1acd105e0e91dcc<>res://.godot/imported/cat_walk2.png-23038719588769509b33729c60591a58.ctex::
+cat_walk3.png::CompressedTexture2D::7704418572980276957::1793398546::1793398654::1::::<><><>0<>0<>b0b4b4b11e09b26a298b9d98119b2bbc<>res://.godot/imported/cat_walk3.png-4f67f25baf61e79498a3f9d6fbf911d5.ctex::
+cat_walk4.png::CompressedTexture2D::1096422256966123917::1793398580::1793398654::1::::<><><>0<>0<>3a77792ca009aae201e33ece73e975f9<>res://.godot/imported/cat_walk4.png-bbf2bc63ebfeb38cdce67592c44eacc5.ctex::
+cat_walk5.png::CompressedTexture2D::8382731781502647332::1793398616::1793398654::1::::<><><>0<>0<>48fa2fbde0876626e67fbb2180550f1a<>res://.godot/imported/cat_walk5.png-5b44f88502345187bfb0f81fb62091a7.ctex::
+cat_walk6.png::CompressedTexture2D::4966862894215006660::1793398650::1793398654::1::::<><><>0<>0<>eca634d12698e9a998a8b8ef8918df2f<>res://.godot/imported/cat_walk6.png-e9f0f8886edd3c1c09f6aceb0f562182.ctex::
+anim_cat_walk.tscn::PackedScene::4735620467176921695::1793404974::0::1::::<><><>0<>0<><>::uid://bs7wx6xsq86tk::::res://assets/sprites/cat/cat_walk1.png<>uid://d2kxyf55ih2kc::::res://assets/sprites/cat/cat_walk2.png<>uid://dh1cwbnq8wmi4::::res://assets/sprites/cat/cat_walk3.png<>uid://pvd6da53m0rh::::res://assets/sprites/cat/cat_walk4.png<>uid://drowmrcowetay::::res://assets/sprites/cat/cat_walk5.png<>uid://cc08rhfxij6vw::::res://assets/sprites/cat/cat_walk6.png
+anim_cat_crawling.tscn::PackedScene::5278559918395996941::1793401600::0::1::::<><><>0<>0<><>::uid://bun3l4xxuarhh::::res://assets/sprites/cat/cat_crawling1.png<>uid://ygw44rhcatfn::::res://assets/sprites/cat/cat_crawling2.png<>uid://bgn004d2llw63::::res://assets/sprites/cat/cat_crawling3.png<>uid://bnij25j8m5ywr::::res://assets/sprites/cat/cat_crawling4.png<>uid://clrdwligk3oyf::::res://assets/sprites/cat/cat_crawling5.png
+anim_cat_jump.tscn::PackedScene::7451928794081051725::1793402082::0::1::::<><><>0<>0<><>::uid://pvd6da53m0rh::::res://assets/sprites/cat/cat_walk4.png<>uid://cc08rhfxij6vw::::res://assets/sprites/cat/cat_walk6.png<>uid://bgn004d2llw63::::res://assets/sprites/cat/cat_crawling3.png<>uid://drowmrcowetay::::res://assets/sprites/cat/cat_walk5.png
 ::res://assets/sprites/dog/::1793382273
-::res://scenes/::1793382575
-Level_Bird_Rooftops.tscn::PackedScene/PackedScene::6004837055652858567::1793382575::0::1::::<><><>0<>0<><>::
-Level_Cat_Cemetry.tscn::PackedScene/PackedScene::3458655312812261215::1793382477::0::1::::<><><>0<>0<><>::
-Level_Dog_Park.tscn::PackedScene/PackedScene::23052414478975220::1793382500::0::1::::<><><>0<>0<><>::
-MainMenu.tscn::PackedScene/PackedScene::6313870575222179617::1793382451::0::1::::<><><>0<>0<><>::
+::res://scenes/::1793404974
+Level_Bird_Rooftops.tscn::PackedScene::6004837055652858567::1793404974::0::1::::<><><>0<>0<><>::uid://b0w34kqsj1wnr::::res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3
+Level_Cat_Cemetry.tscn::PackedScene::3458655312812261215::1793404974::0::1::::<><><>0<>0<><>::uid://b0w34kqsj1wnr::::res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3<>uid://dw270u10it62u::::res://assets/environment/tileset_spooky/tile.png
+Level_Dog_Park.tscn::PackedScene::23052414478975220::1793404974::0::1::::<><><>0<>0<><>::uid://b0w34kqsj1wnr::::res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3
+MainMenu.tscn::PackedScene::6313870575222179617::1793404974::0::1::::<><><>0<>0<><>::uid://c8tw0hlttjo7k::::res://assets/audio/Звук сверчков живой звук на природе.mp3
 ::res://scripts/::1793386285
 GhostVisionShader.gd::GDScript/GDScript::6399785834969133131::1793382911::0::1::::<>Node<><>0<>0<><>::
 MovementBird.gd::GDScript/GDScript::2534313446941324071::1793382866::0::1::::<>Node<><>0<>0<><>::
@@ -22,5 +54,5 @@ MovementDog.gd::GDScript/GDScript::4972865552926259342::1793382826::0::1::::<>No
 Obstacle.gd::GDScript/GDScript::8653508799994477731::1793382920::0::1::::<>Node<><>0<>0<><>::
 PlayerController.gd::GDScript/GDScript::4847812251221830020::1793382777::0::1::::<>Node<><>0<>0<><>::
 ShapeShiftManager.gd::GDScript/GDScript::5864266011401073210::1793382898::0::1::::<>Node<><>0<>0<><>::
-The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3::AudioStreamMP3::5862787933061114029::1793386285::1793386285::1::::<><><>0<>0<>3237b93a4a5632be7695158031e6b669<>res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-3a11be079898e21dd91eb00d3d68eb7c.mp3str::
+The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3::AudioStreamMP3/AudioStreamMP3::5862787933061114029::1793386285::1793386285::1::::<><><>0<>0<>3237b93a4a5632be7695158031e6b669<>res://.godot/imported/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3-3a11be079898e21dd91eb00d3d68eb7c.mp3str::
 WindZone.gd::GDScript/GDScript::474598161301315228::1793382931::0::1::::<>Node<><>0<>0<><>::
