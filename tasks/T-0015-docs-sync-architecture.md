@@ -1,12 +1,12 @@
 ---
 id: T-0015
 title: Синхронизировать README/ARCHITECTURE/INPUT_MAP с фактом репозитория
-status: todo
+status: claimed
 form: docs
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:29:01Z
+branch: task/T-0015-docs-sync-architecture
 paths:
   - docs/ARCHITECTURE.md
   - docs/INPUT_MAP.md
