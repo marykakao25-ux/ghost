@@ -5,7 +5,8 @@ name: claims-guard
 # Почему так: squash-merge обычного PR — это тоже push в main, затрагивающий
 # код вне tasks/. Автоматический revert отменял бы любой смерженный PR.
 # Поэтому здесь только предупреждение в лог и issue на прямые push в main
-# от человека (PR-merge ботом нарушением не считается).
+# без связанного PR. Штатный merge (бот или человек через UI) нарушением
+# не считается — проверяем associated pulls у SHA.
 #
 # Настоящая защита кода — agent-guard.yml на PR + Ruleset на main
 # (block force-push / restrict deletions).
@@ -16,6 +17,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: read
 
 jobs:
   guard:
@@ -70,6 +72,19 @@ jobs:
           # PR-merge приходит от бота github-actions — это штатный путь.
           if [ "$ACTOR" = "github-actions[bot]" ]; then
             echo "Push от github-actions[bot] — это merge/бот, нарушением не считаем."
+            exit 0
+          fi
+
+          # Squash/merge через UI идёт от человека: actor ≠ bot, но SHA связан с PR.
+          # Без этой проверки страж плодит ложные issues (#13, #16, #18, #21).
+          PULLS_JSON=$(curl -sS \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/commits/${SHA}/pulls")
+          MERGED_COUNT=$(echo "$PULLS_JSON" | jq '[.[] | select(.merged_at != null)] | length')
+          if [ "${MERGED_COUNT:-0}" -gt 0 ]; then
+            echo "Коммит $SHA связан с merged PR — штатный merge, issue не создаём."
+            echo "$PULLS_JSON" | jq -r '.[] | select(.merged_at != null) | "#\(.number) \(.title)"'
             exit 0
           fi
 
