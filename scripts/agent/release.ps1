@@ -13,12 +13,15 @@ pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner cline
 
 .EXAMPLE
 pwsh -File scripts/agent/release.ps1 -Task T-0002 -Task T-0004 -Owner cline
+.PARAMETER Abort
+Закрыть задачу без вливания работы. Повторный запуск с -Abort на уже закрытой задаче
+идемпотентен: скрипт просто снимает оставшийся лок и выходит.
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory, ValueFromRemainingArguments = $false)][string[]]$Task,
     [Parameter(Mandatory)][string]$Owner,
-    [switch]$Abort   # закрыть задачу как «отменена»: изменения не вливаются
+    [switch]$Abort
 )
 
 $ErrorActionPreference = 'Stop'
@@ -51,7 +54,28 @@ if ($taskList.Count -gt 1) {
 $taskId = [string]$taskList[0]
 
 Write-Step "1. Чтение задачи $taskId"
-$taskPath = Find-Task -Id $taskId
+try {
+    $taskPath = Find-Task -Id $taskId
+}
+catch {
+    if (-not $Abort) { throw }
+    # -Abort на уже закрытой задаче: осталось только убрать забытый лок.
+    $donePath = Join-Path $script:DoneDir (Get-ChildItem -LiteralPath $script:DoneDir -Filter "$taskId-*.md" -File |
+            Select-Object -First 1).Name
+    if (-not (Test-Path -LiteralPath $donePath)) { throw }
+    Write-Warn "Задача $taskId уже в tasks/done/ — снимаю только лок."
+    $claimRef = Get-ClaimBranch -Task $taskId
+    if (Remove-RemoteRef -Ref $claimRef) { Write-Ok "$claimRef удалён." } else { Write-Warn "$claimRef уже отсутствовал." }
+    Invoke-Git -Arguments @('rm', '--quiet', '--ignore-unmatch', '--', "tasks/claims/$taskId.md") | Out-Null
+    $leftover = (Invoke-Git -Arguments @('status', '--porcelain', '--', 'tasks/')).Text
+    if ($leftover -ne '') {
+        Invoke-Git -Arguments @('add', '--', 'tasks/') | Out-Null
+        Invoke-Git -Arguments @('commit', '-m', "[$taskId] chore(claim): release leftover lock ($Owner)") | Out-Null
+        $p = Invoke-Git -Arguments @('push', 'origin', 'HEAD:refs/heads/main') -AllowFail
+        if ($p.Code -ne 0) { Write-Warn 'Лиз-файл удалён локально, но main не обновлён — запушьте вручную.' }
+    }
+    exit 0
+}
 $taskData = Read-TaskFile -Path $taskPath
 $claimFile = Join-Path $script:ClaimsDir "$taskId.md"
 
