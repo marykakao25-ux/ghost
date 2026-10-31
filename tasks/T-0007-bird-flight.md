@@ -1,12 +1,12 @@
 ---
 id: T-0007
 title: Ворон — полёт и сопротивление ветру (MovementBird, WindZone)
-status: todo
+status: claimed
 form: bird
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:02:32Z
+branch: task/T-0007-bird-flight
 paths:
   - scripts/MovementBird.gd
   - scripts/WindZone.gd
