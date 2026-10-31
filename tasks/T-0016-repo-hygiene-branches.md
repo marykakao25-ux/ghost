@@ -1,12 +1,12 @@
 ---
 id: T-0016
 title: Гигиена веток — чеклист удаления stale task/* после squash
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:32:55Z
+branch: task/T-0016-repo-hygiene-branches
 paths:
   - tasks/README.md
 depends_on: []
