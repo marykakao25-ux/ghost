@@ -86,7 +86,7 @@ Write-Step "5. Разбор задачи $Task и проверка лиза (с�
 $taskPath = Find-Task -Id $Task
 $taskData = Read-TaskFile -Path $taskPath
 $taskStatus = "$(Get-TaskField -Task $taskData -Key 'status')"
-$taskPaths = ConvertTo-StringArray -Value (Get-TaskField -Task $taskData -Key 'paths')
+$taskPaths = @(ConvertTo-StringArray -Value (Get-TaskField -Task $taskData -Key 'paths'))
 
 if ($taskStatus -eq 'done') { Fail "Задача $Task уже закрыта (status: done). Возьмите другую." }
 if ($taskPaths.Count -eq 0) { Fail "В задаче $Task не задано поле paths — нечем защищаться от конфликтов." }
