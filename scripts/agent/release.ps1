@@ -55,8 +55,12 @@ if (-not $Abort) {
         Fail "Ветка работы $branchName не существует на origin. Запушьте работу: git push -u origin $branchName"
     }
     $ahead = Invoke-Git -Arguments @('rev-list', '--count', "origin/$branchName..HEAD") -AllowFail
-    if ($localBranch -eq $branchName -and $ahead.Code -eq 0 -and [int]$ahead.Text.Trim() -gt 0) {
-        Fail "В $branchName есть незапушенные коммиты ($($ahead.Text.Trim())). Сначала git push."
+    if ($localBranch -eq $branchName) {
+        $aheadText = ($ahead.Text | Out-String).Trim()
+        if ($ahead.Code -ne 0) { Fail "Не удалось сравнить $branchName с origin/$branchName`: $aheadText" }
+        if ([int]$aheadText -gt 0) {
+            Fail "В $branchName есть незапушенные коммиты ($aheadText). Сначала git push."
+        }
     }
 }
 
