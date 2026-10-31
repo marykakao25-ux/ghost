@@ -1,12 +1,12 @@
 ---
 id: T-0033
 title: Починить вселение в интро и переход на следующий уровень
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T00:33:55Z
+branch: task/T-0033-fix-possession-transitions
 paths:
   - scenes/Intro.gd
   - scenes/Intro.tscn
