@@ -18,6 +18,7 @@ var _reset_reason: String = ""
 
 
 func _ready() -> void:
+	add_to_group("level_director")
 	_level_root = get_parent()
 	_player = get_node_or_null(player_path) as PlayerController
 	if _player == null:
@@ -57,6 +58,10 @@ func register_obstacles() -> void:
 
 func set_checkpoint(position: Vector2) -> void:
 	ShapeShiftManager.set_checkpoint(position)
+
+
+func respawn_to_checkpoint(reason: String = "Возврат к последнему фонарю.") -> void:
+	_on_checkpoint_reset(reason)
 
 
 func _on_checkpoint_reset(reason: String) -> void:

@@ -10,6 +10,7 @@ const CAT_CAPSULE_HEIGHT: float = 44.0
 const DOG_CAPSULE_RADIUS: float = 21.0
 const DOG_CAPSULE_HEIGHT: float = 64.0
 const BIRD_CIRCLE_RADIUS: float = 22.0
+const MAIN_MENU_PATH: String = "res://scenes/MainMenu.tscn"
 
 const _MOVEMENT_SCRIPTS: Dictionary = {
 	Form.CAT: preload("res://scripts/MovementCat.gd"),
@@ -23,6 +24,7 @@ var current_movement: Node = null
 var _pause_layer: CanvasLayer = null
 var _owns_pause: bool = false
 var _texture_bounds: Dictionary[Texture2D, Rect2] = {}
+var _effects_enabled: bool = true
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -99,25 +101,96 @@ func _toggle_pause() -> void:
 	get_tree().paused = not get_tree().paused
 	_owns_pause = get_tree().paused
 	_pause_layer.visible = get_tree().paused
+	_sync_atmosphere()
 
 
 func _create_pause_overlay() -> void:
 	_pause_layer = CanvasLayer.new()
 	_pause_layer.name = "PauseOverlay"
 	_pause_layer.layer = 100
+	_pause_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_pause_layer)
 	var shade: ColorRect = ColorRect.new()
 	shade.name = "Shade"
-	shade.color = Color(0.0, 0.0, 0.0, 0.7)
+	shade.color = Color(0.0, 0.0, 0.0, 0.72)
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_pause_layer.add_child(shade)
-	var label: Label = Label.new()
-	label.text = "Пауза\nEsc — продолжить"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	shade.add_child(label)
+	var panel: VBoxContainer = VBoxContainer.new()
+	panel.name = "Menu"
+	panel.alignment = BoxContainer.ALIGNMENT_CENTER
+	panel.add_theme_constant_override("separation", 12)
+	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	panel.custom_minimum_size = Vector2(320.0, 280.0)
+	panel.position = Vector2(740.0, 220.0)
+	_pause_layer.add_child(panel)
+	var title: Label = Label.new()
+	title.text = "Пауза"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 32)
+	panel.add_child(title)
+	_add_pause_button(panel, "Продолжить", _on_pause_resume)
+	_add_pause_button(panel, "К чекпоинту", _on_pause_checkpoint)
+	_add_pause_button(panel, "В меню", _on_pause_menu)
+	_add_pause_button(panel, "Эффекты: вкл", _on_pause_effects)
+	_add_pause_button(panel, "Выход", _on_pause_quit)
+
+
+func _add_pause_button(parent: Node, text: String, callback: Callable) -> Button:
+	var button: Button = Button.new()
+	button.text = text
+	button.custom_minimum_size = Vector2(280.0, 40.0)
+	button.process_mode = Node.PROCESS_MODE_ALWAYS
+	button.pressed.connect(callback)
+	parent.add_child(button)
+	return button
+
+
+func _on_pause_resume() -> void:
+	if get_tree().paused:
+		_toggle_pause()
+
+
+func _on_pause_checkpoint() -> void:
+	_on_pause_resume()
+	var director: Node = get_tree().get_first_node_in_group("level_director")
+	if director == null:
+		var parent_node: Node = get_parent()
+		if parent_node != null:
+			director = parent_node.get_node_or_null("LevelDirector")
+	if director != null and director.has_method("respawn_to_checkpoint"):
+		director.call("respawn_to_checkpoint", "Возврат к последнему фонарю.")
+
+
+func _on_pause_menu() -> void:
+	if _owns_pause:
+		get_tree().paused = false
+		_owns_pause = false
+	get_tree().change_scene_to_file(MAIN_MENU_PATH)
+
+
+func _on_pause_effects() -> void:
+	_effects_enabled = not _effects_enabled
+	_sync_atmosphere()
+	if _pause_layer == null:
+		return
+	var menu: Node = _pause_layer.get_node_or_null("Menu")
+	if menu == null or menu.get_child_count() < 5:
+		return
+	var effects_button: Button = menu.get_child(4) as Button
+	if effects_button != null:
+		effects_button.text = "Эффекты: вкл" if _effects_enabled else "Эффекты: выкл"
+
+
+func _on_pause_quit() -> void:
+	if _owns_pause:
+		get_tree().paused = false
+		_owns_pause = false
+	get_tree().quit()
+
+
+func _sync_atmosphere() -> void:
+	var enabled: bool = _effects_enabled and not get_tree().paused
+	get_tree().call_group("level_presentation", "set_atmosphere_enabled", enabled)
 
 
 func set_form(form: Form) -> void:

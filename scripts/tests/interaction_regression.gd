@@ -1,0 +1,147 @@
+extends SceneTree
+## Запуск: godot --headless --path . --script scripts/tests/interaction_regression.gd
+
+var _failures: int = 0
+var _player: CharacterBody2D = null
+var _manager: Node = null
+var _had_progress: bool = false
+var _original_progress: PackedByteArray = PackedByteArray()
+
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+
+func _check(condition: bool, message: String) -> void:
+	if not condition:
+		_failures += 1
+		push_error(message)
+
+
+func _load_level(path: String) -> void:
+	change_scene_to_file(path)
+	for frame: int in range(4):
+		await process_frame
+	_player = current_scene.get_node("Player") as CharacterBody2D
+	_player.set_physics_process(false)
+
+
+func _step(count: int) -> void:
+	for frame: int in range(count):
+		await physics_frame
+		_player.current_movement.move(_player, 1.0 / 60.0)
+		_player._update_visual()
+
+
+func _run() -> void:
+	_had_progress = FileAccess.file_exists("user://progress.cfg")
+	if _had_progress:
+		_original_progress = FileAccess.get_file_as_bytes("user://progress.cfg")
+	_manager = root.get_node("ShapeShiftManager")
+	_manager.unlocked_forms.clear()
+	_manager.unlock_form(0)
+	await _load_level("res://scenes/Level_Cat_Cemetry.tscn")
+	await _test_crawl_idle()
+	await _test_pause_menu()
+	await _test_atmosphere()
+	await _test_ghost_visible()
+	await _test_dog_push_break()
+	await _test_menu_music_release()
+	if _had_progress:
+		var file: FileAccess = FileAccess.open("user://progress.cfg", FileAccess.WRITE)
+		_check(file != null, "Не удалось восстановить сохранение")
+		if file != null:
+			file.store_buffer(_original_progress)
+			file.close()
+	else:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path("user://progress.cfg"))
+	print("Регрессии взаимодействия: провалено проверок — ", _failures)
+	quit(1 if _failures > 0 else 0)
+
+
+func _test_crawl_idle() -> void:
+	_player.global_position = Vector2(250.0, 498.0)
+	_player.velocity = Vector2.ZERO
+	Input.action_press("crawl")
+	await _step(8)
+	Input.action_release("crawl")
+	await _step(4)
+	_check(bool(_player.current_movement.get("is_crawling")), "Кот не присел")
+	_check(not _player.animated_sprite.is_playing(), "Неподвижный ползущий кот анимируется")
+	_check(_player.animated_sprite.frame == 0, "Не та поза ползания")
+	Input.action_press("crawl")
+	Input.action_press("move_right")
+	await _step(10)
+	_check(_player.animated_sprite.is_playing(), "Ползание в движении без анимации")
+	Input.action_release("move_right")
+	Input.action_release("crawl")
+	_player.global_position = Vector2(250.0, 498.0)
+	_player.set_form(0)
+	await _step(6)
+
+
+func _test_pause_menu() -> void:
+	_player._toggle_pause()
+	await process_frame
+	_check(paused, "Пауза не включилась")
+	_check(_player.get_node_or_null("PauseOverlay") != null, "Нет оверлея паузы")
+	var menu: Node = _player.get_node("PauseOverlay/Menu")
+	_check(menu.get_child_count() >= 6, "В паузе мало пунктов")
+	_player._on_pause_resume()
+	await process_frame
+	_check(not paused, "Пауза не снялась")
+
+
+func _test_atmosphere() -> void:
+	var presentation: Node = current_scene.get_node("Presentation")
+	_check(presentation.get_node_or_null("AtmosphereLayer/Atmosphere") != null, "Нет постэффекта")
+	presentation.call("set_atmosphere_enabled", true)
+	_player._toggle_pause()
+	await process_frame
+	var atmosphere: CanvasItem = presentation.get_node("AtmosphereLayer/Atmosphere")
+	_check(not atmosphere.visible, "Постэффект не выключился на паузе")
+	_player._on_pause_resume()
+	await process_frame
+	_check(atmosphere.visible, "Постэффект не вернулся после паузы")
+
+
+func _test_ghost_visible() -> void:
+	_manager.unlock_form(1)
+	_check(_manager.change_form(1), "Не сменилась форма")
+	await process_frame
+	var pivot: Node2D = _player.get_node("FormPivot")
+	_check(pivot.get_node_or_null("PossessionGhost") != null, "Призрак не появился при смене")
+	_check(_player.animated_sprite.visible, "Форма скрыта после вселения")
+	_player.set_form(0)
+	await _step(4)
+
+
+func _test_dog_push_break() -> void:
+	await _load_level("res://scenes/Level_Dog_Park.tscn")
+	_player.global_position = Vector2(470.0, 488.0)
+	_player.velocity = Vector2.ZERO
+	await _step(8)
+	Input.action_press("move_right")
+	await _step(90)
+	Input.action_release("move_right")
+	await process_frame
+	_check(not current_scene.has_node("BreakableBox2"), "Ящик не сломан толканием с места")
+	_check(_player.global_position.x > 500.0, "Пёс не вышел из промежутка")
+
+
+func _test_menu_music_release() -> void:
+	change_scene_to_file("res://scenes/MainMenu.tscn")
+	for frame: int in range(4):
+		await process_frame
+	var menu: Node = current_scene
+	_check(menu.has_method("_release_music"), "MainMenu без освобождения аудио")
+	var music: AudioStreamPlayer = menu.get_node_or_null("AudioStreamPlayer") as AudioStreamPlayer
+	_check(music != null, "Нет AudioStreamPlayer в меню")
+	# В headless меню сразу сбрасывает stream, чтобы --quit не утекал PlaybackMP3.
+	if DisplayServer.get_name() == "headless":
+		_check(music.stream == null, "Headless меню не сбросило stream")
+	else:
+		_check(music.playing, "Музыка меню не стартовала")
+		menu.call("_release_music")
+		_check(music.stream == null, "Поток меню не сброшен")
+		_check(not music.playing, "Музыка меню продолжает играть")
