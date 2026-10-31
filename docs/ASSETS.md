@@ -10,8 +10,14 @@
 | `assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3` | музыка уровня кота | `lightaudio.ru` | **не подтверждена** | минус известной песни; в имени файла водяной знак сайта |
 | `assets/audio/Звук сверчков живой звук на природе.mp3` | эмбиент меню | не задокументирован | **не подтверждена** | нужен источник |
 | `assets/sprites/cat/*.png` | кадры кота (idle 2, walk 6, crawling 5, jump — в сцене) | внутренняя графика | — | авторство указывает команда |
-| `assets/environment/tileset_spooky/*.png` | тайлсет, декор, препятствия | внутренняя графика | — | 13 файлов |
 | `assets/sprites/cat/anim_cat_*.tscn` | `SpriteFrames` для кота | внутренние | — | эталон для новых анимаций |
+| `assets/sprites/dog/*.png` | кадры пса (idle 3, run 6, jump_high 4) | внутренняя графика | — | T-0010; попали в main через `e2f65ab` (#20), затем верифицированы |
+| `assets/sprites/dog/anim_dog_*.tscn` | `SpriteFrames` для пса | внутренние | — | idle / run / jump_high |
+| `assets/sprites/bird/*.png` | кадры ворона (idle 4, fly 6) | внутренняя графика | — | T-0011; 2 анимации, без dive |
+| `assets/sprites/bird/anim_bird_*.tscn` | `SpriteFrames` для ворона | внутренние | — | idle / fly |
+| `assets/sprites/gg/*.png` | спрайты призрака (ghost1..3) | внутренняя графика | — | вне T-0010/T-0011; из `e2f65ab` (#20) |
+| `assets/environment/tileset_spooky/*.png` | тайлсет, декор, препятствия | внутренняя графика | — | 13 файлов |
+| `assets/environment/halloween_props/{cat,dog,bird}_location.png` | маркеры локаций форм | внутренняя графика | — | из `e2f65ab` (#20) |
 
 ### Риск
 
@@ -51,5 +57,6 @@
 | Задача | Что добавляет |
 |---|---|
 | T-0008 | `assets/shaders/ghost_vision.gdshader` |
-| T-0010 | `assets/sprites/dog/` (3 анимации) |
-| T-0011 | `assets/sprites/bird/` (2–3 анимации) |
+| T-0010 | `assets/sprites/dog/` (3 анимации) — **done** |
+| T-0011 | `assets/sprites/bird/` (2 анимации, без dive) — **done** |
+| T-0013 | строки в этой таблице для dog/bird/gg/location |
