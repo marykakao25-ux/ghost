@@ -20,24 +20,100 @@ const _MOVEMENT_SCRIPTS: Dictionary = {
 var current_form: Form = Form.CAT
 var current_movement: Node = null
 
+var _pause_layer: CanvasLayer = null
+var _owns_pause: bool = false
+
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var form_pivot: Node2D = $FormPivot
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group("player")
+	ShapeShiftManager.register_player(self)
 	animated_sprite = $AnimatedSprite2D
+	animated_sprite.process_mode = Node.PROCESS_MODE_PAUSABLE
 	collision_shape = $CollisionShape2D
 	form_pivot = $FormPivot
 	set_form(current_form)
 
 
 func _physics_process(delta: float) -> void:
+	if get_tree().paused:
+		return
 	if current_movement != null and current_movement.has_method("move"):
 		current_movement.move(self, delta)
 	else:
 		_apply_default_gravity(delta)
 		move_and_slide()
+
+
+func _exit_tree() -> void:
+	if _owns_pause:
+		get_tree().paused = false
+	if ShapeShiftManager.active_player == self:
+		ShapeShiftManager.active_player = null
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if ShapeShiftManager.get_player() != self:
+		return
+	if event.is_action_pressed("pause"):
+		_toggle_pause()
+		get_viewport().set_input_as_handled()
+		return
+	if get_tree().paused:
+		return
+	var requested_form: Form = current_form
+	if event.is_action_pressed("shapeshift_cat"):
+		requested_form = Form.CAT
+	elif event.is_action_pressed("shapeshift_dog"):
+		requested_form = Form.DOG
+	elif event.is_action_pressed("shapeshift_bird"):
+		requested_form = Form.BIRD
+	elif event.is_action_pressed("shapeshift"):
+		requested_form = _get_next_unlocked_form()
+	else:
+		return
+	get_viewport().set_input_as_handled()
+	if ShapeShiftManager.is_form_unlocked(requested_form):
+		ShapeShiftManager.change_form(requested_form)
+
+
+func _get_next_unlocked_form() -> Form:
+	for offset: int in range(1, Form.size()):
+		var candidate: Form = ((int(current_form) + offset) % Form.size()) as Form
+		if ShapeShiftManager.is_form_unlocked(candidate):
+			return candidate
+	return current_form
+
+
+func _toggle_pause() -> void:
+	if _pause_layer == null:
+		_create_pause_overlay()
+	get_tree().paused = not get_tree().paused
+	_owns_pause = get_tree().paused
+	_pause_layer.visible = get_tree().paused
+
+
+func _create_pause_overlay() -> void:
+	_pause_layer = CanvasLayer.new()
+	_pause_layer.name = "PauseOverlay"
+	_pause_layer.layer = 100
+	add_child(_pause_layer)
+	var shade: ColorRect = ColorRect.new()
+	shade.name = "Shade"
+	shade.color = Color(0.0, 0.0, 0.0, 0.7)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_pause_layer.add_child(shade)
+	var label: Label = Label.new()
+	label.text = "Пауза\nEsc — продолжить"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.add_child(label)
 
 
 func set_form(form: Form) -> void:
@@ -109,5 +185,6 @@ func _swap_movement(form: Form) -> void:
 	var script: GDScript = _MOVEMENT_SCRIPTS[form] as GDScript
 	var movement: Node = script.new() as Node
 	movement.name = "Movement"
+	movement.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(movement)
 	current_movement = movement
