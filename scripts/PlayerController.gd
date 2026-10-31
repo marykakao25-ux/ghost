@@ -25,6 +25,7 @@ var current_movement: Node = null
 
 var _pause_layer: CanvasLayer = null
 var _owns_pause: bool = false
+var _collision_pending: bool = false
 var _texture_bounds: Dictionary[Texture2D, Rect2] = {}
 var _effects_enabled: bool = true
 
@@ -49,6 +50,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if get_tree().paused:
 		return
+	if _collision_pending and not _movement_is_crawling():
+		_apply_form_collision()
 	if current_movement != null and current_movement.has_method("move"):
 		current_movement.move(self, delta)
 	else:
@@ -195,17 +198,32 @@ func _sync_atmosphere() -> void:
 	get_tree().call_group("level_presentation", "set_atmosphere_enabled", enabled)
 
 
-func set_form(form: Form) -> void:
+func set_form(form: Form) -> bool:
 	_ensure_child_refs()
-	if not can_set_form(form):
-		return
-	var feet_y: float = _get_collider_bottom_y()
+	if form < 0 or form >= Form.size():
+		return false
 	current_form = form
-	_apply_collision_for_form(form)
-	_align_feet_to(feet_y)
+	# Управление и спрайт меняются всегда: отказ из-за пересечения геометрии
+	# не должен оставлять игрока без компонента движения (см. T-0034).
 	_swap_movement(form)
+	_apply_form_collision()
 	_update_visual()
 	form_changed.emit(form)
+	return true
+
+
+func _apply_form_collision() -> void:
+	if not can_set_form(current_form):
+		_collision_pending = true
+		return
+	_collision_pending = false
+	var feet_y: float = _get_collider_bottom_y()
+	_apply_collision_for_form(current_form)
+	_align_feet_to(feet_y)
+
+
+func _movement_is_crawling() -> bool:
+	return current_movement is MovementCat and (current_movement as MovementCat).is_crawling
 
 
 func can_set_form(form: int) -> bool:

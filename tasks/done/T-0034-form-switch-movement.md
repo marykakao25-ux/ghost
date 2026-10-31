@@ -63,25 +63,33 @@ T-0028/T-0033 (история вселения).
 
 ## Acceptance criteria
 
-- [ ] На cat/dog/bird уровнях после входа игрока `current_movement != null`
+- [x] На cat/dog/bird уровнях после входа игрока `current_movement != null`
       без каких-либо ручных доводок из тестов
-- [ ] Зажатый `move_right` сдвигает игрока вперёд на каждом из трёх уровней
+- [x] Зажатый `move_right` сдвигает игрока вперёд на каждом из трёх уровней
       сразу после старта и после каждой смены формы (регрессия)
-- [ ] `ShapeShiftManager.current_form` равен фактической форме игрока после
+- [x] `ShapeShiftManager.current_form` равен фактической форме игрока после
       любой попытки смены, включая отказ
-- [ ] Отказ смены из-за overlap больше не лишает игрока управления: движение
+- [x] Отказ смены из-за overlap больше не лишает игрока управления: движение
       доступно, форма коллизии догоняется в ближайшие кадры
-- [ ] `pwsh -File scripts/agent/verify.ps1`, оба SceneTree-теста — зелёные;
+- [x] `pwsh -File scripts/agent/verify.ps1`, оба SceneTree-теста — зелёные;
       `godot --headless --quit` без SCRIPT ERROR
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
-- [ ] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
-- [ ] `godot --path . --headless --script scripts/tests/demo_regression.gd`
+- [x] `pwsh -File scripts/agent/verify.ps1`
+- [x] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
+- [x] `godot --path . --headless --script scripts/tests/demo_regression.gd`
 - [ ] Ручной прогон: меню → интро (вселение в кота) → walkthrough до хоста-пса
 
 ## Заметки и историю
 
 <!-- Сюда агент дописывает ход работы: что сделано, что осталось, что заблокировало. -->
 - 2026-10-31T21:40:27Z — работа завершена владельцем mixey1201, ветка task/T-0034-form-switch-movement, ожидает PR
+- 2026-11-01, `task/T-0034-form-switch-movement` (mixey1201): `set_form()` теперь
+  всегда меняет компонент движения и спрайт; смена формы коллайдера откладывается
+  (`_collision_pending`) и перепроверяется в `_physics_process`, пока ползание кота
+  не удерживает собственный коллайдер. `change_form()` синхронит `current_form` с
+  фактической формой игрока; инлайн-скрипты Dog/Bird уровней больше не пишут
+  `current_form` напрямую. Из `_load_level` удалён маскирующий ручной патч.
+  Red/green: на старом коде новая регрессия валится (9 провалов), на новом — зелёно.
+  Ручной прогон игры агенту недоступен (headless), пункт остаётся человеку.

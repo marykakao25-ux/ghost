@@ -42,10 +42,9 @@ func _start_as_dog() -> void:
 	ShapeShiftManager.change_form(PlayerController.Form.DOG)
 	var player: Node = ShapeShiftManager.get_player()
 	if player != null and player.has_method(\"set_form\"):
-		# change_form no-op если current_form уже DOG после load_progress.
+		# Страховка рассинхрона: менеджер мог «запомнить» DOG раньше игрока.
 		if int(player.get(\"current_form\")) != PlayerController.Form.DOG:
 			player.call(\"set_form\", PlayerController.Form.DOG)
-			ShapeShiftManager.current_form = PlayerController.Form.DOG
 "
 
 [sub_resource type="GDScript" id="GDScript_checkpoint"]

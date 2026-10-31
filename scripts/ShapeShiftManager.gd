@@ -59,6 +59,7 @@ func get_player() -> Node:
 
 func change_form(new_form: int) -> bool:
 	## Меняет форму: один эффект вспышки, set_form у игрока, сигнал form_changed.
+	## current_form менеджера отражает фактическую форму игрока, а не намерение.
 	var player: Node = _resolve_player()
 	if player == null:
 		push_warning("ShapeShiftManager: нет игрока — сначала register_player().")
@@ -66,16 +67,15 @@ func change_form(new_form: int) -> bool:
 	if not player.has_method("set_form"):
 		push_warning("ShapeShiftManager: у игрока нет метода set_form().")
 		return false
-	if new_form == current_form:
-		return false
-	if player.has_method("can_set_form") and not bool(player.call("can_set_form", new_form)):
+	if new_form == current_form and int(player.get("current_form")) == new_form:
 		return false
 
 	var from_form: int = current_form
 	play_possession_fx(player)
-	current_form = new_form
+	if not bool(player.call("set_form", new_form)):
+		return false
 	_unlock_form(new_form)
-	player.set_form(new_form)
+	current_form = new_form
 	form_changed.emit(from_form, new_form)
 	return true
 
