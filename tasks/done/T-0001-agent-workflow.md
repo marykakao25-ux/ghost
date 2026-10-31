@@ -1,7 +1,7 @@
 ---
 id: T-0001
 title: Инфраструктура ИИ-процесса (AGENTS.md, docs, скрипты агентов)
-status: in-progress
+status: done
 form: infra
 priority: high
 owner: cline
@@ -107,4 +107,5 @@ Ruleset для `main` (запрет force-push и удаления, линейн
 - Оба стража отработали вживую: `agent-guard` на PR #9 (success), `claims-guard`
   на merge-push в `main` (success, без отката — наблюдательный режим подтверждён).
 - Висящая ветка `chore/agent-workflow-fixes` удалена с origin после merge.
+- Файл лежал в `tasks/done/` со `status: in-progress` — `status.ps1` показывал задачу как активную, а `verify.ps1` считал это ошибкой (`файл в tasks/done/, но status=in-progress`). Статус приведён к `done`.
 
