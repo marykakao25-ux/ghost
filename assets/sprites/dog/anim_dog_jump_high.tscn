@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://o7r4x6vwpem4"]
+
+[ext_resource type="Texture2D" uid="uid://pqyjobqn1pfi" path="res://assets/sprites/dog/dog_jump_high1.png" id="1_0hs1r"]
+[ext_resource type="Texture2D" uid="uid://due310ef0iqp1" path="res://assets/sprites/dog/dog_jump_high2.png" id="2_3f7da"]
+[ext_resource type="Texture2D" uid="uid://ciycs4ylfxygc" path="res://assets/sprites/dog/dog_jump_high3.png" id="3_f8iqj"]
+[ext_resource type="Texture2D" uid="uid://c1vtgysd8lxlv" path="res://assets/sprites/dog/dog_jump_high4.png" id="4_f0ysd"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qfjsv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_0hs1r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_3f7da")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_f8iqj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_f0ysd")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="anim_dog_jump_high" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_qfjsv")
+frame = 3
+frame_progress = 0.439486
