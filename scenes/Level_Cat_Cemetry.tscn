@@ -147,8 +147,8 @@ position = Vector2(520, 200)
 shape = SubResource("RectangleShape2D_overhang")
 
 [node name="CrawlDecor" type="Sprite2D" parent="CrawlOverhang"]
-position = Vector2(0, 20)
-scale = Vector2(0.22, 0.14)
+position = Vector2(0, 120)
+scale = Vector2(0.35, 0.28)
 texture = ExtResource("8_box")
 
 [node name="SpawnMarker" type="Marker2D" parent="."]
@@ -196,8 +196,21 @@ shape = SubResource("RectangleShape2D_checkpoint")
 
 [node name="PuddleDecor" type="Sprite2D" parent="."]
 position = Vector2(1900, 530)
-scale = Vector2(0.18, 0.1)
+scale = Vector2(0.35, 0.22)
 texture = ExtResource("7_puddle")
+z_index = 2
+
+[node name="BoxProp" type="Sprite2D" parent="."]
+position = Vector2(980, 500)
+scale = Vector2(0.28, 0.28)
+texture = ExtResource("8_box")
+z_index = 2
+
+[node name="PuddleDecor2" type="Sprite2D" parent="."]
+position = Vector2(2200, 530)
+scale = Vector2(0.32, 0.2)
+texture = ExtResource("7_puddle")
+z_index = 2
 
 [node name="ObstacleHazard" parent="." instance=ExtResource("4_obstacle")]
 position = Vector2(1900, 514)

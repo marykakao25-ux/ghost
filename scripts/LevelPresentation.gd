@@ -55,7 +55,8 @@ func _ready() -> void:
 	var level: Node = get_parent()
 	_player = level.get_node("Player") as PlayerController
 	for node: Node in level.get_children():
-		if node is Sprite2D:
+		# Старый тайловый декор прячем; пропы tileset_spooky (лужи, брёвна, ямы…) оставляем.
+		if node is Sprite2D and str(node.name).begins_with("Tile"):
 			(node as Sprite2D).hide()
 		if node is CollisionObject2D and not node.is_in_group("breakable"):
 			var collider: CollisionShape2D = node.get_node_or_null("CollisionShape2D")
