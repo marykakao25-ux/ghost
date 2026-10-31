@@ -10,13 +10,10 @@
 
 .EXAMPLE
 pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner cline
-
-.EXAMPLE
-pwsh -File scripts/agent/release.ps1 -Task T-0002,T-0004 -Owner cline
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)][string[]]$Task,
+    [Parameter(Mandatory)][string]$Task,
     [Parameter(Mandatory)][string]$Owner,
     [switch]$Abort   # закрыть задачу как «отменена»: изменения не вливаются
 )
@@ -30,20 +27,6 @@ function Fail {
     Write-Err $Message
     exit 1
 }
-
-if ($Task.Count -gt 1) {
-    # Несколько задач закрываются по очереди: так проще проверить каждую и не смешать коммиты.
-    $scriptPath = $PSCommandPath
-    foreach ($one in $Task) {
-        Write-Step "Закрытие $one"
-        $childArgs = @('-NoProfile', '-File', $scriptPath, '-Task', $one, '-Owner', $Owner)
-        if ($Abort) { $childArgs += '-Abort' }
-        & pwsh @childArgs
-        if ($LASTEXITCODE -ne 0) { Fail "Задача $one не закрыта (код $LASTEXITCODE). Остальные не тронуты." }
-    }
-    exit 0
-}
-$Task = $Task[0]
 
 Write-Step "1. Чтение задачи $Task"
 $taskPath = Find-Task -Id $Task
