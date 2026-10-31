@@ -1,12 +1,12 @@
 ---
 id: T-0017
 title: MovementDog — анимации через preload anim_dog_*.tscn (как у кота)
-status: todo
+status: claimed
 form: dog
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:35:01Z
+branch: task/T-0017-fix-dog-animations
 paths:
   - scripts/MovementDog.gd
 depends_on: [T-0006, T-0010]
