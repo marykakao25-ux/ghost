@@ -1,7 +1,7 @@
 ---
 id: T-0024
 title: Переходы между уровнями — LevelExit и связка кот→пёс→ворон
-status: claimed
+status: done
 form: infra
 priority: medium
 owner: opencode
@@ -50,3 +50,4 @@ created: 2026-10-31
 
 ## Заметки и история
 - 2026-10-31T18:01:26Z — лок снят принудительно (был owner=opencode): Преждевременный захват: T-0022/T-0023 ещё не готовы; работы нет, освобождаю сцены для цепочки B
+- 2026-10-31T18:16:26Z — работа завершена владельцем opencode, ветка task/T-0024-level-flow-transitions, ожидает PR
