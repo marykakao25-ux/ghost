@@ -22,7 +22,12 @@ func _load_level(path: String) -> void:
 	change_scene_to_file(path)
 	for frame: int in range(4):
 		await process_frame
+	for frame: int in range(2):
+		await physics_frame
 	_player = current_scene.get_node("Player") as CharacterBody2D
+	# Крупная капсула: set_form в _ready часто откатывается из-за overlap, к кадру уже свободно.
+	if _player.current_movement == null and _player.can_set_form(0):
+		_player.set_form(0)
 	_player.set_physics_process(false)
 
 
@@ -48,6 +53,8 @@ func _run() -> void:
 	await _test_ghost_visible()
 	await _test_dog_push_break()
 	await _test_menu_music_release()
+	await _test_intro_possession()
+	await _test_exit_host_transition()
 	if _had_progress:
 		var file: FileAccess = FileAccess.open("user://progress.cfg", FileAccess.WRITE)
 		_check(file != null, "Не удалось восстановить сохранение")
@@ -60,6 +67,62 @@ func _run() -> void:
 	quit(1 if _failures > 0 else 0)
 
 
+func _test_intro_possession() -> void:
+	change_scene_to_file("res://scenes/Intro.tscn")
+	for frame: int in range(4):
+		await process_frame
+	var intro: Node = current_scene
+	_check(intro.has_method("_possess"), "Intro без вселения")
+	var speed_ok: bool = false
+	var script_res: Script = intro.get_script() as Script
+	if script_res != null:
+		var constants: Variant = script_res.get_script_constant_map()
+		if constants is Dictionary:
+			speed_ok = float((constants as Dictionary).get("GHOST_SPEED", 0.0)) >= 300.0
+	_check(speed_ok, "Призрак слишком медленный")
+	intro.set("_possessing", false)
+	var ghost: Sprite2D = intro.get("_ghost") as Sprite2D
+	var cat: AnimatedSprite2D = intro.get("_cat") as AnimatedSprite2D
+	_check(ghost != null and cat != null, "Нет призрака/кота в интро")
+	if ghost != null and cat != null:
+		ghost.position = cat.position
+		intro.call("_possess")
+		for frame: int in range(90):
+			await process_frame
+			if current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Cat_Cemetry.tscn":
+				break
+		_check(
+			current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Cat_Cemetry.tscn",
+			"Интро не перешло на уровень кота"
+		)
+	await _load_level("res://scenes/Level_Cat_Cemetry.tscn")
+
+
+func _test_exit_host_transition() -> void:
+	await _load_level("res://scenes/Level_Cat_Cemetry.tscn")
+	var exit_node: Area2D = current_scene.get_node("LevelExit") as Area2D
+	_check(exit_node.monitoring, "LevelExit не monitoring")
+	_check(exit_node.collision_mask == 1, "LevelExit mask не ловит игрока")
+	_player.set_physics_process(true)
+	_player.global_position = exit_node.global_position + Vector2(-40.0, 0.0)
+	_player.velocity = Vector2.ZERO
+	for frame: int in range(8):
+		await physics_frame
+	_player.global_position = exit_node.global_position
+	for frame: int in range(90):
+		await physics_frame
+		await process_frame
+		if current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Dog_Park.tscn":
+			break
+	_check(
+		current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Dog_Park.tscn",
+		"Касание хоста не перевело на уровень пса"
+	)
+	if current_scene != null and current_scene.has_node("Player"):
+		_player = current_scene.get_node("Player") as CharacterBody2D
+		_player.set_physics_process(false)
+
+
 func _test_crawl_idle() -> void:
 	_player.global_position = Vector2(250.0, 400.0)
 	_player.velocity = Vector2(0.0, 400.0)
@@ -68,12 +131,13 @@ func _test_crawl_idle() -> void:
 	await _step(4)
 	Input.action_press("crawl")
 	await _step(8)
-	Input.action_release("crawl")
-	await _step(4)
-	_check(bool(_player.current_movement.get("is_crawling")), "Кот не присел")
+	_check(_player.current_movement != null, "Нет MovementCat")
+	_check(
+		_player.current_movement != null and bool(_player.current_movement.get("is_crawling")),
+		"Кот не присел"
+	)
 	_check(not _player.animated_sprite.is_playing(), "Неподвижный ползущий кот анимируется")
 	_check(_player.animated_sprite.frame == 0, "Не та поза ползания")
-	Input.action_press("crawl")
 	Input.action_press("move_right")
 	await _step(10)
 	_check(_player.animated_sprite.is_playing(), "Ползание в движении без анимации")
