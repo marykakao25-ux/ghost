@@ -1,12 +1,12 @@
 ---
 id: T-0009
 title: Препятствия и чекпоинты (Obstacle.gd)
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:10:59Z
+branch: task/T-0009-obstacles
 paths:
   - scripts/Obstacle.gd
   - scenes/Obstacle.tscn
