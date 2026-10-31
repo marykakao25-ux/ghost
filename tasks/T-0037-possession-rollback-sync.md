@@ -1,12 +1,12 @@
 ---
 id: T-0037
 title: Рассинхрон менеджера и игрока при неудачном переходе LevelExit
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T02:08:04Z
+branch: task/T-0037-possession-rollback-sync
 paths:
   - scripts/LevelExit.gd
   - scripts/ShapeShiftManager.gd
