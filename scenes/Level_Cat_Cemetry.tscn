@@ -1,7 +1,54 @@
-[gd_scene load_steps=3 format=3 uid="uid://bpjnsveiytj2n"]
+[gd_scene load_steps=16 format=3 uid="uid://bpjnsveiytj2n"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_t7pfn"]
 [ext_resource type="Texture2D" uid="uid://dw270u10it62u" path="res://assets/environment/tileset_spooky/tile.png" id="2_fcwye"]
+[ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
+[ext_resource type="Script" path="res://scripts/LevelDirector.gd" id="5_director"]
+[ext_resource type="Script" uid="uid://cxgdsjtbgi67p" path="res://scripts/GhostVisionShader.gd" id="6_vision"]
+[ext_resource type="Texture2D" uid="uid://dllr605tvcg11" path="res://assets/environment/tileset_spooky/puddle.png" id="7_puddle"]
+[ext_resource type="Texture2D" uid="uid://c4rxiv7yff6xj" path="res://assets/environment/tileset_spooky/box_to_cat.png" id="8_box"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(1900, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_overhang"]
+size = Vector2(140, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_crawl_sensor"]
+size = Vector2(140, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
+size = Vector2(48, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
+size = Vector2(96, 24)
+
+[sub_resource type="GDScript" id="GDScript_setup"]
+script/source = "extends Node
+
+func _ready() -> void:
+	ShapeShiftManager.unlock_form(PlayerController.Form.DOG)
+	ShapeShiftManager.unlock_form(PlayerController.Form.BIRD)
+	# Сброс сохранённого чекпоинта, чтобы респавн шёл на спавн уровня.
+	ShapeShiftManager.set_checkpoint(Vector2.ZERO)
+"
+
+[sub_resource type="GDScript" id="GDScript_checkpoint"]
+script/source = "extends Area2D
+
+@export var director_path: NodePath = ^\"../LevelDirector\"
+
+func _ready() -> void:
+	body_entered.connect(_on_body_entered)
+
+func _on_body_entered(body: Node2D) -> void:
+	if not body.is_in_group(\"player\"):
+		return
+	var director: Node = get_node_or_null(director_path)
+	if director != null and director.has_method(\"set_checkpoint\"):
+		director.call(\"set_checkpoint\", global_position)
+"
 
 [node name="LevelCatCemetry" type="Node2D"]
 
@@ -83,3 +130,83 @@ position = Vector2(1800, 649)
 rotation = -0.0733038
 scale = Vector2(0.414167, 0.35125)
 texture = ExtResource("2_fcwye")
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(900, 560)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="CrawlOverhang" type="StaticBody2D" parent="."]
+position = Vector2(520, 450)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CrawlOverhang"]
+shape = SubResource("RectangleShape2D_overhang")
+
+[node name="CrawlDecor" type="Sprite2D" parent="CrawlOverhang"]
+position = Vector2(0, 20)
+scale = Vector2(0.22, 0.14)
+texture = ExtResource("8_box")
+
+[node name="SpawnMarker" type="Marker2D" parent="."]
+position = Vector2(120, 490)
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(120, 490)
+
+[node name="LevelDirector" type="Node" parent="."]
+script = ExtResource("5_director")
+player_path = NodePath("../Player")
+spawn_marker = NodePath("../SpawnMarker")
+
+[node name="LevelSetup" type="Node" parent="."]
+script = SubResource("GDScript_setup")
+
+[node name="GhostVision" type="CanvasLayer" parent="."]
+script = ExtResource("6_vision")
+
+[node name="ObstacleCrawl" parent="." instance=ExtResource("4_obstacle")]
+position = Vector2(520, 502)
+scale = Vector2(4.375, 1.125)
+obstacle_type = 0
+allowed_forms = Array[String](["cat"])
+
+[node name="CollisionShape2D" parent="ObstacleCrawl"]
+shape = SubResource("RectangleShape2D_crawl_sensor")
+
+[node name="Checkpoint1" type="Area2D" parent="."]
+position = Vector2(780, 460)
+collision_layer = 0
+script = SubResource("GDScript_checkpoint")
+director_path = NodePath("../LevelDirector")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
+shape = SubResource("RectangleShape2D_checkpoint")
+
+[node name="Checkpoint2" type="Area2D" parent="."]
+position = Vector2(1400, 460)
+collision_layer = 0
+script = SubResource("GDScript_checkpoint")
+director_path = NodePath("../LevelDirector")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
+shape = SubResource("RectangleShape2D_checkpoint")
+
+[node name="PuddleDecor" type="Sprite2D" parent="."]
+position = Vector2(1100, 530)
+scale = Vector2(0.18, 0.1)
+texture = ExtResource("7_puddle")
+
+[node name="ObstacleHazard" parent="." instance=ExtResource("4_obstacle")]
+position = Vector2(1100, 510)
+obstacle_type = 3
+allowed_forms = Array[String]([])
+
+[node name="CollisionShape2D" parent="ObstacleHazard"]
+shape = SubResource("RectangleShape2D_hazard")
+
+[node name="ObstacleCrawl2" parent="." instance=ExtResource("4_obstacle")]
+position = Vector2(1550, 502)
+scale = Vector2(3.5, 1.125)
+obstacle_type = 0
+allowed_forms = Array[String](["cat"])
