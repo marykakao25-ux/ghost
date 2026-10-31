@@ -31,6 +31,21 @@ if ($SelfTest) {
     Write-Step 'Самотест механизма задач'
     $fail = 0
 
+    # Регресс-тест: путь к корню репозитория не должен зависеть от разделителя ОС.
+    # Именно '..\..' ронял verify.ps1 в CI на ubuntu-latest.
+    $root = Get-RepoRoot
+    if (Test-Path -LiteralPath (Join-Path $root 'project.godot')) {
+        Write-Ok "корень репозитория определён: $root"
+    }
+    else {
+        Add-Error "Get-RepoRoot вернул '$root', где нет project.godot (проблема с разделителем пути)."
+        $fail++
+    }
+    if ($root -match '\\\.\.\\') {
+        Add-Error 'в пути к корню остался обратный слэш как разделитель — сломается на Linux.'
+        $fail++
+    }
+
     $cases = @(
         @{ A = 'scripts/MovementCat.gd'; B = 'scripts/MovementCat.gd'; Expect = $true }
         @{ A = 'assets/sprites/cat'; B = 'assets/sprites/cat/cat_idle1.png'; Expect = $true }
