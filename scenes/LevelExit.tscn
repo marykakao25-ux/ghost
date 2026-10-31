@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/LevelExit.gd" id="1_e2d68"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vul8o"]
+size = Vector2(64, 120)
+
+[node name="LevelExit" type="Area2D" unique_id=1474334457]
+collision_layer = 0
+monitorable = false
+script = ExtResource("1_e2d68")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=78819191]
+shape = SubResource("RectangleShape2D_vul8o")
+
+[node name="Glow" type="Polygon2D" parent="." unique_id=1752520634]
+color = Color(0.25, 0.95, 0.8, 0.35)
+polygon = PackedVector2Array(-28, -60, 28, -60, 28, 60, -28, 60)
+
+[node name="Label" type="Label" parent="." unique_id=919857862]
+offset_left = -110.0
+offset_top = -100.0
+offset_right = 110.0
+offset_bottom = -64.0
+theme_override_font_sizes/font_size = 22
+text = "Выход →"
+horizontal_alignment = 1

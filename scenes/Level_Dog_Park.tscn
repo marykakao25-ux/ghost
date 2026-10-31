@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://lfw1nxo75sy"]
+[gd_scene load_steps=16 format=3 uid="uid://lfw1nxo75sy"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_mhn6r"]
 [ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="2_player"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://ba8qicf0eu73u" path="res://assets/environment/tileset_spooky/grass_to_dog.png" id="6_grass"]
 [ext_resource type="Texture2D" uid="uid://174iuerhpdyj" path="res://assets/environment/tileset_spooky/log.png" id="7_log"]
 [ext_resource type="Texture2D" uid="uid://cj4dvrw7j5sgr" path="res://assets/environment/tileset_spooky/pit.png" id="8_pit"]
+[ext_resource type="PackedScene" path="res://scenes/LevelExit.tscn" id="9_exit"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(1900, 80)
@@ -172,3 +173,9 @@ allowed_forms = Array[String]([])
 
 [node name="CollisionShape2D" parent="ObstacleHazard"]
 shape = SubResource("RectangleShape2D_hazard")
+
+[node name="LevelExit" parent="." instance=ExtResource("9_exit")]
+position = Vector2(1730, 460)
+next_scene = "res://scenes/Level_Bird_Rooftops.tscn"
+unlock_form = 2
+exit_text = "К крышам →"
