@@ -1,12 +1,12 @@
 ---
 id: T-0028
 title: Устранить застревание, добавить выход из паузы, вселение и умеренные эффекты
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T23:00:24Z
+branch: task/T-0028-interaction-possession-polish
 paths:
   - scripts/PlayerController.gd
   - scripts/MovementCat.gd
