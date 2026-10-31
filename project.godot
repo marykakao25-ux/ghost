@@ -19,6 +19,10 @@ config/description="2D-платформер: призрак меняет фор�
 run/main_scene="uid://cv7qr47g7l5ej"
 config/features=PackedStringArray("4.7")
 
+[autoload]
+
+ShapeShiftManager="*res://scripts/ShapeShiftManager.gd"
+
 [display]
 
 window/size/viewport_width=1800
