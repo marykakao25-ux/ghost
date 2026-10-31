@@ -1,12 +1,12 @@
 ---
 id: T-0024
 title: Переходы между уровнями — LevelExit и связка кот→пёс→ворон
-status: claimed
+status: todo
 form: infra
 priority: medium
-owner: opencode
-lease_until: 2026-10-31T22:00:51Z
-branch: task/T-0024-level-flow-transitions
+owner: null
+lease_until: null
+branch: null
 paths:
   - scripts/LevelExit.gd
   - scenes/LevelExit.tscn
@@ -49,3 +49,4 @@ created: 2026-10-31
 - [ ] Ручной прогон трёх переходов (можно чит-телепортом к Exit)
 
 ## Заметки и история
+- 2026-10-31T18:01:26Z — лок снят принудительно (был owner=opencode): Преждевременный захват: T-0022/T-0023 ещё не готовы; работы нет, освобождаю сцены для цепочки B
