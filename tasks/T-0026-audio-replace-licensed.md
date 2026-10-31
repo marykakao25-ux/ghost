@@ -1,12 +1,12 @@
 ---
 id: T-0026
 title: Заменить аудио без лицензии на свободные треки
-status: todo
+status: claimed
 form: audio
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T22:50:15Z
+branch: task/T-0026-audio-replace-licensed
 paths:
   - assets/audio/
   - docs/ASSETS.md
