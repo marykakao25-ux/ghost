@@ -1,9 +1,50 @@
-[gd_scene load_steps=2 format=3 uid="uid://cv7qr47g7l5ej"]
+[gd_scene load_steps=3 format=3 uid="uid://cv7qr47g7l5ej"]
 
 [ext_resource type="AudioStream" uid="uid://c8tw0hlttjo7k" path="res://assets/audio/Звук сверчков живой звук на природе.mp3" id="1_yqorp"]
+[ext_resource type="Script" path="res://scenes/MainMenu.gd" id="2_menu"]
 
 [node name="MainMenu" type="Node2D"]
+process_mode = 3
+script = ExtResource("2_menu")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("1_yqorp")
 autoplay = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="CenterContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Buttons" type="VBoxContainer" parent="CanvasLayer/UI/Center"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PlayButton" type="Button" parent="CanvasLayer/UI/Center/Buttons"]
+custom_minimum_size = Vector2(280, 48)
+layout_mode = 2
+text = "Играть"
+
+[node name="SettingsButton" type="Button" parent="CanvasLayer/UI/Center/Buttons"]
+custom_minimum_size = Vector2(280, 48)
+layout_mode = 2
+disabled = true
+text = "Настройки"
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/UI/Center/Buttons"]
+custom_minimum_size = Vector2(280, 48)
+layout_mode = 2
+text = "Выход"
