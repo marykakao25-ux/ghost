@@ -1,12 +1,12 @@
 ---
 id: T-0012
 title: Меню и главная сцена (MainMenu, пауза)
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T20:11:00Z
+branch: task/T-0012-main-menu
 paths:
   - scenes/MainMenu.tscn
   - scenes/MainMenu.gd
