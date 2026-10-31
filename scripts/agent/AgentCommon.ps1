@@ -417,15 +417,16 @@ function ConvertTo-StringArray {
     .SYNOPSIS
     Приводит значение front matter к массиву строк.
     Одиночная строка (поле с одним элементом без "- ") тоже становится массивом из одного элемента.
+    Унарная запятая перед return не даёт PowerShell развернуть одноэлементный массив в скаляр.
     #>
     param([AllowNull()]$Value)
 
-    if ($null -eq $Value) { return @() }
+    if ($null -eq $Value) { return , @() }
     if ($Value -is [string]) {
-        if ($Value.Trim() -eq '') { return @() }
-        return @($Value)
+        if ($Value.Trim() -eq '') { return , @() }
+        return , @($Value)
     }
-    return @($Value | ForEach-Object { "$_" })
+    return , @($Value | ForEach-Object { "$_" })
 }
 
 function Get-PathConflicts {
