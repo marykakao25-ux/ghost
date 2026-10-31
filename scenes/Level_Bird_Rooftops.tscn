@@ -24,7 +24,7 @@ size = Vector2(480, 40)
 size = Vector2(40, 900)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ceiling"]
-size = Vector2(1900, 40)
+size = Vector2(3700, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wind"]
 size = Vector2(280, 220)
@@ -88,7 +88,7 @@ scale = Vector2(0.6, 0.12)
 texture = ExtResource("6_tile")
 
 [node name="RoofCDecor" type="Sprite2D" parent="."]
-position = Vector2(1400, 460)
+position = Vector2(2200, 460)
 scale = Vector2(0.8, 0.12)
 texture = ExtResource("6_tile")
 
@@ -115,7 +115,7 @@ position = Vector2(780, 380)
 shape = SubResource("RectangleShape2D_roof_b")
 
 [node name="RoofC" type="StaticBody2D" parent="."]
-position = Vector2(1400, 460)
+position = Vector2(2200, 460)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RoofC"]
 shape = SubResource("RectangleShape2D_roof_c")
@@ -127,19 +127,19 @@ position = Vector2(-20, 400)
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="WallRight" type="StaticBody2D" parent="."]
-position = Vector2(1820, 400)
+position = Vector2(3620, 400)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="Ceiling" type="StaticBody2D" parent="."]
-position = Vector2(900, -20)
+position = Vector2(1800, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ceiling"]
 shape = SubResource("RectangleShape2D_ceiling")
 
 [node name="FloorBound" type="StaticBody2D" parent="."]
-position = Vector2(900, 820)
+position = Vector2(1800, 820)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FloorBound"]
 shape = SubResource("RectangleShape2D_ceiling")
@@ -205,7 +205,7 @@ director_path = NodePath("../LevelDirector")
 shape = SubResource("RectangleShape2D_checkpoint")
 
 [node name="LevelExit" parent="." instance=ExtResource("9_exit")]
-position = Vector2(1710, 350)
+position = Vector2(3400, 350)
 next_scene = "res://scenes/Finale.tscn"
 host_form = 0
 exit_text = "К свету →"

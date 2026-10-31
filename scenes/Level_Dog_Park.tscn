@@ -12,7 +12,7 @@
 [ext_resource type="Script" path="res://scripts/LevelPresentation.gd" id="10_art"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
-size = Vector2(1900, 80)
+size = Vector2(3700, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_log"]
 size = Vector2(160, 36)
@@ -112,24 +112,24 @@ scale = Vector2(0.35, 0.28)
 texture = ExtResource("6_grass")
 
 [node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2(900, 560)
+position = Vector2(1800, 560)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 shape = SubResource("RectangleShape2D_floor")
 
 [node name="LogVisual" type="Sprite2D" parent="."]
-position = Vector2(900, 500)
+position = Vector2(1600, 500)
 scale = Vector2(0.28, 0.12)
 texture = ExtResource("7_log")
 
 [node name="LogBody" type="StaticBody2D" parent="."]
-position = Vector2(900, 494)
+position = Vector2(1600, 500)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LogBody"]
 shape = SubResource("RectangleShape2D_log")
 
 [node name="PitDecor" type="Sprite2D" parent="."]
-position = Vector2(1500, 545)
+position = Vector2(2600, 545)
 scale = Vector2(0.22, 0.12)
 texture = ExtResource("8_pit")
 
@@ -154,7 +154,7 @@ position = Vector2(420, 488)
 position = Vector2(560, 488)
 
 [node name="ObstacleJump" parent="." instance=ExtResource("3_obstacle")]
-position = Vector2(900, 470)
+position = Vector2(1600, 470)
 monitoring = false
 obstacle_type = 1
 allowed_forms = Array[String](["dog"])
@@ -163,7 +163,7 @@ allowed_forms = Array[String](["dog"])
 shape = SubResource("RectangleShape2D_jump_sensor")
 
 [node name="Checkpoint1" type="Area2D" parent="."]
-position = Vector2(700, 460)
+position = Vector2(1200, 460)
 collision_layer = 0
 script = SubResource("GDScript_checkpoint")
 director_path = NodePath("../LevelDirector")
@@ -172,7 +172,7 @@ director_path = NodePath("../LevelDirector")
 shape = SubResource("RectangleShape2D_checkpoint")
 
 [node name="ObstacleHazard" parent="." instance=ExtResource("3_obstacle")]
-position = Vector2(1500, 514)
+position = Vector2(2600, 514)
 obstacle_type = 3
 allowed_forms = Array[String]([])
 
@@ -180,7 +180,7 @@ allowed_forms = Array[String]([])
 shape = SubResource("RectangleShape2D_hazard")
 
 [node name="LevelExit" parent="." instance=ExtResource("9_exit")]
-position = Vector2(1730, 460)
+position = Vector2(3480, 460)
 next_scene = "res://scenes/Level_Bird_Rooftops.tscn"
 unlock_form = 2
 host_form = 2
@@ -193,7 +193,7 @@ position = Vector2(-20, 400)
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="WallRight" type="StaticBody2D" parent="."]
-position = Vector2(1820, 400)
+position = Vector2(3620, 400)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
 shape = SubResource("RectangleShape2D_wall")

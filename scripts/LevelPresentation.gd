@@ -17,6 +17,7 @@ const OBJECTIVES: Array[String] = [
 const LEGEND_EXIT: String = "Idle-зверь справа — вселение в следующую форму"
 
 @export_enum("Кладбище", "Парк", "Крыши") var location: int = 0
+@export var level_width: float = 3600.0
 
 var _surfaces: Array[Rect2] = []
 var _hazards: Array[Rect2] = []
@@ -106,13 +107,19 @@ func _update_atmosphere_visibility() -> void:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(0.0, 0.0, 1800.0, 800.0), Color("171d30"))
+	draw_rect(Rect2(0.0, 0.0, level_width, 800.0), Color("171d30"))
 	var source: Rect2 = Rect2(0.0, 0.0, 1500.0, 600.0)
-	var sky: Rect2 = Rect2(0.0, 0.0, 1800.0, 520.0)
+	var sky: Rect2 = Rect2(0.0, 0.0, level_width, 520.0)
 	if location == 2:
 		source.size.y = 800.0
 		sky.size.y = 800.0
-	draw_texture_rect_region(BACKGROUNDS[location], sky, source, Color(0.8, 0.84, 0.9))
+	# Повторяем фон по ширине длинного уровня.
+	var tile_w: float = 1800.0
+	var bg_x: float = 0.0
+	while bg_x < level_width:
+		var slice: Rect2 = Rect2(bg_x, sky.position.y, minf(tile_w, level_width - bg_x), sky.size.y)
+		draw_texture_rect_region(BACKGROUNDS[location], slice, source, Color(0.8, 0.84, 0.9))
+		bg_x += tile_w
 	for surface: Rect2 in _surfaces:
 		var fill: Color = Color("36354b") if location != 1 else Color("463e38")
 		var rect: Rect2 = surface
@@ -163,7 +170,7 @@ func _create_hud() -> void:
 	_progress = ProgressBar.new()
 	_progress.position = Vector2(1210.0, 55.0)
 	_progress.size = Vector2(520.0, 12.0)
-	_progress.max_value = 1800.0
+	_progress.max_value = level_width
 	_progress.show_percentage = false
 	_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(_progress)

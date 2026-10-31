@@ -94,6 +94,10 @@ func _test_visuals() -> void:
 		var collider: CollisionShape2D = area.get_node("CollisionShape2D")
 		_check(collider.shape.get_rect().size == Vector2(280.0, 40.0), "Размер прохода")
 	_check(current_scene.has_node("Presentation/LevelHUD"), "Нет оформления/подсказок")
+	_check(_player.get_node_or_null("Camera2D") != null, "Нет Camera2D")
+	var director: Node = current_scene.get_node("LevelDirector")
+	_check(float(director.get("level_width")) >= 3500.0, "Уровень не удлинён")
+	_check(current_scene.get_node("LevelExit").global_position.x > 3000.0, "Выход не в конце длинного уровня")
 
 
 func _test_crawl() -> void:
@@ -126,7 +130,7 @@ func _test_crawl() -> void:
 func _test_respawn() -> void:
 	var director: Node = current_scene.get_node("LevelDirector")
 	director.set_checkpoint(Vector2(780.0, 460.0))
-	_player.global_position = Vector2(1100.0, 498.0)
+	_player.global_position = Vector2(1900.0, 498.0)
 	_player.velocity = Vector2.ZERO
 	for frame: int in range(8):
 		await physics_frame
