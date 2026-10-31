@@ -1,12 +1,12 @@
 ---
 id: T-0008
 title: Ночное зрение кота — 2D-шейдер и маска темноты
-status: todo
+status: claimed
 form: cat
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T20:35:48Z
+branch: task/T-0008-night-vision
 paths:
   - scripts/GhostVisionShader.gd
   - assets/shaders
