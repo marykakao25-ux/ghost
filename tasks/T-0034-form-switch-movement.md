@@ -1,12 +1,12 @@
 ---
 id: T-0034
 title: Движение без components после вселения — set_form молча отказывается из-за overlap
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T01:30:53Z
+branch: task/T-0034-form-switch-movement
 paths:
   - scripts/PlayerController.gd
   - scripts/ShapeShiftManager.gd
