@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bpjnsveiytj2n"]
+[gd_scene load_steps=17 format=3 uid="uid://bpjnsveiytj2n"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_t7pfn"]
 [ext_resource type="Texture2D" uid="uid://dw270u10it62u" path="res://assets/environment/tileset_spooky/tile.png" id="2_fcwye"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cxgdsjtbgi67p" path="res://scripts/GhostVisionShader.gd" id="6_vision"]
 [ext_resource type="Texture2D" uid="uid://dllr605tvcg11" path="res://assets/environment/tileset_spooky/puddle.png" id="7_puddle"]
 [ext_resource type="Texture2D" uid="uid://c4rxiv7yff6xj" path="res://assets/environment/tileset_spooky/box_to_cat.png" id="8_box"]
+[ext_resource type="PackedScene" path="res://scenes/LevelExit.tscn" id="9_exit"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(1900, 80)
@@ -28,8 +29,6 @@ size = Vector2(96, 24)
 script/source = "extends Node
 
 func _ready() -> void:
-	ShapeShiftManager.unlock_form(PlayerController.Form.DOG)
-	ShapeShiftManager.unlock_form(PlayerController.Form.BIRD)
 	# Сброс сохранённого чекпоинта, чтобы респавн шёл на спавн уровня.
 	ShapeShiftManager.set_checkpoint(Vector2.ZERO)
 "
@@ -210,3 +209,9 @@ position = Vector2(1550, 502)
 scale = Vector2(3.5, 1.125)
 obstacle_type = 0
 allowed_forms = Array[String](["cat"])
+
+[node name="LevelExit" parent="." instance=ExtResource("9_exit")]
+position = Vector2(1730, 460)
+next_scene = "res://scenes/Level_Dog_Park.tscn"
+unlock_form = 1
+exit_text = "В парк →"
