@@ -1,12 +1,12 @@
 ---
 id: T-0005
 title: Кот — физика движения и подползание (MovementCat)
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: cursor
+lease_until: 2026-10-31T20:30:36Z
+branch: task/T-0005-cat-movement
 paths:
   - scripts/MovementCat.gd
 depends_on: [T-0003]
