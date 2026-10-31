@@ -37,17 +37,18 @@ created: 2026-10-31
 
 ## Acceptance criteria
 
-- [ ] Autoload виден в Project Settings → Globals
-- [ ] Смена формы проигрывает эффект ровно один раз
-- [ ] `trigger_level_transition` грузит указанную сцену и не падает при отсутствии файла
+- [x] Autoload виден в Project Settings → Globals
+- [x] Смена формы проигрывает эффект ровно один раз
+- [x] `trigger_level_transition` грузит указанную сцену и не падает при отсутствии файла
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
-- [ ] `godot --path . --headless --quit` без ошибок
+- [x] `bash scripts/agent/verify.sh` (pwsh на Void Linux нет — bash-порт)
+- [x] `godot --path . --headless --quit` без ошибок
 
 ## Заметки и история
 - 2026-10-31T08:46:05Z — работа завершена владельцем agent-beta, ветка task/T-0004-shapeshift-manager, ожидает PR
 - 2026-10-31 — возврат в todo: статус «done» был артефактом сквозного теста claim→release (T-0001), код задачи не писался. `ShapeShiftManager.gd` по-прежнему заглушка.
 
 - 2026-10-31T15:12:40Z — работа завершена владельцем mixey1201, ветка task/T-0004-shapeshift-manager, ожидает PR
+- 2026-10-31T15:15:00Z — реализовано mixey1201: autoload в project.godot, одна вспышка CPUParticles2D под FormPivot на смену формы, прогресс в user://progress.cfg, безопасный переход между уровнями (ResourceLoader.exists). Проверено смоук-тестом (18 проверок) и `verify.sh`; PR #19.
