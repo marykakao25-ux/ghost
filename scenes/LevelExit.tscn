@@ -1,27 +1,30 @@
-[gd_scene format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/LevelExit.gd" id="1_e2d68"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vul8o"]
-size = Vector2(140, 180)
+size = Vector2(200, 220)
 
-[node name="LevelExit" type="Area2D" unique_id=1474334457]
+[node name="LevelExit" type="Area2D"]
 collision_layer = 0
+collision_mask = 1
+monitoring = true
 monitorable = false
 script = ExtResource("1_e2d68")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=78819191]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_vul8o")
 
-[node name="Glow" type="Polygon2D" parent="." unique_id=1752520634]
+[node name="Glow" type="Polygon2D" parent="."]
+visible = false
 color = Color(0.25, 0.95, 0.8, 0.35)
 polygon = PackedVector2Array(-28, -60, 28, -60, 28, 60, -28, 60)
 
-[node name="Label" type="Label" parent="." unique_id=919857862]
-offset_left = -110.0
-offset_top = -100.0
-offset_right = 110.0
-offset_bottom = -64.0
+[node name="Label" type="Label" parent="."]
+offset_left = -120.0
+offset_top = -220.0
+offset_right = 120.0
+offset_bottom = -180.0
 theme_override_font_sizes/font_size = 22
-text = "Выход →"
+text = "Вселиться →"
 horizontal_alignment = 1
