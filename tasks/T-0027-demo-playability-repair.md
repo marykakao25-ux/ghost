@@ -1,12 +1,12 @@
 ---
 id: T-0027
 title: Исправить масштаб персонажей, коллизии и визуальную читаемость демо
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T22:27:29Z
+branch: task/T-0027-demo-playability-repair
 paths:
   - scripts/PlayerController.gd
   - scripts/MovementCat.gd
