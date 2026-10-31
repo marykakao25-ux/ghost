@@ -1,7 +1,7 @@
 ---
 id: T-0033
 title: Починить вселение в интро и переход на следующий уровень
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -42,3 +42,4 @@ created: 2026-11-01
 - [ ] Ручной прогон: меню → интро → кот → хост-пёс
 
 ## Заметки и история
+- 2026-10-31T20:44:58Z — работа завершена владельцем mixey1201, ветка task/T-0033-fix-possession-transitions, ожидает PR
