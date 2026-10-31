@@ -4,8 +4,8 @@ title: Кот — физика движения и подползание (Movem
 status: claimed
 form: cat
 priority: high
-owner: cursor
-lease_until: 2026-10-31T20:30:36Z
+owner: mixey1201
+lease_until: 2026-10-31T20:31:38Z
 branch: task/T-0005-cat-movement
 paths:
   - scripts/MovementCat.gd
