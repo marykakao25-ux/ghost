@@ -1,12 +1,12 @@
 ---
 id: T-0025
 title: Финальная сцена — облик призрака (assets/sprites/gg)
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T22:02:02Z
+branch: task/T-0025-finale-ghost-form
 paths:
   - scenes/Finale.tscn
   - scenes/Finale.gd
