@@ -1,12 +1,12 @@
 ---
 id: T-0018
 title: BreakableBox — ломаемая коробка для MovementDog
-status: todo
+status: claimed
 form: dog
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:36:55Z
+branch: task/T-0018-breakable-box
 paths:
   - scripts/BreakableBox.gd
   - scenes/BreakableBox.tscn
