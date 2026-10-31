@@ -17,22 +17,28 @@
 
 | Компонент | Состояние |
 |---|---|
-| Сцены уровней | 3 заготовки без Player и физической геометрии; ещё не играбельны (T-0021…T-0023) |
-| Меню | Кнопки «Играть» / «Выход», переход в сцену кота |
-| Скрипты (`scripts/*.gd`) | Реализованы контроллер, три компонента движения, менеджер, зрение, препятствие и ветер |
+| Сцены уровней | 3 играбельных уровня (кот/пёс/ворон) + Intro и Finale; в уровнях — LevelDirector, LevelExit-хост, Obstacle, чекпоинты, Presentation (HUD/фон/атмосфера) — T-0021…T-0024 |
+| Меню | Кнопки «Играть» / «Выход», музыка, переход через Intro |
+| Скрипты (`scripts/*.gd`) | PlayerController, MovementCat/Dog/Bird, ShapeShiftManager, LevelDirector, LevelExit/HostVessel, BreakableBox, Obstacle, WindZone, GhostVisionShader, LevelPresentation; Intro/Finale — сценовые скрипты |
 | Спрайты кота | 4 набора PNG + 4 сцены `anim_cat_*.tscn` со `SpriteFrames` |
-| Спрайты пса, ворона, призрака | PNG и сцены анимаций в `assets/sprites/dog/`, `bird/`, `gg/`; финального уровня ещё нет |
+| Спрайты пса, ворона, призрака | PNG и сцены анимаций в `assets/sprites/dog/`, `bird/`, `gg/`; финальная сцена `scenes/Finale.tscn` (T-0025) |
 | Тайлсет окружения | 13 PNG в `assets/environment/tileset_spooky/` |
 | Музыка | 2 mp3 в `assets/audio/` (лицензии — см. `docs/ASSETS.md`) |
 | Сцена игрока | `scenes/Player.tscn`, CharacterBody2D с контроллером |
-| Шейдеры | `assets/shaders/ghost_vision.gdshader`, управление через GhostVisionShader (CanvasLayer) |
-| Input map | 11 действий в `project.godot`, см. INPUT_MAP.md |
-| Препятствия | `scenes/Obstacle.tscn`, Area2D с `checkpoint_reset(reason)`; рестарт выполняет внешний обработчик |
+| Шейдеры | `assets/shaders/ghost_vision.gdshader` (GhostVisionShader), `assets/shaders/atmosphere.gdshader` (LevelPresentation) |
+| Input map | 11 действий в `project.godot`; `shapeshift*` не обрабатываются — ручное переключение убрано (T-0036), см. INPUT_MAP.md |
+| Препятствия | `scenes/Obstacle.tscn`, Area2D с `checkpoint_reset(reason)`; обрабатывает LevelDirector |
+| Коробки, ветер, выходы | `scenes/BreakableBox.tscn` (T-0018), `scenes/WindZone.tscn` (T-0007), `scenes/LevelExit.tscn` + алиас `scripts/HostVessel.gd` |
 
-Сборка компонентов в уровни ещё впереди. Регистрацию игрока и респавн добавляет T-0019,
-ввод смены формы и паузу — T-0020, ломаемую коробку — T-0018.
-MovementDog пока ищет именованные анимации в текущих SpriteFrames вместо загрузки пакетов
-с анимацией `default`; исправление — T-0017. Наличие input action не означает наличие обработчика.
+Уровни подключены к API менеджера: `LevelDirector` регистрирует игрока
+(`register_player`) и респавнит по чекпоинтам; инлайн-скрипты уровней выставляют
+форму при старте; `LevelExit` при касании выполняет вселение и переход
+(`unlock_form` + `trigger_level_transition`). Пауза, возврат к чекпоинту и
+фокус кнопок — в `PlayerController`. Смена формы автоматическая (T-0036):
+`ShapeShiftManager.change_form()` → `PlayerController.set_form()`; `set_form`
+всегда оставляет игроку компонент движения, а новую форму коллайдера
+откладывает до освобождения геометрии (T-0034). Наличие input action
+по-прежнему не означает наличия обработчика.
 
 ## Схема Player.tscn
 
@@ -67,25 +73,32 @@ Player (CharacterBody2D, scripts/PlayerController.gd)
 | Файл | Корень | Замечание |
 |---|---|---|
 | `scenes/MainMenu.tscn` | `MainMenu` (Node2D) | главная сцена, кнопки и музыка, скрипт `scenes/MainMenu.gd` |
-| `scenes/Level_Cat_Cemetry.tscn` | `LevelCatCemetry` | имя файла с опечаткой («Cemetry») |
-| `scenes/Level_Dog_Park.tscn` | `LevelDogBird` | корень назван не по файлу |
-| `scenes/Level_Bird_Rooftops.tscn` | `LevelBirdRooftops` | заготовка уровня ворона |
-| `scenes/Player.tscn` | `Player` (CharacterBody2D) | спрайт, коллизия и FormPivot |
+| `scenes/Intro.tscn` | `Intro` (Node2D) | пролог призрака, вселение в кота (T-0029) |
+| `scenes/Level_Cat_Cemetry.tscn` | `LevelCatCemetry` | уровень кота; имя файла с опечаткой («Cemetry») |
+| `scenes/Level_Dog_Park.tscn` | `LevelDogPark` | уровень пса, BreakableBox, Jump-препятствия |
+| `scenes/Level_Bird_Rooftops.tscn` | `LevelBirdRooftops` | уровень ворона: крыши, WindZone, потолок и стены |
+| `scenes/Finale.tscn` | `Finale` (Control) | эпилог призрака, возврат в меню (T-0025) |
+| `scenes/Player.tscn` | `Player` (CharacterBody2D) | спрайт, коллизия и FormPivot; Camera2D добавляет LevelDirector |
 | `scenes/Obstacle.tscn` | `Obstacle` (Area2D) | прямоугольная зона 32×32; по умолчанию разрешён кот |
+| `scenes/LevelExit.tscn` | `LevelExit` (Area2D) | idle-хост следующей формы; `scripts/HostVessel.gd` — совместимый алиас |
+| `scenes/BreakableBox.tscn` | `BreakableBox` (StaticBody2D) | ломается псом на скорости (T-0018) |
+| `scenes/WindZone.tscn` | `WindZone` (Area2D) | толкает MovementBird в своей зоне (T-0007) |
 
 ## Формы и их механики
 
 | Форма | Скорость | Прыжок | Особое | Ограничение |
 |---|---|---|---|---|
 | Кот | средняя | обычный | подползание, ночное зрение | не ломает коробки |
-| Пёс | высокая | высокий | вызывает break_apart у breakable на скорости | сцена коробки ещё не создана (T-0018) |
+| Пёс | высокая | высокий | вызывает break_apart у breakable на скорости | коробка готова: `scenes/BreakableBox.tscn` (T-0018) |
 | Ворон | полёт | нет | игнорирует гравитацию, зависит от ветра | нет опоры на землю |
 
-ShapeShiftManager — Autoload: регистрирует игрока, меняет формы с эффектом вспышки,
-хранит `last_checkpoint` и прогресс в `user://progress.cfg`, загружает следующую сцену
-через `trigger_level_transition(next_scene)`. В уровнях пока нет подключений этого API.
-WindZone передаёт силу MovementBird; ограничение скорости уже есть, геометрических границ
-и собранных зон на уровне ворона пока нет.
+ShapeShiftManager — Autoload: регистрирует игрока, меняет формы с эффектом
+вспышки и призрака-«вселения», хранит `last_checkpoint` и прогресс в
+`user://progress.cfg`, загружает следующую сцену через
+`trigger_level_transition(next_scene)` (это делает `LevelExit`). Ручного
+переключения форм в игре нет (T-0036); `current_form` менеджера синхронизируется
+сигналом игрока `form_changed`. WindZone передаёт силу MovementBird; на уровне
+ворона есть стены, потолок и собранные зоны ветра (T-0023, T-0032).
 
 ## Правила изменения
 

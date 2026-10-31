@@ -65,6 +65,7 @@ func _run() -> void:
 	await _test_intro_possession()
 	await _test_exit_host_transition()
 	await _test_host_possession_stays_synced()
+	await _test_host_rollback_and_retry()
 	if _had_progress:
 		var file: FileAccess = FileAccess.open("user://progress.cfg", FileAccess.WRITE)
 		_check(file != null, "Не удалось восстановить сохранение")
@@ -166,6 +167,42 @@ func _test_host_possession_stays_synced() -> void:
 		"Рассинхрон формы менеджера/игрока после успешного вселения"
 	)
 	_manager.set_checkpoint(checkpoint_before)
+
+
+func _test_host_rollback_and_retry() -> void:
+	# T-0038 (добор AC T-0037): отказ LevelExit не должен менять состояние
+	# менеджера, а хост обязан оставаться доступным для повторной попытки.
+	await _load_level("res://scenes/Level_Cat_Cemetry.tscn")
+	var exit_node: Node = current_scene.get_node("LevelExit")
+	var saved_scene: String = String(exit_node.get("next_scene"))
+	var form_before: int = int(_manager.current_form)
+	var checkpoint_before: Vector2 = _manager.last_checkpoint
+	var unlocked_before: int = _manager.unlocked_forms.size()
+	exit_node.set("next_scene", "res://scenes/__no_such__.tscn")
+	exit_node.call_deferred("_begin_possession", _player)
+	await process_frame
+	await process_frame
+	_check(int(_manager.current_form) == form_before, "Отказ выхода изменил текущую форму менеджера")
+	_check(_manager.last_checkpoint == checkpoint_before, "Отказ выхода обнулил чекпоинт")
+	_check(_manager.unlocked_forms.size() == unlocked_before, "Фантомная разблокировка при отказе выхода")
+	_check(not bool(exit_node.get("_transition_pending")), "Хост залип в pending после неудачи")
+	exit_node.set("next_scene", saved_scene)
+	exit_node.call_deferred("_begin_possession", _player)
+	for frame: int in range(120):
+		await process_frame
+		if current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Dog_Park.tscn":
+			break
+	_check(
+		current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Dog_Park.tscn",
+		"Повторная попытка вселения после отказа не сработала"
+	)
+	_player = current_scene.get_node("Player") as CharacterBody2D
+	await process_frame
+	_player.set_physics_process(false)
+	_check(
+		int(_manager.current_form) == int(_player.current_form),
+		"Рассинхрон формы после повторного вселения"
+	)
 
 
 func _test_crawl_idle() -> void:
@@ -276,11 +313,25 @@ func _test_pause_menu() -> void:
 		absf(panel_center.x - viewport_center.x) < 2.0 and absf(panel_center.y - viewport_center.y) < 2.0,
 		"Меню паузы не отцентровано в viewport (уехало)"
 	)
-	_check(menu.get_child(1) is Button and (menu.get_child(1) as Control).has_focus(), "Первая кнопка паузы не фокусируется")
-	_player._on_pause_resume()
+	_check(menu.get_child(1) is Button, "Первый пункт паузы не кнопка")
+	var resume_button: Button = menu.get_child(1) as Button
+	_check(resume_button.has_focus(), "Первая кнопка паузы не фокусируется")
+	resume_button.pressed.emit()
 	await process_frame
-	_check(not paused, "Пауза не снялась")
+	_check(not paused, "Пауза не снялась нажатием кнопки «Продолжить»")
 	_check(not _player.get_node("PauseOverlay").visible, "Оверлей паузы виден после Продолжить")
+	# T-0038 (добор AC T-0035): «К чекпоинту» срабатывает именно нажатием.
+	_player._toggle_pause()
+	await process_frame
+	var checkpoint_button: Button = _player.get_node("PauseOverlay/MenuCenter/Menu").get_child(2) as Button
+	_check(checkpoint_button != null and checkpoint_button.text == "К чекпоинту", "Пункт «К чекпоинту» не на месте")
+	checkpoint_button.pressed.emit()
+	await process_frame
+	await process_frame
+	_check(not paused, "Пауза не снялась нажатием «К чекпоинту»")
+	var director: Node = current_scene.get_node("LevelDirector")
+	var spawn_pos: Vector2 = director.get("_spawn_position")
+	_check(_player.global_position.distance_to(spawn_pos) < 1.0, "«К чекпоинту» не вернул к точке старта")
 
 
 func _test_atmosphere() -> void:
