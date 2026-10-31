@@ -58,13 +58,15 @@ if ($push.Code -ne 0) {
 }
 Write-Ok 'Лиз-файл снят, задача вернулась в todo.'
 
-$del = Invoke-Git -Arguments @('push', 'origin', '--delete', "claim/$Task") -AllowFail
-if ($del.Code -eq 0) { Write-Ok "claim/$Task удалён." } else { Write-Warn "claim/$Task уже отсутствовал." }
+$claimRef = Get-ClaimBranch -Task $Task
+if (Remove-RemoteRef -Ref $claimRef) { Write-Ok "$claimRef удалён." } else { Write-Warn "$claimRef уже отсутствовал." }
 
 if (-not $KeepTaskBranch) {
-    foreach ($branch in @(Get-RemoteBranchNames -Pattern "task/$Task-*")) {
-        $delTask = Invoke-Git -Arguments @('push', 'origin', '--delete', $branch) -AllowFail
-        if ($delTask.Code -eq 0) { Write-Ok "Ветка $branch удалена (незамерженные коммиты остались в reflog сервера)." }
+    $taskBranchNames = @(Get-RemoteBranchNames -Pattern '*' | Where-Object {
+            (Get-BranchPrefix -Name $_) -eq 'task' -and (Get-RemoteBranchSuffix -Name $_) -like "$Task-*"
+        })
+    foreach ($branch in $taskBranchNames) {
+        if (Remove-RemoteRef -Ref $branch) { Write-Ok "Ветка $branch удалена (незамерженные коммиты остались в reflog сервера)." }
         else { Write-Warn "Не удалось удалить $branch." }
     }
 }

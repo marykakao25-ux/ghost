@@ -34,8 +34,7 @@ function Fail {
 
 function Remove-ClaimRef {
     param([string]$Ref)
-    $res = Invoke-Git -Arguments @('push', 'origin', '--delete', $Ref) -AllowFail
-    if ($res.Code -eq 0) { Write-Ok "Лок $Ref снят." }
+    if (Remove-RemoteRef -Ref $Ref) { Write-Ok "Лок $Ref снят." }
     else { Write-Warn "Не удалось снять $Ref — снимите вручную: git push origin --delete $Ref" }
 }
 
@@ -48,9 +47,9 @@ if (-not (Test-CleanWorktree)) {
 Invoke-Git -Arguments @('fetch', '--prune', 'origin') | Out-Null
 
 # ---------------------------------------------------------------- шаг 2 ----
-Write-Step "2. Проверка жёсткого лока claim/$Task (слой B)"
-$claimRef = "claim/$Task"
-if (Test-RemoteBranch -Name $claimRef) {
+$claimRef = Get-ClaimBranch -Task $Task
+Write-Step "2. Проверка жёсткого лока $claimRef (слой B)"
+if (Test-RemoteBranch -Name $Task -Prefix 'claim') {
     if (-not $Takeover) {
         Fail "Лок $claimRef уже существует — задачу кто-то держит.`n" +
         "   Живой он или нет, покажет: git show origin/$claimRef --stat`n" +
@@ -61,7 +60,9 @@ if (Test-RemoteBranch -Name $claimRef) {
 
 # ---------------------------------------------------------------- шаг 3 ----
 Write-Step "3. Проверка рабочей ветки task/$Task-*"
-$taskBranches = @(Get-RemoteBranchNames -Pattern "task/$Task-*")
+$taskBranches = @(Get-RemoteBranchNames -Pattern '*' | Where-Object {
+        (Get-BranchPrefix -Name $_) -eq 'task' -and (Get-RemoteBranchSuffix -Name $_) -like "$Task-*"
+    })
 if ($taskBranches.Count -gt 0 -and -not $Takeover) {
     Fail ("Ветка работы уже существует: " + ($taskBranches -join ', ') + "`n" +
         "   Значит работа велась и не была закрыта. Проверьте статус задачи:`n" +
@@ -120,7 +121,7 @@ if ($conflicts.Count -gt 0) {
 Write-Ok "Пересечений нет: $(($taskPaths | ForEach-Object { "'$_'" }) -join ', ')"
 
 # ------------------------------------------------------- шаг 7.5: лок B ----
-if (Test-RemoteBranch -Name $claimRef) {
+if (Test-RemoteBranch -Name $Task -Prefix 'claim') {
     Write-Step "7.5. Перехват существующего лока $claimRef"
     Remove-ClaimRef -Ref $claimRef
 }

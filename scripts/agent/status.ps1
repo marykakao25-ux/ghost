@@ -36,8 +36,9 @@ $remoteClaims = @()
 $remoteTaskBranches = @()
 if (-not $NoRemote) {
     Invoke-Git -Arguments @('fetch', '--prune', 'origin') -AllowFail | Out-Null
-    $remoteClaims = @(Get-RemoteBranchNames -Pattern 'claim/*' | ForEach-Object { $_ -replace '^claim/', '' })
-    $remoteTaskBranches = @(Get-RemoteBranchNames -Pattern 'task/*')
+    $remoteClaims = @(Get-RemoteBranchNames -Pattern '*' | Where-Object { (Get-BranchPrefix -Name $_) -eq 'claim' } |
+        ForEach-Object { Get-RemoteBranchSuffix -Name $_ })
+    $remoteTaskBranches = @(Get-RemoteBranchNames -Pattern '*' | Where-Object { (Get-BranchPrefix -Name $_) -eq 'task' })
 }
 
 foreach ($task in $tasks) {
@@ -51,8 +52,8 @@ foreach ($task in $tasks) {
     $claim = if ($claimsById.ContainsKey($id)) { $claimsById[$id] } else { $null }
     $ttl = if ($claim) { Get-LeaseRemaining -Claim $claim } else { '' }
     $lockRef = if ($remoteClaims -contains $id) { 'yes' } elseif ($NoRemote) { '?' } else { 'MISSING' }
-    $workBranch = @($remoteTaskBranches | Where-Object { $_ -like "task/$id-*" })
-    $work = if ($workBranch.Count -gt 0) { $workBranch[0] -replace "^task/$id-", '' } else { '' }
+    $workBranch = @($remoteTaskBranches | Where-Object { (Get-RemoteBranchSuffix -Name $_) -like "$id-*" })
+    $work = if ($workBranch.Count -gt 0) { (Get-RemoteBranchSuffix -Name $workBranch[0]) -replace "^$id-", '' } else { '' }
 
     $overlap = ''
     if ($claim) {

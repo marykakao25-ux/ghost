@@ -93,13 +93,65 @@ function Get-RemoteBranchNames {
     return @($names)
 }
 
-function Test-RemoteBranch {
+function Get-BranchPrefix {
+    # GitHub может создавать ветки с префиксами (user/, bot/). Наш лок — 'claim/' на любом уровне.
     param([Parameter(Mandatory)][string]$Name)
-    $res = Invoke-Git -Arguments @('ls-remote', '--heads', 'origin', $Name) -AllowFail
-    foreach ($line in $res.Output) {
-        if ($line -match "refs/heads/$([regex]::Escape($Name))$") { return $true }
+    if ($Name -match '(^|/)claim/') { return 'claim' }
+    if ($Name -match '(^|/)task/') { return 'task' }
+    return ''
+}
+
+function Get-RemoteBranchSuffix {
+    <#
+    .SYNOPSIS
+    Отбрасывает префиксы и возвращает «хвост» имени ветки.
+    'user/claim/T-0002' -> 'T-0002'; 'task/T-0002-menu' -> 'T-0002-menu'
+    #>
+    param([Parameter(Mandatory)][string]$Name)
+    if ($Name -match '(^|/)(claim|task)/(.+)$') { return $Matches[3] }
+    return $Name
+}
+
+function Test-RemoteBranch {
+    <#
+    .SYNOPSIS
+    Есть ли на origin ветка с таким «хвостом» и указанным префиксом (claim/task).
+    Префикс не фиксирован: ветка, созданная через веб-интерфейс, тоже блокирует задачу.
+    #>
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Prefix
+    )
+    foreach ($remote in @(Get-RemoteBranchNames -Pattern '*')) {
+        if ((Get-BranchPrefix -Name $remote) -eq $Prefix -and (Get-RemoteBranchSuffix -Name $remote) -eq $Name) {
+            return $true
+        }
     }
     return $false
+}
+
+function Get-ClaimBranch {
+    <#
+    .SYNOPSIS
+    Настоящее имя лок-ветки задачи: то, что уже есть на origin, иначе claim/<Task>.
+    #>
+    param([Parameter(Mandatory)][string]$Task)
+    foreach ($remote in @(Get-RemoteBranchNames -Pattern '*')) {
+        if ((Get-BranchPrefix -Name $remote) -eq 'claim' -and (Get-RemoteBranchSuffix -Name $remote) -eq $Task) {
+            return $remote
+        }
+    }
+    return "claim/$Task"
+}
+
+function Remove-RemoteRef {
+    <#
+    .SYNOPSIS
+    Удаляет ветку на origin по точному имени. Возвращает $true при успехе.
+    #>
+    param([Parameter(Mandatory)][string]$Ref)
+    $res = Invoke-Git -Arguments @('push', 'origin', '--delete', $Ref) -AllowFail
+    return ($res.Code -eq 0)
 }
 
 function Set-GitIdentityIfMissing {

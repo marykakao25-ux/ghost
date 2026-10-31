@@ -39,6 +39,8 @@ if (-not (Test-Path -LiteralPath $claimFile)) {
 $claim = Read-TaskFile -Path $claimFile
 $claimOwner = "$(Get-TaskField -Task $claim -Key 'owner')"
 $branchName = "$(Get-TaskField -Task $claim -Key 'branch')"
+$claimedLock = "$(Get-TaskField -Task $claim -Key 'lock_ref')"
+$claimRef = if ($claimedLock -ne '') { $claimedLock } else { Get-ClaimBranch -Task $Task }
 
 if ($claimOwner -ne $Owner) {
     Fail "Лиз принадлежит '$claimOwner', а вы '$Owner'. Задачу закрывает только владелец (или force-release.ps1)."
@@ -51,7 +53,7 @@ if (-not (Test-CleanWorktree)) {
 }
 
 if (-not $Abort) {
-    $remoteTaskBranch = Test-RemoteBranch -Name $branchName
+    $remoteTaskBranch = Test-RemoteBranch -Name (Get-RemoteBranchSuffix -Name $branchName) -Prefix 'task'
     if (-not $remoteTaskBranch) {
         Fail "Ветка работы $branchName не существует на origin. Запушьте работу: git push -u origin $branchName"
     }
@@ -96,10 +98,9 @@ if ($push.Code -ne 0) {
 }
 Write-Ok "Лиз снят, задача перенесена в tasks/done/."
 
-Write-Step "5. Снятие лок-ветки claim/$Task"
-$del = Invoke-Git -Arguments @('push', 'origin', '--delete', "claim/$Task") -AllowFail
-if ($del.Code -eq 0) { Write-Ok "claim/$Task удалён." }
-else { Write-Warn "claim/$Task не удалён (уже нет или нет прав): $($del.Text)" }
+Write-Step "5. Снятие лок-ветки $claimRef"
+if (Remove-RemoteRef -Ref $claimRef) { Write-Ok "$claimRef удалён." }
+else { Write-Warn "$claimRef не удалён (уже нет или нет прав)." }
 
 if ($Abort) {
     Invoke-Git -Arguments @('switch', 'main') | Out-Null
