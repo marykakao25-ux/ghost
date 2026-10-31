@@ -1,7 +1,7 @@
 ---
 id: T-0009
 title: Препятствия и чекпоинты (Obstacle.gd)
-status: claimed
+status: done
 form: infra
 priority: medium
 owner: opencode
@@ -45,3 +45,4 @@ created: 2026-10-31
 - [ ] `pwsh -File scripts/agent/verify.ps1`
 
 ## Заметки и история
+- 2026-10-31T17:14:05Z — работа завершена владельцем opencode, ветка task/T-0009-obstacles, ожидает PR
