@@ -19,6 +19,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'AgentCommon.ps1')
+Initialize-TaskSystem
 
 function Fail {
     param([string]$Message)

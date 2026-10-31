@@ -18,6 +18,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'AgentCommon.ps1')
+Initialize-TaskSystem
 
 $rows = New-Object System.Collections.Generic.List[object]
 $problems = New-Object System.Collections.Generic.List[string]
@@ -55,7 +56,7 @@ foreach ($task in $tasks) {
 
     $overlap = ''
     if ($claim) {
-        $ownPaths = @(Get-TaskField -Task $claim -Key 'claimed_paths')
+        $ownPaths = ConvertTo-StringArray -Value (Get-TaskField -Task $claim -Key 'claimed_paths')
         $conflicts = @(Get-PathConflicts -Paths $ownPaths -IgnoreTaskIds @($id) -Claims $claims)
         if ($conflicts.Count -gt 0) {
             $overlap = '⚠ ' + (($conflicts | ForEach-Object { $_.TaskId } | Select-Object -Unique) -join ',')

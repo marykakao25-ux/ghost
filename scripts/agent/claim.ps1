@@ -78,13 +78,14 @@ $startBranch = Get-CurrentBranch
 Invoke-Git -Arguments @('switch', 'main') | Out-Null
 Invoke-Git -Arguments @('pull', '--ff-only', 'origin', 'main') | Out-Null
 Write-Ok "main = $(Invoke-Git -Arguments @('rev-parse', '--short', 'HEAD')).Text"
+Initialize-TaskSystem
 
 # ---------------------------------------------------------------- шаг 5 ----
 Write-Step "5. Разбор задачи $Task и проверка лиза (слой A)"
 $taskPath = Find-Task -Id $Task
 $taskData = Read-TaskFile -Path $taskPath
 $taskStatus = "$(Get-TaskField -Task $taskData -Key 'status')"
-$taskPaths = @(Get-TaskField -Task $taskData -Key 'paths')
+$taskPaths = ConvertTo-StringArray -Value (Get-TaskField -Task $taskData -Key 'paths')
 
 if ($taskStatus -eq 'done') { Fail "Задача $Task уже закрыта (status: done). Возьмите другую." }
 if ($taskPaths.Count -eq 0) { Fail "В задаче $Task не задано поле paths — нечем защищаться от конфликтов." }

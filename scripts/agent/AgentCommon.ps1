@@ -329,7 +329,8 @@ function Get-LeaseRemaining {
 # ------------------------------------------------------------------ paths ----
 
 function Normalize-RepoPath {
-    param([AllowEmptyString()][string]$Path)
+    param([AllowEmptyString()][AllowNull()][string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path)) { return '' }
     $p = $Path.Trim().Replace('\', '/')
     $p = $p -replace '^\./', '' -replace '/+$', ''
     # Нижний регистр: на Windows/в git-индексе регистр файлов не различается,
@@ -347,11 +348,27 @@ function Test-PathOverlap {
         [Parameter(Mandatory)][AllowEmptyString()][string]$B
     )
 
-    $a = Normalize-RepoPath $A
-    $b = Normalize-RepoPath $B
+    $a = Normalize-RepoPath -Path $A
+    $b = Normalize-RepoPath -Path $B
     if ($a -eq '' -or $b -eq '') { return $false }
     if ($a -eq $b) { return $true }
     return ($a.StartsWith($b + '/') -or $b.StartsWith($a + '/'))
+}
+
+function ConvertTo-StringArray {
+    <#
+    .SYNOPSIS
+    Приводит значение front matter к массиву строк.
+    Одиночная строка (поле с одним элементом без "- ") тоже становится массивом из одного элемента.
+    #>
+    param([AllowNull()]$Value)
+
+    if ($null -eq $Value) { return @() }
+    if ($Value -is [string]) {
+        if ($Value.Trim() -eq '') { return @() }
+        return @($Value)
+    }
+    return @($Value | ForEach-Object { "$_" })
 }
 
 function Get-PathConflicts {
@@ -373,21 +390,22 @@ function Get-PathConflicts {
         if ($claimId -eq '') { $claimId = $claim.Name }
         if ($IgnoreTaskIds -contains $claimId) { continue }
 
-        $claimPaths = @(Get-TaskField -Task $claim -Key 'paths')
+        $claimPaths = ConvertTo-StringArray -Value (Get-TaskField -Task $claim -Key 'paths')
         foreach ($path in $Paths) {
             foreach ($claimPath in $claimPaths) {
-                if (Test-PathOverlap -A $path -B $claimPath) {
-                    $conflicts.Add([pscustomobject]@{
-                            TaskId  = $claimId
-                            Owner   = "$(Get-TaskField -Task $claim -Key 'owner')"
-                            Path    = $path
-                            Claimed = $claimPath
-                        })
+                if (Test-PathOverlap -A "$path" -B "$claimPath") {
+                    $hit = [pscustomobject]@{}
+                    $hit | Add-Member -NotePropertyName TaskId -NotePropertyValue $claimId
+                    $hit | Add-Member -NotePropertyName Owner -NotePropertyValue "$(Get-TaskField -Task $claim -Key 'owner')"
+                    $hit | Add-Member -NotePropertyName Path -NotePropertyValue "$path"
+                    $hit | Add-Member -NotePropertyName Claimed -NotePropertyValue "$claimPath"
+                    [void]$conflicts.Add($hit)
                 }
             }
         }
     }
-    return @($conflicts)
+    if ($conflicts.Count -eq 0) { return @() }
+    return $conflicts.ToArray()
 }
 
 function Format-ConflictList {
@@ -398,6 +416,22 @@ function Format-ConflictList {
 }
 
 # -------------------------------------------------------------- прочее ----
+
+function Initialize-TaskSystem {
+    <#
+    .SYNOPSIS
+    Создаёт пустые папки tasks/claims и tasks/done.
+
+    .DESCRIPTION
+    Git не хранит пустые каталоги, а без них Get-ChildItem и проверки падают на «первом запуске».
+    Вызывайте в начале каждого скрипта: это дёшево и делает систему устойчивой к чистому клону.
+    #>
+    foreach ($dir in @($script:TasksDir, $script:ClaimsDir, $script:DoneDir)) {
+        if (-not (Test-Path -LiteralPath $dir)) {
+            New-Item -ItemType Directory -Path $dir -Force | Out-Null
+        }
+    }
+}
 
 function Read-RepoText {
     # Явная UTF-8: в Windows PowerShell 5.1 Get-Content по умолчанию читает ANSI.

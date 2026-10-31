@@ -18,6 +18,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'AgentCommon.ps1')
+Initialize-TaskSystem
 
 $errors = New-Object System.Collections.Generic.List[string]
 $warnings = New-Object System.Collections.Generic.List[string]
@@ -37,12 +38,21 @@ if ($SelfTest) {
         @{ A = 'scripts/MovementCat.gd'; B = 'scripts/MovementDog.gd'; Expect = $false }
         @{ A = 'scenes/Level_Cat_Cemetry.tscn'; B = 'scenes'; Expect = $true }
         @{ A = 'PROJECT.GODOT'; B = 'project.godot'; Expect = $true }
+        @{ A = 'project.godot'; B = 'assets/x.png'; Expect = $false }
     )
     foreach ($case in $cases) {
         $got = Test-PathOverlap -A $case.A -B $case.B
         if ($got -eq $case.Expect) { Write-Ok "overlap '$($case.A)' vs '$($case.B)' = $got" }
         else { Add-Error "overlap '$($case.A)' vs '$($case.B)': ожидалось $($case.Expect), получено $got"; $fail++ }
     }
+
+    # Одиночная строка вместо массива — самая частая причина ложных падений.
+    $single = @(ConvertTo-StringArray -Value 'project.godot')
+    if ($single.Count -eq 1 -and $single[0] -eq 'project.godot') { Write-Ok 'одиночная строка приведена к массиву' }
+    else { Add-Error "ConvertTo-StringArray вернул $($single.Count) элементов"; $fail++ }
+    $empty = @(ConvertTo-StringArray -Value $null)
+    if ($empty.Count -eq 0) { Write-Ok 'null приведён к пустому массиву' }
+    else { Add-Error 'ConvertTo-StringArray для $null вернул непустой массив'; $fail++ }
 
     $sample = Join-Path ([System.IO.Path]::GetTempPath()) "ghost-task-$([guid]::NewGuid().ToString('N')).md"
     @(
@@ -60,10 +70,10 @@ if ($SelfTest) {
         '## Контекст'
     ) | Set-Content -LiteralPath $sample -Encoding UTF8
     $parsed = Read-TaskFile -Path $sample
-    $paths = @(Get-TaskField -Task $parsed -Key 'paths')
+    $paths = @(ConvertTo-StringArray -Value (Get-TaskField -Task $parsed -Key 'paths'))
     if ($paths.Count -eq 2 -and $paths[1] -eq 'scenes/B.tscn') { Write-Ok "блочный список paths разобран: $($paths -join ', ')" }
     else { Add-Error "блочный список paths разобран неверно: $($paths -join ', ')"; $fail++ }
-    $deps = @(Get-TaskField -Task $parsed -Key 'depends_on')
+    $deps = @(ConvertTo-StringArray -Value (Get-TaskField -Task $parsed -Key 'depends_on'))
     if ($deps.Count -eq 2) { Write-Ok "inline-список depends_on разобран: $($deps -join ', ')" }
     else { Add-Error "inline-список depends_on разобран неверно: $($deps -join ', ')"; $fail++ }
     if ($null -eq (Get-TaskField -Task $parsed -Key 'owner')) { Write-Ok 'null разобран как $null' }
@@ -93,7 +103,7 @@ foreach ($task in $tasks) {
     if ('todo', 'claimed', 'in-progress', 'review', 'done', 'blocked' -notcontains $status) {
         Add-Error "${file}: неизвестный status '$status'."
     }
-    $paths = @(Get-TaskField -Task $task -Key 'paths')
+    $paths = ConvertTo-StringArray -Value (Get-TaskField -Task $task -Key 'paths')
     if ($paths.Count -eq 0 -and $status -ne 'done') { Add-Error "${file}: пустое поле paths." }
     foreach ($p in $paths) {
         if ($p -match '^/' -or $p -match '^[A-Za-z]:') { Add-Error "${file}: путь '$p' должен быть относительным от корня репозитория." }
@@ -119,8 +129,8 @@ Write-Ok "Лизов: $($claims.Count)"
 for ($i = 0; $i -lt $claims.Count; $i++) {
     for ($j = $i + 1; $j -lt $claims.Count; $j++) {
         $a = $claims[$i]; $b = $claims[$j]
-        foreach ($pa in @(Get-TaskField -Task $a -Key 'claimed_paths')) {
-            foreach ($pb in @(Get-TaskField -Task $b -Key 'claimed_paths')) {
+        foreach ($pa in (ConvertTo-StringArray -Value (Get-TaskField -Task $a -Key 'claimed_paths'))) {
+            foreach ($pb in (ConvertTo-StringArray -Value (Get-TaskField -Task $b -Key 'claimed_paths'))) {
                 if (Test-PathOverlap -A $pa -B $pb) {
                     Add-Error "Лизы $(Get-TaskField -Task $a -Key 'id') и $(Get-TaskField -Task $b -Key 'id') захватили один файл: '$pa' / '$pb'."
                 }

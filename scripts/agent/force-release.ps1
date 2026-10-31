@@ -20,6 +20,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'AgentCommon.ps1')
+Initialize-TaskSystem
 
 Write-Warn "Принудительное снятие лока задачи $Task. Причина: $Reason"
 
