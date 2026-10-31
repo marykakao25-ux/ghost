@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://dplayer0003scn"]
+
+[ext_resource type="Script" uid="uid://cbck028rysgsy" path="res://scripts/PlayerController.gd" id="1_player"]
+[ext_resource type="Texture2D" uid="uid://cki3tjnbusiid" path="res://assets/sprites/cat/cat_idle1.png" id="2_idle1"]
+[ext_resource type="Texture2D" uid="uid://yxmds7isfqt5" path="res://assets/sprites/cat/cat_idle2.png" id="3_idle2"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_idle"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_idle1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_idle2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cat"]
+radius = 10.0
+height = 28.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_player")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_idle")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_cat")
+
+[node name="FormPivot" type="Node2D" parent="."]
