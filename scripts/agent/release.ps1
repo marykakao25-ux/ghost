@@ -48,21 +48,21 @@ if ($taskList.Count -gt 1) {
     }
     exit 0
 }
-$Task = [string]$taskList[0]
+$taskId = [string]$taskList[0]
 
-Write-Step "1. Чтение задачи $Task"
-$taskPath = Find-Task -Id $Task
+Write-Step "1. Чтение задачи $taskId"
+$taskPath = Find-Task -Id $taskId
 $taskData = Read-TaskFile -Path $taskPath
-$claimFile = Join-Path $script:ClaimsDir "$Task.md"
+$claimFile = Join-Path $script:ClaimsDir "$taskId.md"
 
 if (-not (Test-Path -LiteralPath $claimFile)) {
-    Fail "Нет лиз-файла tasks/claims/$Task.md — задачу никто не держал (или лиз уже снят)."
+    Fail "Нет лиз-файла tasks/claims/$taskId.md — задачу никто не держал (или лиз уже снят)."
 }
 $claim = Read-TaskFile -Path $claimFile
 $claimOwner = "$(Get-TaskField -Task $claim -Key 'owner')"
 $branchName = "$(Get-TaskField -Task $claim -Key 'branch')"
 $claimedLock = "$(Get-TaskField -Task $claim -Key 'lock_ref')"
-$claimRef = if ($claimedLock -ne '') { $claimedLock } else { Get-ClaimBranch -Task $Task }
+$claimRef = if ($claimedLock -ne '') { $claimedLock } else { Get-ClaimBranch -Task $taskId }
 
 if ($claimOwner -ne $Owner) {
     Fail "Лиз принадлежит '$claimOwner', а вы '$Owner'. Задачу закрывает только владелец (или force-release.ps1)."
@@ -106,10 +106,10 @@ Add-TaskNote -Path $taskPath -Note $note
 
 Invoke-Git -Arguments @('add', '--', "tasks/$(Split-Path -Leaf $taskPath)") | Out-Null
 Invoke-Git -Arguments @('mv', '-f', "tasks/$(Split-Path -Leaf $taskPath)", "tasks/done/$(Split-Path -Leaf $taskPath)") | Out-Null
-Invoke-Git -Arguments @('rm', '--quiet', '--ignore-unmatch', '--', "tasks/claims/$Task.md") | Out-Null
+Invoke-Git -Arguments @('rm', '--quiet', '--ignore-unmatch', '--', "tasks/claims/$taskId.md") | Out-Null
 
 Write-Step '4. Коммит и push в main'
-Invoke-Git -Arguments @('commit', '-m', "[$Task] chore: release ($Owner)") | Out-Null
+Invoke-Git -Arguments @('commit', '-m', "[$taskId] chore: release ($Owner)") | Out-Null
 $push = Invoke-Git -Arguments @('push', 'origin', 'HEAD:refs/heads/main') -AllowFail
 if ($push.Code -ne 0) {
     Invoke-Git -Arguments @('pull', '--rebase', 'origin', 'main') -AllowFail | Out-Null
@@ -127,7 +127,7 @@ else { Write-Warn "$claimRef не удалён (уже нет или нет пр
 if ($Abort) {
     Invoke-Git -Arguments @('switch', 'main') | Out-Null
     Write-Host ''
-    Write-Ok "Задача $Task закрыта как отменённая. Ветка $branchName осталась в origin — удалите вручную при необходимости."
+    Write-Ok "Задача $taskId закрыта как отменённая. Ветка $branchName осталась в origin — удалите вручную при необходимости."
     exit 0
 }
 
@@ -135,6 +135,6 @@ Invoke-Git -Arguments @('switch', $returnBranch) | Out-Null
 Write-Host ''
 Write-Ok "Готово. Осталось открыть PR и влить squash-merge:"
 Write-Host "  ветка:  $branchName"
-Write-Host "  задача: $Task"
+Write-Host "  задача: $taskId"
 Write-Host '  В названии PR обязательно укажите [T-XXXX]: это проверяет workflow agent-guard.yml.'
 exit 0

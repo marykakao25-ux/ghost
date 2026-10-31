@@ -11,7 +11,15 @@ $ErrorActionPreference = 'Stop'
 Initialize-TaskSystem
 
 Write-Host "--- Normalize ---"
-Write-Host ("result: '" + (Normalize-RepoPath -Path 'project.godot') + "'")
+
+Write-Host "--- Find-Task ---"
+try {
+    $found = Find-Task -Id 'T-0002'
+    Write-Host "found: $found"
+}
+catch {
+    Write-Host "FIND ERROR: $($_.Exception.GetType().FullName) :: $($_.Exception.Message)"
+}
 
 Write-Host "--- Test-PathOverlap ---"
 try {
