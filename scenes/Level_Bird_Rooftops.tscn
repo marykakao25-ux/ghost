@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://crs113cokr4v8"]
+[gd_scene load_steps=20 format=3 uid="uid://crs113cokr4v8"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_ab656"]
 [ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="2_player"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://3r62ulfad6ps" path="res://assets/environment/tileset_spooky/branch.png" id="7_branch"]
 [ext_resource type="Texture2D" uid="uid://dagdmygpagp1j" path="res://assets/environment/tileset_spooky/lantern.png" id="8_lantern"]
 [ext_resource type="PackedScene" path="res://scenes/LevelExit.tscn" id="9_exit"]
+[ext_resource type="Script" path="res://scripts/LevelPresentation.gd" id="10_art"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_roof_a"]
 size = Vector2(420, 40)
@@ -179,6 +180,7 @@ shape = SubResource("RectangleShape2D_wind")
 
 [node name="ObstacleFly" parent="." instance=ExtResource("3_obstacle")]
 position = Vector2(560, 260)
+monitoring = false
 obstacle_type = 2
 allowed_forms = Array[String](["bird"])
 
@@ -205,4 +207,8 @@ shape = SubResource("RectangleShape2D_checkpoint")
 [node name="LevelExit" parent="." instance=ExtResource("9_exit")]
 position = Vector2(1710, 350)
 next_scene = "res://scenes/Finale.tscn"
-exit_text = "Вспомнить себя →"
+exit_text = "К свету →"
+
+[node name="Presentation" type="Node2D" parent="."]
+script = ExtResource("10_art")
+location = 2
