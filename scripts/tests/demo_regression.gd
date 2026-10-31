@@ -98,6 +98,8 @@ func _test_visuals() -> void:
 	var director: Node = current_scene.get_node("LevelDirector")
 	_check(float(director.get("level_width")) >= 3500.0, "Уровень не удлинён")
 	_check(current_scene.get_node("LevelExit").global_position.x > 3000.0, "Выход не в конце длинного уровня")
+	_check(current_scene.get_node("PuddleDecor").visible, "Лужа tileset скрыта")
+	_check(current_scene.get_node("BoxProp").visible, "Коробка tileset скрыта")
 
 
 func _test_crawl() -> void:
@@ -175,6 +177,8 @@ func _test_dog() -> void:
 	_check(_player.velocity.y != 0.0 or _player.global_position.x > 730.0, "Пёс не пытался преодолеть бревно")
 	var exit_dog: Node = current_scene.get_node("LevelExit")
 	_check(int(exit_dog.get("host_form")) == 2, "Выход dog без idle-ворона")
+	_check(current_scene.get_node("LogVisual").visible, "Бревно tileset скрыто")
+	_check(current_scene.get_node("PitDecor").visible, "Овраг tileset скрыт")
 
 
 func _test_flow() -> void:
