@@ -54,7 +54,7 @@ created: 2026-10-31
 - [x] Повторный захват той же задачи тем же/другим агентом отвергается
 - [x] Задача с пересекающимися `paths` не берётся
 - [x] `verify.ps1 -SelfTest` зелёный
-- [ ] На GitHub включён Ruleset для `main` (force-push/удаление запрещены) — вручную владельцем репозитория
+- [x] На GitHub включён Ruleset для `main` (force-push/удаление запрещены) — вручную владельцем репозитория
 
 ## Проверка
 
@@ -89,4 +89,22 @@ created: 2026-10-31
 Ruleset для `main` (запрет force-push и удаления, линейная история, без «Require a PR»
 для пути `tasks/**`) настраивается в веб-интерфейсе GitHub — из git это недоступно.
 
-Временные ветки для PR, созданные до слияния первой версии: `chore/agent-workflow`.
+Временные ветки для PR, созданные до слияния первой версии: `chore/agent-workflow`,
+`chore/agent-workflow-fixes`.
+
+### Итог: задача завершена (2026-10-31)
+
+Все acceptance criteria закрыты, последний пункт снят вручную:
+
+- Ruleset `main-protection` (id 26265533) создан: `enforcement: active`,
+  `branch: refs/heads/main`, правила `non_fast_forward` (запрет force-push)
+  и `deletion` (запрет удаления ветки). «Require a pull request» не включён —
+  скрипты агентов обязаны пушить лизы в `tasks/**` напрямую.
+- PR #9 (squash, `[T-0001]`) смержен в `main` (commit 91c2266): наблюдательный
+  `claims-guard` (без авто-отката), кроссплатформенный путь в `AgentCommon.ps1`,
+  усиленный `agent-guard`, регресс-тест пути в `verify.ps1 -SelfTest`, фикс
+  идемпотентности `force-release`.
+- Оба стража отработали вживую: `agent-guard` на PR #9 (success), `claims-guard`
+  на merge-push в `main` (success, без отката — наблюдательный режим подтверждён).
+- Висящая ветка `chore/agent-workflow-fixes` удалена с origin после merge.
+
