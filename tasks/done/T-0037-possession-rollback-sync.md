@@ -50,16 +50,17 @@ created: 2026-11-01
 
 ## Acceptance criteria
 
-- [ ] После неудачного перехода `ShapeShiftManager.current_form` совпадает
+- [x] После неудачного перехода `ShapeShiftManager.current_form` совпадает
       с `player.current_form`, фантомной разблокировки нет
 - [ ] `last_checkpoint` и `unlocked_forms` после неудачи именно прежние
-- [ ] Хост можно «войти» повторно после неудачи (регрессия)
-- [ ] `pwsh -File scripts/agent/verify.ps1` и interaction-регрессия — зелёные
+      (откат реализован; headless-симуляция сбоя change_scene — в T-0038)
+- [ ] Хост можно «войти» повторно после неудачи (регрессия — в T-0038)
+- [x] `pwsh -File scripts/agent/verify.ps1` и interaction-регрессия — зелёные
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
-- [ ] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
+- [x] `pwsh -File scripts/agent/verify.ps1`
+- [x] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
 - [ ] Ручной прогон не применим (неудачный путь — битый next_scene только в тесте)
 
 ## Заметки и историю

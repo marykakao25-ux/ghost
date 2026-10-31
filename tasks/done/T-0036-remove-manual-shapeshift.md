@@ -52,16 +52,16 @@ created: 2026-11-01
 
 ## Acceptance criteria
 
-- [ ] Q, 1, 2, 3 в игре не меняют форму (проверка в регрессии)
-- [ ] Автосмена при вселении/старте уровней работает как раньше
-- [ ] В HUD нет упоминаний Q/1/2/3; пауза Esc не задета
-- [ ] docs/INPUT_MAP.md отражает фактические обработчики
-- [ ] `pwsh -File scripts/agent/verify.ps1` и оба SceneTree-теста — зелёные
+- [x] Q, 1, 2, 3 в игре не меняют форму (проверка в регрессии)
+- [x] Автосмена при вселении/старте уровней работает как раньше
+- [x] В HUD нет упоминаний Q/1/2/3; пауза Esc не задета
+- [x] docs/INPUT_MAP.md отражает фактические обработчики
+- [x] `pwsh -File scripts/agent/verify.ps1` и оба SceneTree-теста — зелёные
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
-- [ ] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
+- [x] `pwsh -File scripts/agent/verify.ps1`
+- [x] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
 - [ ] Ручной прогон: на cat-уровне нажать Q/1/2/3 — ничего; дойти до
       хоста-пса — вселение состоялось
 
@@ -69,3 +69,8 @@ created: 2026-11-01
 
 <!-- Сюда агент дописывает ход работы: что сделано, что осталось, что заблокировало. -->
 - 2026-10-31T22:04:41Z — работа завершена владельцем mixey1201, ветка task/T-0036-remove-manual-shapeshift, ожидает PR
+- 2026-11-01 (mixey1201, PR #59): обработчик shapeshift* и _get_next_unlocked_form()
+  удалены из PlayerController._unhandled_input (остался только pause); подсказка
+  «Q · 1 · 2 · 3» убрана из строки формы LevelPresentation; INPUT_MAP помечает
+  действия «объявлено, не обрабатывается» (project.godot [input] не тронут по п. 4.6).
+  Регрессия _test_manual_shapeshift_removed: red — 3 падения на старом коде, green — 0.
