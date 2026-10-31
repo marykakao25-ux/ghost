@@ -52,9 +52,9 @@ created: 2026-11-01
 
 - [x] После неудачного перехода `ShapeShiftManager.current_form` совпадает
       с `player.current_form`, фантомной разблокировки нет
-- [ ] `last_checkpoint` и `unlocked_forms` после неудачи именно прежние
-      (откат реализован; headless-симуляция сбоя change_scene — в T-0038)
-- [ ] Хост можно «войти» повторно после неудачи (регрессия — в T-0038)
+- [x] `last_checkpoint` и `unlocked_forms` после неудачи именно прежние
+      (регрессия `_test_host_rollback_and_retry` в T-0038)
+- [x] Хост можно «войти» повторно после неудачи (регрессия в T-0038)
 - [x] `pwsh -File scripts/agent/verify.ps1` и interaction-регрессия — зелёные
 
 ## Проверка

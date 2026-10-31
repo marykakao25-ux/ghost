@@ -47,20 +47,26 @@ T-0035 и T-0037 влиты (PR #58, #60), но их acceptance criteria зак�
 
 ## Acceptance criteria
 
-- [ ] Пауза: «К чекпоинту» срабатывает от нажатия кнопки в регрессии
-- [ ] Отказ LevelExit: состояние менеджера прежнее, хост доступен для повторной
+- [x] Пауза: «К чекпоинту» срабатывает от нажатия кнопки в регрессии
+- [x] Отказ LevelExit: состояние менеджера прежнее, хост доступен для повторной
       попытки (регрессия); успешный повтор доводит до уровня пса
-- [ ] docs/ARCHITECTURE.md описывает фактическое состояние (ни одной ссылки на
+- [x] docs/ARCHITECTURE.md описывает фактическое состояние (ни одной ссылки на
       T-0017..T-0020 как «ещё предстоит»)
-- [ ] `pwsh -File scripts/agent/verify.ps1`, interaction/demo-регрессии — зелёные
+- [x] `pwsh -File scripts/agent/verify.ps1`, interaction/demo-регрессии — зелёные
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
-- [ ] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
-- [ ] `godot --path . --headless --script scripts/tests/demo_regression.gd`
+- [x] `pwsh -File scripts/agent/verify.ps1`
+- [x] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
+- [x] `godot --path . --headless --script scripts/tests/demo_regression.gd`
 
 ## Заметки и историю
 
 <!-- Сюда агент дописывает ход работы: что сделано, что осталось, что заблокировало. -->
 - 2026-10-31T22:23:38Z — работа завершена владельцем mixey1201, ветка task/T-0038-followup-records-docs, ожидает PR
+- 2026-11-01 (mixey1201, PR #62): `_test_host_rollback_and_retry` покрывает отказ
+  LevelExit и повторную попытку; `_test_pause_menu` теперь «нажимает»
+  «Продолжить» и «К чекпоинту» через `pressed.emit()` с проверкой возврата к
+  точке старта; ARCHITECTURE приведён к состоянию после T-0034..T-0037.
+  Ожидаемое push_warning «сцена назначения пока недоступна» в тесте — от
+  намеренно битого next_scene.
