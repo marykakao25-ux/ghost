@@ -1,12 +1,12 @@
 ---
 id: T-0024
 title: Переходы между уровнями — LevelExit и связка кот→пёс→ворон
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T22:10:01Z
+branch: task/T-0024-level-flow-transitions
 paths:
   - scripts/LevelExit.gd
   - scenes/LevelExit.tscn
