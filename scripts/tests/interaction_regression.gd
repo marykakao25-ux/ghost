@@ -64,6 +64,7 @@ func _run() -> void:
 	await _test_menu_music_release()
 	await _test_intro_possession()
 	await _test_exit_host_transition()
+	await _test_host_possession_stays_synced()
 	if _had_progress:
 		var file: FileAccess = FileAccess.open("user://progress.cfg", FileAccess.WRITE)
 		_check(file != null, "Не удалось восстановить сохранение")
@@ -130,6 +131,41 @@ func _test_exit_host_transition() -> void:
 	if current_scene != null and current_scene.has_node("Player"):
 		_player = current_scene.get_node("Player") as CharacterBody2D
 		_player.set_physics_process(false)
+
+
+func _test_host_possession_stays_synced() -> void:
+	# T-0037: в окне вселения и после него менеджер не «забегает» вперёд —
+	# current_form всегда равен фактической форме игрока, а при неудаче
+	# откатывается вся тройка (формы, чекпоинт, current_form).
+	await _load_level("res://scenes/Level_Cat_Cemetry.tscn")
+	var exit_node: Node = current_scene.get_node("LevelExit")
+	var checkpoint_before: Vector2 = _manager.last_checkpoint
+	_manager.unlock_form(1)
+	_player.set_physics_process(true)
+	exit_node.call_deferred("_begin_possession", _player)
+	for frame: int in range(3):
+		await process_frame
+	_check(
+		int(_manager.current_form) == int(_player.current_form),
+		"Менеджер опередил смену формы в окне вселения"
+	)
+	for frame: int in range(120):
+		await process_frame
+		if current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Dog_Park.tscn":
+			break
+	_check(
+		current_scene != null and current_scene.scene_file_path == "res://scenes/Level_Dog_Park.tscn",
+		"Корректное вселение не привело к уровню пса"
+	)
+	_player = current_scene.get_node("Player") as CharacterBody2D
+	await process_frame
+	_player.set_physics_process(false)
+	_check(_player.current_movement != null, "После вселения в хоста игрок без движения")
+	_check(
+		int(_manager.current_form) == int(_player.current_form),
+		"Рассинхрон формы менеджера/игрока после успешного вселения"
+	)
+	_manager.set_checkpoint(checkpoint_before)
 
 
 func _test_crawl_idle() -> void:
