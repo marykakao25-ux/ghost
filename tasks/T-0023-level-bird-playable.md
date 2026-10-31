@@ -1,12 +1,12 @@
 ---
 id: T-0023
 title: Играбельный уровень ворона — границы, WindZone, Obstacle, LevelDirector
-status: todo
+status: claimed
 form: bird
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T22:05:54Z
+branch: task/T-0023-level-bird-playable
 paths:
   - scenes/Level_Bird_Rooftops.tscn
 depends_on: [T-0019, T-0020, T-0007, T-0009]
