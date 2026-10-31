@@ -119,13 +119,17 @@ func _begin_possession(player: PlayerController) -> void:
 		ShapeShiftManager.play_possession_fx(player)
 	var previous_forms: Array[int] = ShapeShiftManager.unlocked_forms.duplicate()
 	var previous_checkpoint: Vector2 = ShapeShiftManager.last_checkpoint
+	var previous_form: int = ShapeShiftManager.current_form
 	if unlock_form >= 0:
 		ShapeShiftManager.unlock_form(unlock_form)
-		ShapeShiftManager.current_form = unlock_form
+	# current_form не выставляется заранее: состояние менеджера должно отражать
+	# фактическую форму игрока — синхронизацию делает form_changed, а целевой
+	# уровень сам сменит форму директором (T-0037).
 	ShapeShiftManager.set_checkpoint(Vector2.ZERO)
 	await get_tree().create_timer(0.25).timeout
 	if not ShapeShiftManager.trigger_level_transition(next_scene):
 		ShapeShiftManager.unlocked_forms = previous_forms
 		ShapeShiftManager.set_checkpoint(previous_checkpoint)
+		ShapeShiftManager.current_form = previous_form
 		ShapeShiftManager.save_progress()
 		_transition_pending = false
