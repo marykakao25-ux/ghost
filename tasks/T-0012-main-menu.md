@@ -9,6 +9,7 @@ lease_until: null
 branch: null
 paths:
   - scenes/MainMenu.tscn
+  - scenes/MainMenu.gd
 depends_on: [T-0002]
 created: 2026-10-31
 ---
