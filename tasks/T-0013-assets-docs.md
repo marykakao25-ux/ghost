@@ -1,12 +1,12 @@
 ---
 id: T-0013
 title: Документировать ассеты dog/bird/gg/location в docs/ASSETS.md
-status: todo
+status: claimed
 form: docs
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T19:42:46Z
+branch: task/T-0013-assets-docs
 paths:
   - docs/ASSETS.md
 depends_on: []
