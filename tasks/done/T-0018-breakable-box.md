@@ -1,7 +1,7 @@
 ---
 id: T-0018
 title: BreakableBox — ломаемая коробка для MovementDog
-status: claimed
+status: done
 form: dog
 priority: high
 owner: opencode
@@ -41,3 +41,4 @@ created: 2026-10-31
 - [ ] Godot headless / открытие `scenes/BreakableBox.tscn`
 
 ## Заметки и история
+- 2026-10-31T17:38:42Z — работа завершена владельцем opencode, ветка task/T-0018-breakable-box, ожидает PR
