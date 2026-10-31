@@ -1,7 +1,7 @@
 ---
 id: T-0028
 title: Устранить застревание, добавить выход из паузы, вселение и умеренные эффекты
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -60,4 +60,5 @@ T-0027 ещё не в main: эта задача включает её измен
 
 Одна последовательная задача для атомарного исправления пользовательских сценариев.
 2026-10-31 — takeover mixey1201 (opencode не мог доделать).
-2026-10-31 — добавлен `scenes/MainMenu.gd` в paths: утечка AudioStreamMP3 при headless quit.
+2026-10-31 — добавлены `scenes/MainMenu.gd` / `.tscn` в paths: утечка AudioStreamMP3 при headless quit.
+- 2026-10-31T19:30:41Z — работа завершена владельцем mixey1201, ветка task/T-0028-interaction-possession-polish, ожидает PR
