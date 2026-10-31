@@ -1,6 +1,72 @@
-[gd_scene load_steps=2 format=3 uid="uid://crs113cokr4v8"]
+[gd_scene load_steps=18 format=3 uid="uid://crs113cokr4v8"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_ab656"]
+[ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="3_obstacle"]
+[ext_resource type="Script" path="res://scripts/LevelDirector.gd" id="4_director"]
+[ext_resource type="Script" uid="uid://g05tedwuietg" path="res://scripts/WindZone.gd" id="5_wind"]
+[ext_resource type="Texture2D" uid="uid://dw270u10it62u" path="res://assets/environment/tileset_spooky/tile.png" id="6_tile"]
+[ext_resource type="Texture2D" uid="uid://3r62ulfad6ps" path="res://assets/environment/tileset_spooky/branch.png" id="7_branch"]
+[ext_resource type="Texture2D" uid="uid://dagdmygpagp1j" path="res://assets/environment/tileset_spooky/lantern.png" id="8_lantern"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_roof_a"]
+size = Vector2(420, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_roof_b"]
+size = Vector2(360, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_roof_c"]
+size = Vector2(480, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(40, 900)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ceiling"]
+size = Vector2(1900, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wind"]
+size = Vector2(280, 220)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fly"]
+size = Vector2(80, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
+size = Vector2(64, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
+size = Vector2(48, 120)
+
+[sub_resource type="GDScript" id="GDScript_setup"]
+script/source = "extends Node
+
+func _ready() -> void:
+	ShapeShiftManager.unlock_form(PlayerController.Form.BIRD)
+	ShapeShiftManager.set_checkpoint(Vector2.ZERO)
+	call_deferred(\"_start_as_bird\")
+
+func _start_as_bird() -> void:
+	ShapeShiftManager.change_form(PlayerController.Form.BIRD)
+	var player: Node = ShapeShiftManager.get_player()
+	if player != null and int(player.get(\"current_form\")) != PlayerController.Form.BIRD:
+		player.call(\"set_form\", PlayerController.Form.BIRD)
+		ShapeShiftManager.current_form = PlayerController.Form.BIRD
+"
+
+[sub_resource type="GDScript" id="GDScript_checkpoint"]
+script/source = "extends Area2D
+
+@export var director_path: NodePath = ^\"../LevelDirector\"
+
+func _ready() -> void:
+	body_entered.connect(_on_body_entered)
+
+func _on_body_entered(body: Node2D) -> void:
+	if not body.is_in_group(\"player\"):
+		return
+	var director: Node = get_node_or_null(director_path)
+	if director != null and director.has_method(\"set_checkpoint\"):
+		director.call(\"set_checkpoint\", global_position)
+"
 
 [node name="LevelBirdRooftops" type="Node2D"]
 
@@ -8,3 +74,129 @@
 stream = ExtResource("1_ab656")
 volume_db = -40.0
 autoplay = true
+
+[node name="RoofADecor" type="Sprite2D" parent="."]
+position = Vector2(240, 520)
+scale = Vector2(0.7, 0.12)
+texture = ExtResource("6_tile")
+
+[node name="RoofBDecor" type="Sprite2D" parent="."]
+position = Vector2(780, 380)
+scale = Vector2(0.6, 0.12)
+texture = ExtResource("6_tile")
+
+[node name="RoofCDecor" type="Sprite2D" parent="."]
+position = Vector2(1400, 460)
+scale = Vector2(0.8, 0.12)
+texture = ExtResource("6_tile")
+
+[node name="BranchDecor" type="Sprite2D" parent="."]
+position = Vector2(560, 260)
+scale = Vector2(0.18, 0.18)
+texture = ExtResource("7_branch")
+
+[node name="LanternDecor" type="Sprite2D" parent="."]
+position = Vector2(1100, 220)
+scale = Vector2(0.16, 0.2)
+texture = ExtResource("8_lantern")
+
+[node name="RoofA" type="StaticBody2D" parent="."]
+position = Vector2(240, 520)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoofA"]
+shape = SubResource("RectangleShape2D_roof_a")
+
+[node name="RoofB" type="StaticBody2D" parent="."]
+position = Vector2(780, 380)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoofB"]
+shape = SubResource("RectangleShape2D_roof_b")
+
+[node name="RoofC" type="StaticBody2D" parent="."]
+position = Vector2(1400, 460)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoofC"]
+shape = SubResource("RectangleShape2D_roof_c")
+
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(-20, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="WallRight" type="StaticBody2D" parent="."]
+position = Vector2(1820, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Ceiling" type="StaticBody2D" parent="."]
+position = Vector2(900, -20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ceiling"]
+shape = SubResource("RectangleShape2D_ceiling")
+
+[node name="FloorBound" type="StaticBody2D" parent="."]
+position = Vector2(900, 820)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FloorBound"]
+shape = SubResource("RectangleShape2D_ceiling")
+
+[node name="SpawnMarker" type="Marker2D" parent="."]
+position = Vector2(180, 400)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(180, 400)
+
+[node name="LevelDirector" type="Node" parent="."]
+script = ExtResource("4_director")
+player_path = NodePath("../Player")
+spawn_marker = NodePath("../SpawnMarker")
+
+[node name="LevelSetup" type="Node" parent="."]
+script = SubResource("GDScript_setup")
+
+[node name="WindZoneRight" type="Area2D" parent="."]
+position = Vector2(520, 300)
+collision_layer = 0
+script = ExtResource("5_wind")
+wind_direction = Vector2(1, -0.2)
+wind_strength = 160.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WindZoneRight"]
+shape = SubResource("RectangleShape2D_wind")
+
+[node name="WindZoneUp" type="Area2D" parent="."]
+position = Vector2(1100, 280)
+collision_layer = 0
+script = ExtResource("5_wind")
+wind_direction = Vector2(0, -1)
+wind_strength = 200.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WindZoneUp"]
+shape = SubResource("RectangleShape2D_wind")
+
+[node name="ObstacleFly" parent="." instance=ExtResource("3_obstacle")]
+position = Vector2(560, 260)
+obstacle_type = 2
+allowed_forms = Array[String](["bird"])
+
+[node name="CollisionShape2D" parent="ObstacleFly"]
+shape = SubResource("RectangleShape2D_fly")
+
+[node name="ObstacleHazard" parent="." instance=ExtResource("3_obstacle")]
+position = Vector2(1100, 220)
+obstacle_type = 3
+allowed_forms = Array[String]([])
+
+[node name="CollisionShape2D" parent="ObstacleHazard"]
+shape = SubResource("RectangleShape2D_hazard")
+
+[node name="Checkpoint1" type="Area2D" parent="."]
+position = Vector2(780, 320)
+collision_layer = 0
+script = SubResource("GDScript_checkpoint")
+director_path = NodePath("../LevelDirector")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
+shape = SubResource("RectangleShape2D_checkpoint")
