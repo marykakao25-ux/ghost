@@ -1,0 +1,78 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/Finale.gd" id="1_llsq6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/gg/ghost1.png" id="2_1trlt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/gg/ghost2.png" id="3_f26iu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/gg/ghost3.png" id="4_3e3gg"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_m3x0o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_1trlt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_f26iu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_3e3gg")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 3.0
+}]
+
+[node name="Finale" type="Control" unique_id=452209537]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_llsq6")
+
+[node name="Background" type="ColorRect" parent="." unique_id=55803376]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.025, 0.035, 0.065, 1)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=16617904]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Content" type="VBoxContainer" parent="Center" unique_id=1577118069]
+custom_minimum_size = Vector2(1000, 0)
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Center/Content" unique_id=1208075029]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.65, 0.95, 0.91, 1)
+text = "Ты вспомнил, каково это — чувствовать"
+horizontal_alignment = 1
+
+[node name="GhostStage" type="Control" parent="Center/Content" unique_id=818303293]
+custom_minimum_size = Vector2(0, 290)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Ghost" type="AnimatedSprite2D" parent="Center/Content/GhostStage" unique_id=2052430329]
+scale = Vector2(0.48, 0.48)
+sprite_frames = SubResource("SpriteFrames_m3x0o")
+
+[node name="Story" type="Label" parent="Center/Content" unique_id=1198236821]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Тепло земли. Сила прыжка. Свобода полёта.
+Все эти чувства теперь — часть тебя."
+horizontal_alignment = 1
+
+[node name="MenuButton" type="Button" parent="Center/Content" unique_id=1459292808]
+process_mode = 3
+custom_minimum_size = Vector2(280, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+text = "В меню"
