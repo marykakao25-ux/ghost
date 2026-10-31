@@ -32,47 +32,31 @@ if (-not (Test-CleanWorktree)) {
 Invoke-Git -Arguments @('switch', 'main') | Out-Null
 Invoke-Git -Arguments @('pull', '--ff-only', 'origin', 'main') | Out-Null
 
-$taskPath = $null
-try {
-    $taskPath = Find-Task -Id $Task
-}
-catch {
-    # Задача уже закрыта (лежит в tasks/done/): остаётся только снять локи.
-    Write-Warn "Задача $Task не найдена в tasks/ — снимаю только локи."
-}
+$taskPath = Find-Task -Id $Task
 $claimFile = Join-Path $script:ClaimsDir "$Task.md"
 $owner = '(none)'
 if (Test-Path -LiteralPath $claimFile) {
     $owner = "$(Get-TaskField -Task (Read-TaskFile -Path $claimFile) -Key 'owner')"
     Invoke-Git -Arguments @('rm', '--quiet', '--', "tasks/claims/$Task.md") | Out-Null
 }
-$changed = $false
-if ($taskPath) {
-    Set-TaskField -Path $taskPath -Key 'status' -Value 'todo'
-    Set-TaskField -Path $taskPath -Key 'owner' -Value 'null'
-    Set-TaskField -Path $taskPath -Key 'lease_until' -Value 'null'
-    Set-TaskField -Path $taskPath -Key 'branch' -Value 'null'
-    Add-TaskNote -Path $taskPath -Note "лок снят принудительно (был owner=$owner): $Reason"
-    Invoke-Git -Arguments @('add', '--', "tasks/$(Split-Path -Leaf $taskPath)") | Out-Null
-    $changed = $true
-}
+Set-TaskField -Path $taskPath -Key 'status' -Value 'todo'
+Set-TaskField -Path $taskPath -Key 'owner' -Value 'null'
+Set-TaskField -Path $taskPath -Key 'lease_until' -Value 'null'
+Set-TaskField -Path $taskPath -Key 'branch' -Value 'null'
+Add-TaskNote -Path $taskPath -Note "лок снят принудительно (был owner=$owner): $Reason"
+Invoke-Git -Arguments @('add', '--', "tasks/$(Split-Path -Leaf $taskPath)") | Out-Null
+Invoke-Git -Arguments @('commit', '-m', "[$Task] chore(claim): force-release ($Reason)") | Out-Null
 
-if ($changed) {
-    Invoke-Git -Arguments @('commit', '-m', "[$Task] chore(claim): force-release ($Reason)") | Out-Null
+$push = Invoke-Git -Arguments @('push', 'origin', 'HEAD:refs/heads/main') -AllowFail
+if ($push.Code -ne 0) {
+    Invoke-Git -Arguments @('pull', '--rebase', 'origin', 'main') -AllowFail | Out-Null
     $push = Invoke-Git -Arguments @('push', 'origin', 'HEAD:refs/heads/main') -AllowFail
-    if ($push.Code -ne 0) {
-        Invoke-Git -Arguments @('pull', '--rebase', 'origin', 'main') -AllowFail | Out-Null
-        $push = Invoke-Git -Arguments @('push', 'origin', 'HEAD:refs/heads/main') -AllowFail
-    }
-    if ($push.Code -ne 0) {
-        Write-Err "Не удалось обновить main; лок claim/$Task НЕ снят.`n$($push.Text)"
-        exit 1
-    }
-    Write-Ok 'Лиз-файл снят, задача вернулась в todo.'
 }
-else {
-    Write-Warn "Лиз-файла для $Task нет — снимаю только ветки."
+if ($push.Code -ne 0) {
+    Write-Err "Не удалось обновить main; лок claim/$Task НЕ снят.`n$($push.Text)"
+    exit 1
 }
+Write-Ok 'Лиз-файл снят, задача вернулась в todo.'
 
 $claimRef = Get-ClaimBranch -Task $Task
 if (Remove-RemoteRef -Ref $claimRef) { Write-Ok "$claimRef удалён." } else { Write-Warn "$claimRef уже отсутствовал." }
