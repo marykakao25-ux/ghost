@@ -103,7 +103,7 @@ foreach ($task in $tasks) {
     if ('todo', 'claimed', 'in-progress', 'review', 'done', 'blocked' -notcontains $status) {
         Add-Error "${file}: неизвестный status '$status'."
     }
-    $paths = ConvertTo-StringArray -Value (Get-TaskField -Task $task -Key 'paths')
+    $paths = @(ConvertTo-StringArray -Value (Get-TaskField -Task $task -Key 'paths'))
     if ($paths.Count -eq 0 -and $status -ne 'done') { Add-Error "${file}: пустое поле paths." }
     foreach ($p in $paths) {
         if ($p -match '^/' -or $p -match '^[A-Za-z]:') { Add-Error "${file}: путь '$p' должен быть относительным от корня репозитория." }

@@ -260,11 +260,15 @@ function Set-TaskField {
 
     $raw = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
     $pattern = "(?m)^" + [regex]::Escape($Key) + ":[ \t]*.*$"
+    # Строка для вставки собирается заранее: внутри scriptblock `":` распознаётся
+    # как часть имени переменной и ломает регулярку (проверено тестом).
+    $line = $Key + ': ' + $Value
     if ([regex]::IsMatch($raw, $pattern)) {
-        $raw = [regex]::Replace($raw, $pattern, { param($m) "$Key`": $Value" })
+        $raw = [regex]::Replace($raw, $pattern, $line)
     }
     else {
-        $raw = [regex]::Replace($raw, '(?m)^---$', "---`n$Key`": $Value", 1)
+        $head = '---' + "`n" + $line
+        $raw = [regex]::Replace($raw, '(?m)^---$', $head, 1)
     }
     Set-Content -LiteralPath $Path -Value $raw -Encoding UTF8 -NoNewline
 }
