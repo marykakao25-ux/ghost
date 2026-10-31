@@ -20,6 +20,7 @@ param(
     [Parameter(Mandatory)][string]$Task,
     [Parameter(Mandatory)][string]$Owner,
     [switch]$Takeover,
+    [switch]$IgnorePathConflicts,
     [int]$LeaseHours = 4
 )
 
@@ -114,11 +115,18 @@ if (Test-Path -LiteralPath $claimFile) {
 Write-Step '6. Проверка пересечения путей с активными задачами'
 $conflicts = @(Get-PathConflicts -Paths $taskPaths -IgnoreTaskIds @($Task))
 if ($conflicts.Count -gt 0) {
-    Fail ("Задача $Task пересекается по файлам с уже занятыми задачами:`n" +
-        (Format-ConflictList -Conflicts $conflicts) + "`n" +
-        "   Возьмите другую задачу или дождитесь освобождения этих файлов.")
+    if (-not $IgnorePathConflicts) {
+        Fail ("Задача $Task пересекается по файлам с уже занятыми задачами:`n" +
+            (Format-ConflictList -Conflicts $conflicts) + "`n" +
+            "   Возьмите другую задачу или дождитесь освобождения этих файлов.`n" +
+            "   Осознанное исключение (например, две задачи обязаны менять project.godot): -IgnorePathConflicts")
+    }
+    Write-Warn "Пересечения проигнорированы по флагу -IgnorePathConflicts:"
+    Write-Host (Format-ConflictList -Conflicts $conflicts) -ForegroundColor Yellow
 }
-Write-Ok "Пересечений нет: $(($taskPaths | ForEach-Object { "'$_'" }) -join ', ')"
+else {
+    Write-Ok "Пересечений нет: $(($taskPaths | ForEach-Object { "'$_'" }) -join ', ')"
+}
 
 # ------------------------------------------------------- шаг 7.5: лок B ----
 if (Test-RemoteBranch -Name $Task -Prefix 'claim') {
@@ -214,7 +222,7 @@ while ($mainPush.Code -ne 0 -and $attempt -lt 1) {
         }
     }
     $lateConflicts = @(Get-PathConflicts -Paths $taskPaths -IgnoreTaskIds @($Task))
-    if ($lateConflicts.Count -gt 0) {
+    if ($lateConflicts.Count -gt 0 -and -not $IgnorePathConflicts) {
         Invoke-Git -Arguments @('reset', '--hard', 'origin/main') -AllowFail | Out-Null
         Remove-ClaimRef -Ref $claimRef
         Fail ("После обновления main появились пересечения файлов:`n" +
