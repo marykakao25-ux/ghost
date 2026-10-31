@@ -1,7 +1,7 @@
 ---
 id: T-0022
 title: Играбельный уровень пса — пол, Jump/Breakable, LevelDirector
-status: claimed
+status: done
 form: dog
 priority: high
 owner: mixey1201
@@ -44,3 +44,4 @@ created: 2026-10-31
 - [ ] Ручной smoke: разгон → break, прыжок через бревно
 
 ## Заметки и история
+- 2026-10-31T18:03:58Z — работа завершена владельцем mixey1201, ветка task/T-0022-level-dog-playable, ожидает PR
