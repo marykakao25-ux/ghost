@@ -12,11 +12,11 @@
 pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner cline
 
 .EXAMPLE
-pwsh -File scripts/agent/release.ps1 -Task T-0002,T-0004 -Owner cline
+pwsh -File scripts/agent/release.ps1 -Task T-0002 -Task T-0004 -Owner cline
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)][string[]]$Task,
+    [Parameter(Mandatory, ValueFromRemainingArguments = $false)][string[]]$Task,
     [Parameter(Mandatory)][string]$Owner,
     [switch]$Abort   # закрыть задачу как «отменена»: изменения не вливаются
 )
@@ -24,6 +24,9 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'AgentCommon.ps1')
 Initialize-TaskSystem
+
+# 'T-0002,T-0004' тоже допустимо: разделители могут попасть внутрь одного элемента.
+$Task = @($Task | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
 
 function Fail {
     param([string]$Message)
