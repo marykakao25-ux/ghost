@@ -12,7 +12,8 @@
 
 Set-StrictMode -Version Latest
 
-$script:RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+# Прямые слэши, а не '..\..': CI (ubuntu-latest) не понимает обратный слэш как разделитель.
+$script:RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $script:TasksDir = Join-Path $script:RepoRoot 'tasks'
 $script:ClaimsDir = Join-Path $script:TasksDir 'claims'
 $script:DoneDir = Join-Path $script:TasksDir 'done'

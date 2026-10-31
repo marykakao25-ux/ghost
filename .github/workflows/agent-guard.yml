@@ -31,18 +31,25 @@ jobs:
       - name: Файлы задачи на месте
         run: |
           set -euo pipefail
-          TID=$(echo "${{ github.event.pull_request.title }}" | grep -Eo 'T-[0-9]{4}' | head -1)
-          echo "TID=$TID" >> "$GITHUB_ENV"
+          TITLE="${{ github.event.pull_request.title }}"
+          TID=$(echo "$TITLE" | grep -Eo 'T-[0-9]{4}' | head -1 || true)
+          if [ -z "$TID" ]; then
+            echo "::error::В названии PR не найден id задачи вида T-0000"
+            exit 1
+          fi
           FILE=$(ls tasks/$TID-*.md 2>/dev/null | head -1 || true)
           if [ -z "$FILE" ]; then
             FILE=$(ls tasks/done/$TID-*.md 2>/dev/null | head -1 || true)
           fi
           if [ -z "$FILE" ]; then
-            echo "::error::Файл задачи tasks/$TID-*.md не найден"
+            echo "::error::Файл задачи tasks/$TID-*.md не найден ни в tasks/, ни в tasks/done/"
             exit 1
           fi
+          # $GITHUB_ENV действует ТОЛЬКО со следующего шага, поэтому ниже в этом
+          # же шаге используется локальная $TID, а не импортированная.
+          echo "TID=$TID" >> "$GITHUB_ENV"
           echo "TASK_FILE=$FILE" >> "$GITHUB_ENV"
-          echo "Найдена задача: $FILE"
+          echo "Найдена задача: $FILE (id $TID)"
 
       - name: Дифф не выходит за paths задачи
         run: |
@@ -50,9 +57,29 @@ jobs:
           CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
           echo "Изменённые файлы:"; echo "$CHANGED"
 
-          # paths задачи: блок "paths:" + строки "  - путь"
-          PATHS=$(awk '/^paths:/{flag=1;next}/^[a-zA-Z_]+:/{flag=0}flag&&/^[[:space:]]*-/{gsub(/^[[:space:]]*-[[:space:]]*/,"");gsub(/"/,"");print}' "$TASK_FILE")
+          # Блок paths: только строки списка СРАЗУ после "paths:", без комментариев
+          # и с обрезкой inline-комментариев — иначе TEMPLATE.md даёт мусор в паттернах.
+          PATHS=$(awk '
+            /^paths:/ { inblock=1; next }
+            inblock && /^[[:space:]]*#/ { next }
+            inblock && /^[[:space:]]*-/ {
+              line=$0
+              sub(/^[[:space:]]*-[[:space:]]*/, "", line)
+              sub(/[[:space:]]*#.*$/, "", line)
+              gsub(/"/, "", line)
+              sub(/[[:space:]]+$/, "", line)
+              if (line != "") print line
+              next
+            }
+            inblock && /^[[:space:]]*$/ { next }
+            inblock { inblock=0 }
+          ' "$TASK_FILE")
           echo "Разрешённые paths:"; echo "$PATHS"
+
+          if [ -z "$PATHS" ]; then
+            echo "::error::В задаче $TID не задано поле paths — нечем проверять дифф."
+            exit 1
+          fi
 
           # Служебные пути, которые agent-guard проверяет отдельно и не считает нарушением:
           # сами файлы tasks/ (release.ps1 переносит задачу в done/) проверяются ниже.
