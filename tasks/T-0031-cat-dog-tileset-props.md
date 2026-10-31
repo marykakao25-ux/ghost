@@ -1,12 +1,12 @@
 ---
 id: T-0031
 title: Брёвна, коробки, лужи и овраги из tileset_spooky на кот/пёс
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T00:25:00Z
+branch: task/T-0031-cat-dog-tileset-props
 paths:
   - scenes/Level_Cat_Cemetry.tscn
   - scenes/Level_Dog_Park.tscn
