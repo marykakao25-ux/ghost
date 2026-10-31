@@ -1,12 +1,12 @@
 ---
 id: T-0036
 title: Убрать ручное переключение форм (Q и 1/2/3) — только автоматическое вселение
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T02:01:32Z
+branch: task/T-0036-remove-manual-shapeshift
 paths:
   - scripts/PlayerController.gd
   - scripts/LevelPresentation.gd
