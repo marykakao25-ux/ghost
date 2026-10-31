@@ -52,7 +52,6 @@ func _start_as_bird() -> void:
 	var player: Node = ShapeShiftManager.get_player()
 	if player != null and int(player.get(\"current_form\")) != PlayerController.Form.BIRD:
 		player.call(\"set_form\", PlayerController.Form.BIRD)
-		ShapeShiftManager.current_form = PlayerController.Form.BIRD
 "
 
 [sub_resource type="GDScript" id="GDScript_checkpoint"]

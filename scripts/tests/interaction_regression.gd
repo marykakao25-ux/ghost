@@ -25,9 +25,14 @@ func _load_level(path: String) -> void:
 	for frame: int in range(2):
 		await physics_frame
 	_player = current_scene.get_node("Player") as CharacterBody2D
-	# Крупная капсула: set_form в _ready часто откатывается из-за overlap, к кадру уже свободно.
-	if _player.current_movement == null and _player.can_set_form(0):
-		_player.set_form(0)
+	# T-0034: компонент движения обязан существовать сразу после загрузки.
+	# Раньше здесь был ручной патч (set_form при current_movement == null),
+	# который маскировал «не работает движение после переключения».
+	_check(_player.current_movement != null, "Игрок загружен без компонента движения: %s" % path)
+	_check(
+		int(_manager.current_form) == int(_player.current_form),
+		"Рассинхрон формы менеджер/игрок после загрузки: %s" % path
+	)
 	_player.set_physics_process(false)
 
 
@@ -47,6 +52,9 @@ func _run() -> void:
 	_manager.unlocked_forms.clear()
 	_manager.unlock_form(0)
 	await _load_level("res://scenes/Level_Cat_Cemetry.tscn")
+	await _test_real_input_movement()
+	await _test_always_switched_forms()
+	await _test_desync_selfheal()
 	await _test_crawl_idle()
 	await _test_pause_menu()
 	await _test_atmosphere()
@@ -148,6 +156,59 @@ func _test_crawl_idle() -> void:
 	await _step(6)
 
 
+func _test_real_input_movement() -> void:
+	# Настоящий игровой цикл: физика не отключена, движение от зажатой клавиши.
+	_player.global_position = Vector2(250.0, 400.0)
+	_player.velocity = Vector2.ZERO
+	_player.set_physics_process(true)
+	var start_x: float = _player.global_position.x
+	Input.action_press("move_right")
+	for frame: int in range(30):
+		await physics_frame
+	Input.action_release("move_right")
+	_check(
+		_player.global_position.x - start_x > 30.0,
+		"Ввод move_right не двигает игрока в реальном физическом цикле"
+	)
+	_player.set_physics_process(false)
+	_player.velocity = Vector2.ZERO
+
+
+func _test_always_switched_forms() -> void:
+	# T-0034: смена формы никогда не «съедается» отказом коллизии —
+	# компонент движения и синхрон с менеджером гарантированы на любой форме.
+	_manager.unlock_form(1)
+	_manager.unlock_form(2)
+	var movement_paths: Array[String] = [
+		"res://scripts/MovementCat.gd",
+		"res://scripts/MovementDog.gd",
+		"res://scripts/MovementBird.gd",
+	]
+	for form: int in range(3):
+		_player.set_form(form)
+		_check(_player.current_movement != null, "Форма %s осталась без компонента движения" % form)
+		_check(
+			_player.current_movement != null
+				and str(_player.current_movement.get_script().resource_path) == movement_paths[form],
+			"Компонент движения не соответствует форме %s" % form
+		)
+		_check(int(_manager.current_form) == form, "Менеджер не синхронизировал форму %s" % form)
+	_player.set_form(0)
+	await _step(2)
+
+
+func _test_desync_selfheal() -> void:
+	# load_progress мог «запомнить» форму раньше игрока: смена не должна становиться
+	# ложным no-op, а игрок — оставаться без движения.
+	_player.set_form(0)
+	_manager.current_form = 1
+	_check(_manager.change_form(1), "change_form съедает смену формы при рассинхроне")
+	_check(int(_player.current_form) == 1, "Игрок не сменил форму после рассинхрона")
+	_check(_player.current_movement != null, "После смены из рассинхрона игрок без компонента движения")
+	_player.set_form(0)
+	await _step(2)
+
+
 func _test_pause_menu() -> void:
 	_player._toggle_pause()
 	await process_frame
@@ -182,6 +243,7 @@ func _test_ghost_visible() -> void:
 	_manager.unlock_form(1)
 	_check(_manager.change_form(1), "Не сменилась форма")
 	await process_frame
+	_check(int(_manager.current_form) == 1 and int(_player.current_form) == 1, "Рассинхрон формы после смены")
 	var pivot: Node2D = _player.get_node("FormPivot")
 	_check(pivot.get_node_or_null("PossessionGhost") != null, "Призрак не появился при смене")
 	_check(_player.animated_sprite.visible, "Форма скрыта после вселения")
