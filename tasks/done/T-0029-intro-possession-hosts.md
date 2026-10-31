@@ -1,7 +1,7 @@
 ---
 id: T-0029
 title: Интро призрака, вселение в сосуды и масштаб героя
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -73,3 +73,4 @@ README описывает лор («призрак хочет почувство
 - [ ] `scripts/tests/demo_regression.gd` и `interaction_regression.gd`
 
 ## Заметки и история
+- 2026-10-31T20:18:59Z — работа завершена владельцем mixey1201, ветка task/T-0029-intro-possession-hosts, ожидает PR
