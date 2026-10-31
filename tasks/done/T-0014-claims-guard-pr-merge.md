@@ -1,7 +1,7 @@
 ---
 id: T-0014
 title: claims-guard — не создавать issue на squash-merge PR человеком
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -41,3 +41,4 @@ API: `GET /repos/{owner}/{repo}/commits/{sha}/pulls` — для merge-комми
 - [ ] Ревью diff workflow в PR
 
 ## Заметки и история
+- 2026-10-31T15:50:01Z — работа завершена владельцем mixey1201, ветка task/T-0014-claims-guard-pr-merge, ожидает PR
