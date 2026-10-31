@@ -1,7 +1,7 @@
 ---
 id: T-0004
 title: ShapeShiftManager — смена формы и переход между уровнями
-status: claimed
+status: done
 form: infra
 priority: high
 owner: agent-beta
@@ -47,3 +47,4 @@ created: 2026-10-31
 - [ ] `godot --path . --headless --quit` без ошибок
 
 ## Заметки и история
+- 2026-10-31T08:46:05Z — работа завершена владельцем agent-beta, ветка task/T-0004-shapeshift-manager, ожидает PR
