@@ -11,23 +11,30 @@
 | Рендерер | `gl_compatibility` (mobile — тоже) | `project.godot` |
 | Экран | 1800×800, `canvas_items`, `expand`, окно не ресайзится | `project.godot` |
 | Язык | GDScript | `scripts/*.gd` |
-| Главная сцена | `scenes/Level_Bird_Rooftops.tscn` (должно стать `MainMenu.tscn` — T-0002) | `run/main_scene="uid://crs113cokr4v8"` |
+| Главная сцена | `scenes/MainMenu.tscn` | `run/main_scene="uid://cv7qr47g7l5ej"` |
 
 ## Что реализовано на сегодня
 
 | Компонент | Состояние |
 |---|---|
-| Сцены уровней | 4 сцены-заготовки: только `AudioStreamPlayer` и `Sprite2D` тайлов |
-| Скрипты (`scripts/*.gd`) | **все 8 — заглушки `extends Node`, 14 байт** |
+| Сцены уровней | 3 заготовки без Player и физической геометрии; ещё не играбельны (T-0021…T-0023) |
+| Меню | Кнопки «Играть» / «Выход», переход в сцену кота |
+| Скрипты (`scripts/*.gd`) | Реализованы контроллер, три компонента движения, менеджер, зрение, препятствие и ветер |
 | Спрайты кота | 4 набора PNG + 4 сцены `anim_cat_*.tscn` со `SpriteFrames` |
-| Спрайты пса, ворона | отсутствуют (T-0010, T-0011) |
+| Спрайты пса, ворона, призрака | PNG и сцены анимаций в `assets/sprites/dog/`, `bird/`, `gg/`; финального уровня ещё нет |
 | Тайлсет окружения | 13 PNG в `assets/environment/tileset_spooky/` |
 | Музыка | 2 mp3 в `assets/audio/` (лицензии — см. `docs/ASSETS.md`) |
-| Сцена игрока | отсутствует (T-0003) |
-| Шейдеры | отсутствуют (T-0008) |
-| Input map | отсутствует (T-0002) |
+| Сцена игрока | `scenes/Player.tscn`, CharacterBody2D с контроллером |
+| Шейдеры | `assets/shaders/ghost_vision.gdshader`, управление через GhostVisionShader (CanvasLayer) |
+| Input map | 11 действий в `project.godot`, см. INPUT_MAP.md |
+| Препятствия | `scenes/Obstacle.tscn`, Area2D с `checkpoint_reset(reason)`; рестарт выполняет внешний обработчик |
 
-## Целевая схема узлов
+Сборка компонентов в уровни ещё впереди. Регистрацию игрока и респавн добавляет T-0019,
+ввод смены формы и паузу — T-0020, ломаемую коробку — T-0018.
+MovementDog пока ищет именованные анимации в текущих SpriteFrames вместо загрузки пакетов
+с анимацией `default`; исправление — T-0017. Наличие input action не означает наличие обработчика.
+
+## Схема Player.tscn
 
 ```
 Player (CharacterBody2D, scripts/PlayerController.gd)
@@ -36,39 +43,49 @@ Player (CharacterBody2D, scripts/PlayerController.gd)
 └── FormPivot (Node2D)      точка для эффекта вспышки при трансформации
 ```
 
-Компоненты движения — **не узлы сцены, а скрипты** (`MovementCat/Dog/Bird`), которые
-`PlayerController` держит в `current_movement` и вызывает `move(player, delta)`.
-Это позволяет менять форму без пересоздания сцены.
+`PlayerController` создаёт компонент движения (`MovementCat/Dog/Bird`) как дочерний Node
+с именем `Movement`, держит его в `current_movement` и вызывает `move(player, delta)`.
+При смене формы старый компонент освобождается, новый создаётся без пересоздания Player.
+Каждый компонент сам вызывает `move_and_slide()`; при отсутствии метода move работает
+резервная гравитация контроллера. Формы — enum `PlayerController.Form`, а не строки.
 
 ## Связь файлов
 
 | Файл | Ответственность | Зависит от |
 |---|---|---|
-| `scripts/PlayerController.gd` | ввод, гравитация, делегирование в форму | `Movement*.gd`, `Player.tscn` |
+| `scripts/PlayerController.gd` | set_form, коллизия, резервная гравитация, делегирование движения | `Movement*.gd`, `Player.tscn` |
 | `scripts/MovementCat.gd` | бег, прыжок, подползание, `night_vision_enabled` | `PlayerController`, `INPUT_MAP` |
 | `scripts/MovementDog.gd` | разгон, высокий прыжок, ломание коробок | `PlayerController` |
 | `scripts/MovementBird.gd` | полёт по обеим осям, ветер | `PlayerController`, `WindZone` |
 | `scripts/ShapeShiftManager.gd` | Autoload: смена формы, переход уровней, прогресс | `PlayerController` |
 | `scripts/GhostVisionShader.gd` | экранная маска темноты с конусом | `assets/shaders/ghost_vision.gdshader` |
-| `scripts/Obstacle.gd` | тип препятствия, допустимые формы, сигнал рестарта | чекпоинты уровня |
+| `scripts/Obstacle.gd` | Area2D: допустимые формы cat/dog/bird, HAZARD, сигнал с защитой от рекурсии | `PlayerController`, внешний обработчик чекпоинта |
 | `scripts/WindZone.gd` | `Area2D`, передаёт вектор ветра воронам в зоне | `MovementBird` |
 
 ## Сцены и их корневые узлы
 
 | Файл | Корень | Замечание |
 |---|---|---|
-| `scenes/MainMenu.tscn` | `MainMenu` (Node2D) | без кнопок, только музыка (T-0012) |
+| `scenes/MainMenu.tscn` | `MainMenu` (Node2D) | главная сцена, кнопки и музыка, скрипт `scenes/MainMenu.gd` |
 | `scenes/Level_Cat_Cemetry.tscn` | `LevelCatCemetry` | имя файла с опечаткой («Cemetry») |
 | `scenes/Level_Dog_Park.tscn` | `LevelDogBird` | корень назван не по файлу |
-| `scenes/Level_Bird_Rooftops.tscn` | `LevelBirdRooftops` | сейчас главная сцена проекта |
+| `scenes/Level_Bird_Rooftops.tscn` | `LevelBirdRooftops` | заготовка уровня ворона |
+| `scenes/Player.tscn` | `Player` (CharacterBody2D) | спрайт, коллизия и FormPivot |
+| `scenes/Obstacle.tscn` | `Obstacle` (Area2D) | прямоугольная зона 32×32; по умолчанию разрешён кот |
 
 ## Формы и их механики
 
 | Форма | Скорость | Прыжок | Особое | Ограничение |
 |---|---|---|---|---|
 | Кот | средняя | обычный | подползание, ночное зрение | не ломает коробки |
-| Пёс | высокая | высокий | ломает дерево на скорости | не подползает |
+| Пёс | высокая | высокий | вызывает break_apart у breakable на скорости | сцена коробки ещё не создана (T-0018) |
 | Ворон | полёт | нет | игнорирует гравитацию, зависит от ветра | нет опоры на землю |
+
+ShapeShiftManager — Autoload: регистрирует игрока, меняет формы с эффектом вспышки,
+хранит `last_checkpoint` и прогресс в `user://progress.cfg`, загружает следующую сцену
+через `trigger_level_transition(next_scene)`. В уровнях пока нет подключений этого API.
+WindZone передаёт силу MovementBird; ограничение скорости уже есть, геометрических границ
+и собранных зон на уровне ворона пока нет.
 
 ## Правила изменения
 
