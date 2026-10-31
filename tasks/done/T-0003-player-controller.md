@@ -1,7 +1,7 @@
 ---
 id: T-0003
 title: PlayerController — CharacterBody2D, делегирование формы, коллизии
-status: claimed
+status: done
 form: infra
 priority: high
 owner: cursor
@@ -49,3 +49,4 @@ created: 2026-10-31
 - [ ] `godot --path . scenes/Player.tscn` — сцена запускается
 
 ## Заметки и история
+- 2026-10-31T14:51:07Z — работа завершена владельцем cursor, ветка task/T-0003-player-controller, ожидает PR
