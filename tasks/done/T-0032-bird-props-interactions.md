@@ -1,7 +1,7 @@
 ---
 id: T-0032
 title: Ветки из фона, воздух и фонари на уровне ворона
-status: claimed
+status: done
 form: bird
 priority: high
 owner: mixey1201
@@ -52,3 +52,4 @@ created: 2026-11-01
 - [ ] Прогон bird-уровня вручную или регрессией
 
 ## Заметки и история
+- 2026-10-31T20:29:22Z — работа завершена владельцем mixey1201, ветка task/T-0032-bird-props-interactions, ожидает PR
