@@ -1,12 +1,12 @@
 ---
 id: T-0029
 title: Интро призрака, вселение в сосуды и масштаб героя
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T00:08:05Z
+branch: task/T-0029-intro-possession-hosts
 paths:
   - scenes/MainMenu.gd
   - scenes/MainMenu.tscn
