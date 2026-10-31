@@ -1,0 +1,2 @@
+# Активные лизы задач (tasks/claims/T-XXXX.md) — создаются scripts/agent/claim.ps1.
+# Держите эту папку в git: пустая директория git не хранит.

@@ -1,0 +1,96 @@
+name: agent-guard
+
+# Проверяет каждый PR: есть ли задача, не выходит ли дифф за её paths,
+# не попали ли в коммит артефакты и кэш Godot.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Название PR содержит [T-XXXX]
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if ! echo "$TITLE" | grep -Eq '\[T-[0-9]{4}\]'; then
+            echo "::error::Название PR должно начинаться с id задачи, например: [T-0012] Меню и пауза"
+            exit 1
+          fi
+          echo "Задача из названия: $(echo "$TITLE" | grep -Eo 'T-[0-9]{4}' | head -1)"
+
+      - name: Файлы задачи на месте
+        run: |
+          set -euo pipefail
+          TID=$(echo "${{ github.event.pull_request.title }}" | grep -Eo 'T-[0-9]{4}' | head -1)
+          echo "TID=$TID" >> "$GITHUB_ENV"
+          FILE=$(ls tasks/$TID-*.md 2>/dev/null | head -1 || true)
+          if [ -z "$FILE" ]; then
+            FILE=$(ls tasks/done/$TID-*.md 2>/dev/null | head -1 || true)
+          fi
+          if [ -z "$FILE" ]; then
+            echo "::error::Файл задачи tasks/$TID-*.md не найден"
+            exit 1
+          fi
+          echo "TASK_FILE=$FILE" >> "$GITHUB_ENV"
+          echo "Найдена задача: $FILE"
+
+      - name: Дифф не выходит за paths задачи
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          echo "Изменённые файлы:"; echo "$CHANGED"
+
+          # paths задачи: блок "paths:" + строки "  - путь"
+          PATHS=$(awk '/^paths:/{flag=1;next}/^[a-zA-Z_]+:/{flag=0}flag&&/^[[:space:]]*-/{gsub(/^[[:space:]]*-[[:space:]]*/,"");gsub(/"/,"");print}' "$TASK_FILE")
+          echo "Разрешённые paths:"; echo "$PATHS"
+
+          # Служебные пути, которые agent-guard проверяет отдельно и не считает нарушением:
+          # сами файлы tasks/ (release.ps1 переносит задачу в done/) проверяются ниже.
+          fail=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              tasks/*) continue ;;
+            esac
+            ok=0
+            while IFS= read -r p; do
+              [ -z "$p" ] && continue
+              if [ "$f" = "$p" ] || [[ "$f" == "$p"/* ]] || [[ "$p" == "$f"/* ]]; then ok=1; break; fi
+            done <<< "$PATHS"
+            if [ "$ok" -eq 0 ]; then
+              echo "::error file=$f::Файл вне paths задачи $TID. Добавьте его в paths или разделите задачу."
+              fail=1
+            fi
+          done <<< "$CHANGED"
+          exit $fail
+
+      - name: Нет кэша, сборок и ключей
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          bad=$(echo "$CHANGED" | grep -E '^(\.godot/|build/|builds/|export/|\.vs/)|\.(exe|pck|apk|aab|dmg|keystore|jks|user|suo)$' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::В PR попали запрещённые файлы:"; echo "$bad"; exit 1
+          fi
+
+      - name: .tscn и uid не менялись вручную (предупреждение)
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" -- '*.tscn')
+          if [ -n "$CHANGED" ]; then
+            echo "::warning::Изменённые сцены (проверьте, что правили в редакторе, а не руками): $CHANGED"
+          fi
+
+      - name: Проверка задач и лизов
+        shell: pwsh
+        run: ./scripts/agent/verify.ps1

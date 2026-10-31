@@ -1,0 +1,63 @@
+name: claims-guard
+
+# Страх на push в main: прямой push допустим ТОЛЬКО для tasks/**.
+# Всё остальное должно приходить через PR (agent-guard.yml).
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Дифф push затрагивает только tasks/
+        id: check
+        run: |
+          set -euo pipefail
+          BEFORE="${{ github.event.before }}"
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "Новая ветка — проверять нечего."
+            echo "bad=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}")
+          echo "Изменённые файлы:"; echo "$CHANGED"
+          BAD=$(echo "$CHANGED" | grep -v '^tasks/' | grep -v '^$' || true)
+          if [ -z "$BAD" ]; then
+            echo "bad=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "bad<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$BAD" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "::error::Прямой push в main вне tasks/: $BAD"
+
+      - name: Откатить и сообщить
+        if: steps.check.outputs.bad != ''
+        env:
+          BAD: ${{ steps.check.outputs.bad }}
+          SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          set -euo pipefail
+          echo "::warning::Откатываю коммит $SHA: прямой push в main разрешён только для tasks/**"
+
+          git config user.name "claims-guard[bot]"
+          git config user.email "claims-guard@users.noreply.github.com"
+          git revert --no-edit "$SHA"
+          git push origin "HEAD:refs/heads/main"
+
+          BODY=$(printf 'Прямой push в `main` от `%s` затронул файлы вне `tasks/`:\n\n```\n%s\n```\n\nКоммит `%s` автоматически откачен.\n\n**Что делать:** изменения кода, сцен и ассетов должны идти через задачу и PR:\n\n1. `pwsh -File scripts/agent/claim.ps1 -Task T-XXXX -Owner <имя>`\n2. работа в ветке `task/T-XXXX-*`\n3. PR с названием `[T-XXXX] ...`\n\nСм. `AGENTS.md`, раздел 3.\n' "$ACTOR" "$BAD" "$SHA")
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/issues" \
+            -d "$(jq -n --arg t "claims-guard: прямой push в main отклонён ($SHA)" --arg b "$BODY" '{title:$t, body:$b, labels:["process"]}')"

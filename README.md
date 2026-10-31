@@ -52,64 +52,121 @@
 
 ## Спецификация анимаций
 
-Для реализации геймплея требуется **10 ключевых анимаций**:
+Для реализации геймплея требуется **9 ключевых анимаций** (4 кота + 3 пса + 2 ворона).
+Если у ворона появится третья анимация (пикирование), число станет 10 — решение зафиксировано в задаче T-0011.
 
 ### Кот (4 анимации)
-1. `cat_idle` — сидит, глаза горят (1-2 кадров)
-2. `cat_walk` — движение (4-6 кадров)
+1. `cat_idle` — сидит, глаза горят (1–2 кадра)
+2. `cat_walk` — движение (4–6 кадров)
 3. `cat_crawling` — подползание / пролезание под препятствиями (4–6 кадров)
-4. `cat_jump` — фазы прыжка(3–4 кадра)
+4. `cat_jump` — фазы прыжка (3–4 кадра)
 
 ### Пёс (3 анимации)
 1. `dog_idle` — лежит (3 кадра)
-2. `dog_run` — бег (4-6 кадров)
+2. `dog_run` — бег (4–6 кадров)
 3. `dog_jump_high` — прыжок (4 кадра)
 
-### Ворон (3 анимации)
+### Ворон (2 анимации)
 1. `bird_idle` — зависание в воздухе / парение (4 кадра)
 2. `bird_fly` — активный взмах крыльев (6 кадров)
 
 ## Структура проекта
 
 ```
-sense-walk/
+ghost/
+├── AGENTS.md                 инструкции для ИИ-агентов (единый канон)
+├── CLAUDE.md, GEMINI.md      обёртки для конкретных инструментов
+├── README.md                 этот файл
+├── project.godot             настройки Godot 4.7 (1800×800, gl_compatibility)
+├── .gitignore, .gitattributes
+├── docs/
+│   ├── ARCHITECTURE.md       сцены ↔ скрипты ↔ формы, текущее состояние
+│   ├── GDSCRIPT_STYLE.md     стиль кода
+│   ├── INPUT_MAP.md          действия ввода (сейчас секции [input] нет — T-0002)
+│   └── ASSETS.md             источники и лицензии ассетов
+├── tasks/                    задачи команды и ИИ-агентов
+│   ├── README.md, TEMPLATE.md
+│   ├── claims/               активные блокировки (локи)
+│   └── done/                 завершённые задачи
+├── scripts/agent/            claim / release / status / heartbeat / verify
 ├── assets/
 │   ├── sprites/
-│   │   ├── cat/
-│   │   │   ├── cat_idle.png
-│   │   │   ├── cat_walk.png
-│   │   │   ├── cat_crawling.png
-│   │   │   └── cat_jump.png
-│   │   ├── dog/
-│   │   │   ├── dog_idle.png
-│   │   │   ├── dog_run.png
-│   │   │   └── dog_jump_high.png
-│   │   └── bird/
-│   │       ├── bird_idle.png
-│   │       └── bird_fly.png
+│   │   └── cat/              14 PNG (idle 2, walk 6, crawling 5, jump 1)
+│   │       ├── cat_idle1.png … cat_idle2.png
+│   │       ├── cat_walk1.png … cat_walk6.png
+│   │       ├── cat_crawling1.png … cat_crawling5.png
+│   │       └── anim_cat_idle.tscn, anim_cat_walk.tscn,
+│   │           anim_cat_crawling.tscn, anim_cat_jump.tscn
 │   ├── environment/
-│   │   ├── halloween_props
-│   │   └── tileset_spooky
-│   └── audio/
-│       └── music/
+│   │   └── tileset_spooky/   13 PNG: tile, grass, grass_to_dog, log, bench,
+│   │                         box_to_cat, box_to_dog, branch, lantern,
+│   │                         puddle, pit, air
+│   └── audio/                2 mp3 (лицензии не подтверждены — docs/ASSETS.md)
 ├── scenes/
 │   ├── MainMenu.tscn
-│   ├── Level_Cat_Cemetery.tscn
+│   ├── Level_Cat_Cemetry.tscn
 │   ├── Level_Dog_Park.tscn
 │   └── Level_Bird_Rooftops.tscn
-├── scripts/
-│   ├── PlayerController.gd
-│   ├── MovementCat.gd
-│   ├── MovementDog.gd
-│   ├── MovementBird.gd
-│   ├── ShapeShiftManager.gd
-│   ├── GhostVisionShader.gd
-│   ├── Obstacle.gd
-│   └── WindZone.gd
-├── .gitignore
-└── README.md
+└── scripts/
+    ├── PlayerController.gd
+    ├── MovementCat.gd
+    ├── MovementDog.gd
+    ├── MovementBird.gd
+    ├── ShapeShiftManager.gd
+    ├── GhostVisionShader.gd
+    ├── Obstacle.gd
+    └── WindZone.gd
 ```
-размер игрового экрана 1800;800
+
+Игровой экран — **1800×800** (`project.godot`, `window/size/viewport_width/height`, растяжение `canvas_items`).
+
+### Текущее состояние
+
+Скрипты в `scripts/*.gd` — **заглушки** (`extends Node`), а сцены пока не содержат игровой логики.
+Спрайты нарисованы только для кота; пса и ворона ещё нужно нарисовать (`tasks/T-0010`, `tasks/T-0011`).
+Что уже есть, а что нет — подробно в `docs/ARCHITECTURE.md`.
+
+## Быстрый старт
+
+1. Установить **Godot 4.7** (стандартная сборка GDScript, не .NET).
+2. Клонировать репозиторий и открыть `project.godot` в редакторе.
+3. Запустить (F5) — сейчас открывается `Level_Bird_Rooftops.tscn`; главной сценой станет `MainMenu.tscn`
+   после задачи T-0002.
+4. Проверки перед сдачей работы:
+
+```powershell
+pwsh -File scripts/agent/verify.ps1
+```
+
+## Как мы работаем (люди и ИИ-агенты)
+
+Каждый шаг работы — отдельная ветка, каждая ветка — отдельная задача из `tasks/`.
+
+```powershell
+pwsh -File scripts/agent/status.ps1                                  # что свободно
+pwsh -File scripts/agent/claim.ps1  -Task T-0012 -Owner <имя>        # взять задачу
+pwsh -File scripts/agent/verify.ps1                                  # проверить
+pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner <имя>       # закрыть
+```
+
+* Задачу нельзя взять вручную: `claim.ps1` создаёт жёсткий лок-ветку `claim/T-XXXX`
+  и лиз-файл `tasks/claims/T-XXXX.md`. Второй агент получит отказ.
+* Две задачи не могут делить один файл — это проверяется по полю `paths` в задаче.
+* Код попадает в `main` только через PR с названием `[T-XXXX] ...` и squash-merge.
+* Подробности — `AGENTS.md` (для ИИ) и `tasks/README.md` (для людей).
+
+## Документация
+
+| Документ | Для кого |
+|---|---|
+| `AGENTS.md` | ИИ-агенты: правила, запреты, порядок работы |
+| `tasks/README.md` | команда: как устроены задачи и блокировки |
+| `docs/ARCHITECTURE.md` | все: архитектура и текущее состояние |
+| `docs/GDSCRIPT_STYLE.md` | все: как писать код |
+| `docs/INPUT_MAP.md` | все: управление |
+| `docs/ASSETS.md` | все: ассеты и лицензии |
+
+## Компоненты
 
 ### 1. `scripts/PlayerController.gd`
 Главный менеджер игрока (CharacterBody2D). Управляет переключением состояний движения, коллизиями и передачей ввода текущему скрипту формы.
@@ -133,8 +190,8 @@ sense-walk/
   * `is_crawling: bool`
 * **Функционал и функции:**
   * `move(player: CharacterBody2D, delta: float)` — обработка бега и прыжков.
-  * `crawl()` — при нажатии `UI_DOWN` уменьшает высоту коллизии в 2 раза и переключает анимацию на `cat_crawling`.
-  * `apply_night_vision()` — активирует конусный свет перед кошкой для проявления скрытых объектов в темноте.
+  * `crawl()` — при удержании действия `crawl` уменьшает высоту коллизии в 2 раза и переключает анимацию на `cat_crawling`.
+  * `apply_night_vision()` — включает ночное зрение: конус света перед котом, через который проявляются скрытые объекты (шейдер — `GhostVisionShader.gd`).
 
 ---
 
@@ -152,15 +209,15 @@ sense-walk/
 * **Переменные физики:**
   * `FLY_SPEED = ...`
   * `WIND_RESISTANCE = ...`
-  * `vertical_velocity: ...`
+  * `vertical_velocity: float`
 * **Функционал и функции:**
-  * `move(player: CharacterBody2D, delta: float)` — обработка движения по оси $X$ (`UI_UP`, `UI_DOWN`, `UI_LEFT`, `UI_RIGHT`).
+  * `move(player: CharacterBody2D, delta: float)` — полёт по обеим осям (`move_up`, `move_down`, `move_left`, `move_right`).
   * `apply_wind_force(force: Vector2)` — начисление смещения при попадании в зону ветрового потока.
 
 ### 5. `scripts/ShapeShiftManager.gd`
-Глобальный синглтон (Autoload) или менеджер уровней для обработки смены форм.
+Глобальный синглтон (Autoload) для обработки смены форм.
 * **Функционал:**
-  * `change_form(new_form: String)` — проигрывает эффект призрачной вспышки (Particals/AnimationPlayer), подменяет скрипт движения в `PlayerController` и меняет набор анимаций.
+  * `change_form(new_form: String)` — проигрывает эффект призрачной вспышки (`CPUParticles2D`/`AnimationPlayer`), подменяет скрипт движения в `PlayerController` и меняет набор анимаций.
   * `trigger_level_transition()` — сохраняет прогресс и загружает следующий тематический уровень при достижении финиша.
 
 ### 6. `scripts/GhostVisionShader.gd`
@@ -184,14 +241,29 @@ sense-walk/
 * **Функционал:**
   * `_physics_process(delta)` — передает вектор силы ветра в `MovementBird.gd`, если птица находится внутри `Area2D`.
 
-## Необходимые файлы и техническая реализация
+## Задачи и статус реализации
 
-1. **Графические ресурсы:**
-   * Спрайт-листы анимаций всех трех животных.
-   * Декорации: тыквы , кованые ограды, ветки, лавочки, сухие бревна, паутина.
-2. **Скрипты и логика:**
-   * `ShapeShiftManager.gd` — обработка трансформации (эффект вспышки призрачного света при смене формы).
-   * `PlayerController.gd` — логика физики и ввода под каждую форму.
-   * `GhostVisionShader.gd` — шейдер ночного/призрачного зрения для уровня Кота.
-3. **Сцены:**
-   * 3 тематических хэллоуинских уровня.
+Список работ с acceptance criteria — в `tasks/`. Ниже — сводка, чтобы читать README было достаточно.
+
+| Задача | Что | Состояние |
+|---|---|---|
+| T-0001 | Инфраструктура ИИ-процесса (AGENTS.md, docs, скрипты, CI) | выполнено |
+| T-0002 | Карта ввода, имя проекта, главная сцена | TODO |
+| T-0003 | `PlayerController.gd` + `scenes/Player.tscn` | TODO |
+| T-0004 | `ShapeShiftManager.gd` (Autoload) | TODO |
+| T-0005 | Кот: физика и подползание | TODO |
+| T-0006 | Пёс: скорость, прыжок, ломание коробок | TODO |
+| T-0007 | Ворон: полёт и ветер (`MovementBird`, `WindZone`) | TODO |
+| T-0008 | Ночное зрение: шейдер и маска темноты | TODO |
+| T-0009 | Препятствия и чекпоинты (`Obstacle.gd`) | TODO |
+| T-0010 | Графика пса | TODO |
+| T-0011 | Графика ворона | TODO |
+| T-0012 | Меню и пауза | TODO |
+
+### Ещё нужно сделать по проекту
+
+* **Графика:** спрайты пса и ворона (у кота — готовы).
+* **Декор:** тыквы, кованые ограды, ветки, лавочки, сухие брёвна, паутина — сейчас есть только
+  базовый тайлсет `tileset_spooky` и часть пропсов (`log`, `bench`, `branch`, `lantern`, `pit`).
+* **Звук:** заменить mp3 с неподтверждённой лицензией (см. `docs/ASSETS.md`).
+* **Уровни:** 3 тематические сцены наполнить геймплеем.

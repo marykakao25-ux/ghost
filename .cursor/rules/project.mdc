@@ -1,0 +1,29 @@
+---
+description: Правила работы ИИ-агентов в проекте Ghost (Godot 4.7)
+alwaysApply: true
+---
+
+# Ghost — правила агента
+
+Канонические инструкции: **[`AGENTS.md`](../../AGENTS.md)** в корне репозитория.
+Прочитайте его целиком перед изменениями. Ниже — минимум, который нельзя нарушать.
+
+## Порядок работы
+
+1. `pwsh -File scripts/agent/status.ps1` — посмотреть свободные задачи.
+2. Захват: `pwsh -File scripts/agent/claim.ps1 -Task T-XXXX -Owner <имя>`. Вручную задачу брать нельзя.
+3. Работа только в ветке `task/T-XXXX-*`, только с файлами из `paths` задачи.
+4. `pwsh -File scripts/agent/verify.ps1` — обязателен перед сдачей.
+5. `pwsh -File scripts/agent/release.ps1 -Task T-XXXX -Owner <имя>`, затем PR `[T-XXXX] ...`.
+
+## Запреты
+
+- Не коммитить `.godot/`, `build/`, `*.exe`, `*.pck`, `*.keystore`, `.vscode/`.
+- Не править руками `*.import`, не удалять `*.uid`, не менять `uid://` в `.tscn`.
+- Конфликты в `.tscn` — только переоткрытием сцены в редакторе (`git checkout --ours` + правка).
+- Не менять `project.godot`, рендерер, разрешение и `run/main_scene` вне задач T-0002/T-0004.
+- Не использовать действия `UI_*` для геймплея — только собственные из `docs/INPUT_MAP.md`.
+
+## Стек
+
+Godot 4.7, GDScript, `gl_compatibility`, экран 1800×800, отступы — табы.
