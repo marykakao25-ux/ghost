@@ -1,12 +1,12 @@
 ---
 id: T-0019
 title: LevelDirector — регистрация игрока и респавн по checkpoint_reset
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:39:28Z
+branch: task/T-0019-level-director
 paths:
   - scripts/LevelDirector.gd
 depends_on: [T-0003, T-0004, T-0009]
