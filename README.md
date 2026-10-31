@@ -52,8 +52,9 @@
 
 ## Спецификация анимаций
 
-Для реализации геймплея требуется **9 ключевых анимаций** (4 кота + 3 пса + 2 ворона).
-Если у ворона появится третья анимация (пикирование), число станет 10 — решение зафиксировано в задаче T-0011.
+В репозитории есть **9 ключевых анимаций** (4 кота + 3 пса + 2 ворона),
+а также кадры призрака в `assets/sprites/gg/`. В сценах пакетов анимация называется `default`;
+имена ниже обозначают пакеты, а не имена внутри SpriteFrames.
 
 ### Кот (4 анимации)
 1. `cat_idle` — сидит, глаза горят (1–2 кадра)
@@ -82,7 +83,7 @@ ghost/
 ├── docs/
 │   ├── ARCHITECTURE.md       сцены ↔ скрипты ↔ формы, текущее состояние
 │   ├── GDSCRIPT_STYLE.md     стиль кода
-│   ├── INPUT_MAP.md          действия ввода (сейчас секции [input] нет — T-0002)
+│   ├── INPUT_MAP.md          11 действий из project.godot и состояние обработчиков
 │   └── ASSETS.md             источники и лицензии ассетов
 ├── tasks/                    задачи команды и ИИ-агентов
 │   ├── README.md, TEMPLATE.md
@@ -91,6 +92,9 @@ ghost/
 ├── scripts/agent/            claim / release / status / heartbeat / verify
 ├── assets/
 │   ├── sprites/
+│   │   ├── dog/              idle / run / jump_high, PNG и сцены анимаций
+│   │   ├── bird/             idle / fly, PNG и сцены анимаций
+│   │   ├── gg/               кадры призрака
 │   │   └── cat/              14 PNG (idle 2, walk 6, crawling 5, jump 1)
 │   │       ├── cat_idle1.png … cat_idle2.png
 │   │       ├── cat_walk1.png … cat_walk6.png
@@ -101,9 +105,13 @@ ghost/
 │   │   └── tileset_spooky/   13 PNG: tile, grass, grass_to_dog, log, bench,
 │   │                         box_to_cat, box_to_dog, branch, lantern,
 │   │                         puddle, pit, air
+│   ├── shaders/              ghost_vision.gdshader
 │   └── audio/                2 mp3 (лицензии не подтверждены — docs/ASSETS.md)
 ├── scenes/
 │   ├── MainMenu.tscn
+│   ├── MainMenu.gd
+│   ├── Player.tscn
+│   ├── Obstacle.tscn
 │   ├── Level_Cat_Cemetry.tscn
 │   ├── Level_Dog_Park.tscn
 │   └── Level_Bird_Rooftops.tscn
@@ -122,21 +130,30 @@ ghost/
 
 ### Текущее состояние
 
-Скрипты в `scripts/*.gd` — **заглушки** (`extends Node`), а сцены пока не содержат игровой логики.
-Спрайты нарисованы только для кота; пса и ворона ещё нужно нарисовать (`tasks/T-0010`, `tasks/T-0011`).
-Что уже есть, а что нет — подробно в `docs/ARCHITECTURE.md`.
+Реализованы PlayerController, движение трёх форм, менеджер смены форм и прогресса,
+ночное зрение, зона ветра и сенсор препятствий с сигналом возврата на чекпоинт.
+Есть отдельные Player.tscn и Obstacle.tscn, графика кота, пса, ворона и призрака.
+Главная сцена — MainMenu с кнопками «Играть» / «Выход».
+
+**Уровни ещё не играбельны:** в трёх сценах нет экземпляра Player и физической геометрии.
+Кнопка «Играть» открывает заготовку кладбища, а не готовый игровой цикл.
+Не собраны респавн, ввод смены форм/паузы и переходы между уровнями; анимации пса требуют
+подключения пакетов SpriteFrames (T-0017). Следующий этап — T-0018…T-0025.
+Подробное фактическое состояние — в `docs/ARCHITECTURE.md`; концепция выше описывает замысел.
 
 ## Быстрый старт
 
 1. Установить **Godot 4.7** (стандартная сборка GDScript, не .NET).
 2. Клонировать репозиторий и открыть `project.godot` в редакторе.
-3. Запустить (F5) — сейчас открывается `Level_Bird_Rooftops.tscn`; главной сценой станет `MainMenu.tscn`
-   после задачи T-0002.
+3. Запустить (F5) — откроется `MainMenu.tscn`. «Играть» ведёт в заготовку уровня кота.
+   Для проверки отдельных компонентов используйте экземпляр `scenes/Player.tscn` в тестовой сцене.
 4. Проверки перед сдачей работы:
 
 ```powershell
 pwsh -File scripts/agent/verify.ps1
 ```
+
+На Linux без PowerShell: `bash scripts/agent/verify.sh`.
 
 ## Как мы работаем (люди и ИИ-агенты)
 
@@ -171,8 +188,8 @@ pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner <имя>       # зак
 ### 1. `scripts/PlayerController.gd`
 Главный менеджер игрока (CharacterBody2D). Управляет переключением состояний движения, коллизиями и передачей ввода текущему скрипту формы.
 * **Основные переменные:**
-  * `current_form: String` (`"CAT"`, `"DOG"`, `"BIRD"`)
-  * `current_movement_script: Node` — ссылка на текущий компонент физики.
+  * `current_form: Form` (enum `CAT`, `DOG`, `BIRD`)
+  * `current_movement: Node` — ссылка на текущий компонент физики.
   * `animated_sprite: AnimatedSprite2D` — контроллер спрайтов.
   * `collision_shape: CollisionShape2D` — управляемая коллизия игрока.
 * **Ключевая логика:**
@@ -184,32 +201,32 @@ pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner <имя>       # зак
 ### 2. `scripts/MovementCat.gd`
 Модуль физики для формы Кота.
 * **Переменные физики:**
-  * `SPEED = ...`
-  * `JUMP_VELOCITY = ...`
-  * `CRAWL_SPEED = ...`
+  * `SPEED = 220.0`
+  * `JUMP_VELOCITY = -420.0`
+  * `CRAWL_SPEED = 90.0`
   * `is_crawling: bool`
 * **Функционал и функции:**
   * `move(player: CharacterBody2D, delta: float)` — обработка бега и прыжков.
-  * `crawl()` — при удержании действия `crawl` уменьшает высоту коллизии в 2 раза и переключает анимацию на `cat_crawling`.
-  * `apply_night_vision()` — включает ночное зрение: конус света перед котом, через который проявляются скрытые объекты (шейдер — `GhostVisionShader.gd`).
+  * При удержании `crawl` уменьшает коллизию, проверяет место для вставания и выбирает пакет crawling.
+  * `night_vision_enabled` используется `GhostVisionShader.gd` для экранной маски с конусом света.
 
 ---
 
 ### 3. `scripts/MovementDog.gd`
 Модуль физики для формы Собаки (скорость и прыгучесть).
 * **Переменные физики:**
-  * `SPEED = ...`
-  * `JUMP_VELOCITY = ...`
-  * `ACCELERATION = ...`
+  * `SPEED = 360.0`
+  * `JUMP_VELOCITY = -580.0`
+  * `ACCELERATION = 900.0`
 * **Функционал и функции:**
   * `move(player: CharacterBody2D, delta: float)` — быстрый бег с инерцией и вычисление траектории высокого прыжка.
   * `check_obstacle_break()` — проверка столкновения с разрушаемыми деревянными коробками на высокой скорости.
 
 ### 4. `scripts/MovementBird.gd`
 * **Переменные физики:**
-  * `FLY_SPEED = ...`
-  * `WIND_RESISTANCE = ...`
-  * `vertical_velocity: float`
+  * `FLY_SPEED = 200.0`
+  * `WIND_RESISTANCE = 2.5`
+  * `MAX_VERTICAL_SPEED = 260.0`
 * **Функционал и функции:**
   * `move(player: CharacterBody2D, delta: float)` — полёт по обеим осям (`move_up`, `move_down`, `move_left`, `move_right`).
   * `apply_wind_force(force: Vector2)` — начисление смещения при попадании в зону ветрового потока.
@@ -217,8 +234,10 @@ pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner <имя>       # зак
 ### 5. `scripts/ShapeShiftManager.gd`
 Глобальный синглтон (Autoload) для обработки смены форм.
 * **Функционал:**
-  * `change_form(new_form: String)` — проигрывает эффект призрачной вспышки (`CPUParticles2D`/`AnimationPlayer`), подменяет скрипт движения в `PlayerController` и меняет набор анимаций.
-  * `trigger_level_transition()` — сохраняет прогресс и загружает следующий тематический уровень при достижении финиша.
+  * `register_player(player)` — задаёт активного игрока; форма хранится как int из enum PlayerController.Form.
+  * `change_form(new_form: int)` — проигрывает вспышку CPUParticles2D и вызывает set_form у игрока.
+  * `set_checkpoint(position)` и `last_checkpoint` — позиция для внешнего обработчика респавна.
+  * `trigger_level_transition(next_scene: String)` — сохраняет прогресс и загружает указанную сцену.
 
 ### 6. `scripts/GhostVisionShader.gd`
 Скрипт управления 2D-шейдером ночного видения для уровня Кота.
@@ -231,7 +250,9 @@ pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner <имя>       # зак
 * **Переменные:**
   * `obstacle_type: Enum` (`CRAWL_UNDER`, `JUMP_OVER`, `FLY_AROUND`, `HAZARD`)
 * **Функционал:**
-  * `_on_body_entered(body)` — проверяет тип существа. Если кот пытается перепрыгнуть коробку вместо подлезания под нее или собака падает в овраг — перезапускает чекпоинт.
+  * `_on_body_entered(body)` — проверяет форму PlayerController по `allowed_forms` (cat/dog/bird).
+    HAZARD опасен для всех форм. Эмитит `checkpoint_reset(reason)` с защитой от рекурсии;
+    сам не перезапускает сцену, обработчик подключается отдельно.
 
 ### 8. `scripts/WindZone.gd`
 Скрипт для зон с порывами ветра на уровне Ворона (Area2D).
@@ -248,21 +269,22 @@ pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner <имя>       # зак
 | Задача | Что | Состояние |
 |---|---|---|
 | T-0001 | Инфраструктура ИИ-процесса (AGENTS.md, docs, скрипты, CI) | выполнено |
-| T-0002 | Карта ввода, имя проекта, главная сцена | TODO |
-| T-0003 | `PlayerController.gd` + `scenes/Player.tscn` | TODO |
-| T-0004 | `ShapeShiftManager.gd` (Autoload) | TODO |
-| T-0005 | Кот: физика и подползание | TODO |
-| T-0006 | Пёс: скорость, прыжок, ломание коробок | TODO |
-| T-0007 | Ворон: полёт и ветер (`MovementBird`, `WindZone`) | TODO |
-| T-0008 | Ночное зрение: шейдер и маска темноты | TODO |
-| T-0009 | Препятствия и чекпоинты (`Obstacle.gd`) | TODO |
-| T-0010 | Графика пса | TODO |
-| T-0011 | Графика ворона | TODO |
-| T-0012 | Меню и пауза | TODO |
+| T-0002 | Карта ввода, имя проекта, главная сцена | выполнено |
+| T-0003 | `PlayerController.gd` + `scenes/Player.tscn` | выполнено |
+| T-0004 | `ShapeShiftManager.gd` (Autoload) | выполнено |
+| T-0005 | Кот: физика и подползание | выполнено |
+| T-0006 | Пёс: скорость, прыжок, вызов разрушения | выполнено; анимации — T-0017 |
+| T-0007 | Ворон: полёт и ветер (`MovementBird`, `WindZone`) | выполнено |
+| T-0008 | Ночное зрение: шейдер и маска темноты | выполнено |
+| T-0009 | Сенсор препятствий (`Obstacle.gd`) | выполнено; обработчик респавна — T-0019 |
+| T-0010 | Графика пса | выполнено |
+| T-0011 | Графика ворона | выполнено |
+| T-0012 | Меню | выполнено; игровая пауза — T-0020 |
+| T-0013…T-0014 | Документация ассетов и исправление CI | выполнено |
 
 ### Ещё нужно сделать по проекту
 
-* **Графика:** спрайты пса и ворона (у кота — готовы).
+* **Фундамент:** подключение анимаций пса, BreakableBox, LevelDirector, ввод смены форм и пауза.
 * **Декор:** тыквы, кованые ограды, ветки, лавочки, сухие брёвна, паутина — сейчас есть только
   базовый тайлсет `tileset_spooky` и часть пропсов (`log`, `bench`, `branch`, `lantern`, `pit`).
 * **Звук:** заменить mp3 с неподтверждённой лицензией (см. `docs/ASSETS.md`).
