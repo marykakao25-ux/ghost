@@ -1,12 +1,12 @@
 ---
 id: T-0010
 title: Графика пса — спрайты и SpriteFrames (4 анимации)
-status: todo
+status: claimed
 form: art
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T19:32:15Z
+branch: task/T-0010-dog-art
 paths:
   - assets/sprites/dog
 depends_on: []
