@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cv7qr47g7l5ej"]
 
-[ext_resource type="AudioStream" uid="uid://c8tw0hlttjo7k" path="res://assets/audio/Звук сверчков живой звук на природе.mp3" id="1_yqorp"]
+[ext_resource type="AudioStream" uid="uid://c8tw0hlttjo7k" path="res://assets/audio/Live cricket sounds in nature.mp3" id="1_yqorp"]
 [ext_resource type="Script" path="res://scenes/MainMenu.gd" id="2_menu"]
 
 [node name="MainMenu" type="Node2D"]

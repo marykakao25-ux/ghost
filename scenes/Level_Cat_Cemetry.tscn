@@ -1,6 +1,6 @@
 [gd_scene load_steps=17 format=3 uid="uid://bpjnsveiytj2n"]
 
-[ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_t7pfn"]
+[ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown.mp3" id="1_t7pfn"]
 [ext_resource type="Texture2D" uid="uid://dw270u10it62u" path="res://assets/environment/tileset_spooky/tile.png" id="2_fcwye"]
 [ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
