@@ -1,7 +1,7 @@
 ---
 id: T-0025
 title: Финальная сцена — облик призрака (assets/sprites/gg)
-status: claimed
+status: done
 form: infra
 priority: medium
 owner: opencode
@@ -44,3 +44,4 @@ created: 2026-10-31
 - [ ] Godot: открыть Finale.tscn
 
 ## Заметки и история
+- 2026-10-31T18:04:37Z — работа завершена владельцем opencode, ветка task/T-0025-finale-ghost-form, ожидает PR
