@@ -1,12 +1,12 @@
 ---
 id: T-0020
 title: PlayerController — ввод shapeshift* и пауза pause
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T21:42:16Z
+branch: task/T-0020-player-shapeshift-pause
 paths:
   - scripts/PlayerController.gd
 depends_on: [T-0002, T-0003, T-0004]
