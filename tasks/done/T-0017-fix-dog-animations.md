@@ -1,7 +1,7 @@
 ---
 id: T-0017
 title: MovementDog — анимации через preload anim_dog_*.tscn (как у кота)
-status: claimed
+status: done
 form: dog
 priority: high
 owner: opencode
@@ -41,3 +41,4 @@ created: 2026-10-31
 - [ ] Godot headless `--quit` без SCRIPT/Parse Error
 
 ## Заметки и история
+- 2026-10-31T17:36:19Z — работа завершена владельцем opencode, ветка task/T-0017-fix-dog-animations, ожидает PR
