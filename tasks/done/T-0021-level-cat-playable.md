@@ -1,7 +1,7 @@
 ---
 id: T-0021
 title: Играбельный уровень кота — пол, Player, Obstacle, зрение, LevelDirector
-status: claimed
+status: done
 form: cat
 priority: high
 owner: mixey1201
@@ -45,3 +45,4 @@ created: 2026-10-31
 - [ ] Ручной smoke: пол, crawl, респавн
 
 ## Заметки и история
+- 2026-10-31T18:00:01Z — работа завершена владельцем mixey1201, ветка task/T-0021-level-cat-playable, ожидает PR
