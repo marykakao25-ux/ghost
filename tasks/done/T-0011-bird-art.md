@@ -1,7 +1,7 @@
 ---
 id: T-0011
 title: Графика ворона — спрайты и SpriteFrames
-status: claimed
+status: done
 form: art
 priority: medium
 owner: mixey1201
@@ -42,3 +42,4 @@ created: 2026-10-31
 - [ ] `godot --path . assets/sprites/bird/anim_bird_fly.tscn`
 
 ## Заметки и история
+- 2026-10-31T15:40:47Z — работа завершена владельцем mixey1201, ветка task/T-0011-bird-art, ожидает PR
