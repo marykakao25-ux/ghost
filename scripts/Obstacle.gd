@@ -50,5 +50,5 @@ func _get_reset_reason() -> String:
 		ObstacleType.FLY_AROUND:
 			return "Эта форма не может облететь препятствие."
 		ObstacleType.HAZARD:
-			return "Игрок попал в опасную зону."
+			return "Осторожно: ветка, фонарь или иная опасность."
 	return "Игрок столкнулся с препятствием."

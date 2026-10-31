@@ -47,6 +47,7 @@ func _run() -> void:
 	await _test_crawl()
 	await _test_respawn()
 	await _test_dog()
+	await _test_bird_props()
 	await _test_flow()
 	if _had_progress:
 		var file: FileAccess = FileAccess.open("user://progress.cfg", FileAccess.WRITE)
@@ -179,6 +180,16 @@ func _test_dog() -> void:
 	_check(int(exit_dog.get("host_form")) == 2, "Выход dog без idle-ворона")
 	_check(current_scene.get_node("LogVisual").visible, "Бревно tileset скрыто")
 	_check(current_scene.get_node("PitDecor").visible, "Овраг tileset скрыт")
+
+
+func _test_bird_props() -> void:
+	await _load_level("res://scenes/Level_Bird_Rooftops.tscn")
+	_check(current_scene.get_node("BranchDecor").visible, "Ветка скрыта")
+	_check(current_scene.get_node("AirDecor").visible, "Поток air скрыт")
+	_check(current_scene.get_node("LanternDecor").visible, "Фонарь скрыт")
+	_check(current_scene.get_node("LanternDecor").global_position.y > 500.0, "Фонарь не снизу")
+	_check(current_scene.has_node("WindZoneRight"), "Нет WindZone")
+	_check(current_scene.has_node("ObstacleFly"), "Нет коллизии ветки")
 
 
 func _test_flow() -> void:
