@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://def1gclxorthl"]
+
+[ext_resource type="Texture2D" uid="uid://pvd6da53m0rh" path="res://assets/sprites/cat/cat_walk4.png" id="1_2ldv6"]
+[ext_resource type="Texture2D" uid="uid://cc08rhfxij6vw" path="res://assets/sprites/cat/cat_walk6.png" id="2_qp8cf"]
+[ext_resource type="Texture2D" uid="uid://bgn004d2llw63" path="res://assets/sprites/cat/cat_crawling3.png" id="3_2rkkv"]
+[ext_resource type="Texture2D" uid="uid://drowmrcowetay" path="res://assets/sprites/cat/cat_walk5.png" id="4_uyuuw"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2f4xy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_2ldv6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_qp8cf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_2rkkv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_uyuuw")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="anim_cat_jump" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_2f4xy")
+frame_progress = 0.0829457

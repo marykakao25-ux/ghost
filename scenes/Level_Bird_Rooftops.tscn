@@ -1,3 +1,10 @@
-[gd_scene format=3 uid="uid://crs113cokr4v8"]
+[gd_scene load_steps=2 format=3 uid="uid://crs113cokr4v8"]
+
+[ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_ab656"]
 
 [node name="LevelBirdRooftops" type="Node2D"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_ab656")
+volume_db = -40.0
+autoplay = true
