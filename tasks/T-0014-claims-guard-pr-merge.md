@@ -1,12 +1,12 @@
 ---
 id: T-0014
 title: claims-guard — не создавать issue на squash-merge PR человеком
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T19:46:35Z
+branch: task/T-0014-claims-guard-pr-merge
 paths:
   - .github/workflows/claims-guard.yml
 depends_on: []
