@@ -1,7 +1,7 @@
 ---
 id: T-0005
 title: Кот — физика движения и подползание (MovementCat)
-status: claimed
+status: done
 form: cat
 priority: high
 owner: mixey1201
@@ -46,3 +46,4 @@ created: 2026-10-31
 - [ ] Проверка в сцене `Level_Cat_Cemetry.tscn`
 
 ## Заметки и история
+- 2026-10-31T16:34:42Z — работа завершена владельцем mixey1201, ветка task/T-0005-cat-movement, ожидает PR
