@@ -26,7 +26,7 @@ $ErrorActionPreference = 'Stop'
 Initialize-TaskSystem
 
 # 'T-0002,T-0004' тоже допустимо: разделители могут попасть внутрь одного элемента.
-$Task = @($Task | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
+$taskList = @($Task | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
 
 function Fail {
     param([string]$Message)
@@ -34,10 +34,12 @@ function Fail {
     exit 1
 }
 
-if ($Task.Count -gt 1) {
+if ($taskList.Count -eq 0) { Fail 'Не указано ни одного id задачи.' }
+
+if ($taskList.Count -gt 1) {
     # Несколько задач закрываются по очереди: так проще проверить каждую и не смешать коммиты.
     $scriptPath = $PSCommandPath
-    foreach ($one in $Task) {
+    foreach ($one in $taskList) {
         Write-Step "Закрытие $one"
         $childArgs = @('-NoProfile', '-File', $scriptPath, '-Task', $one, '-Owner', $Owner)
         if ($Abort) { $childArgs += '-Abort' }
@@ -46,7 +48,7 @@ if ($Task.Count -gt 1) {
     }
     exit 0
 }
-$Task = $Task[0]
+$Task = [string]$taskList[0]
 
 Write-Step "1. Чтение задачи $Task"
 $taskPath = Find-Task -Id $Task
