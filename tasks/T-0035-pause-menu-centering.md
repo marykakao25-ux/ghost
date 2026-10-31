@@ -1,12 +1,12 @@
 ---
 id: T-0035
 title: Меню паузы смещено: панель привязана фиксированными координатами, не к viewport
-status: todo
+status: claimed
 form: infra
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T01:56:39Z
+branch: task/T-0035-pause-menu-centering
 paths:
   - scripts/PlayerController.gd
   - scripts/tests/interaction_regression.gd
