@@ -1,7 +1,7 @@
 ---
 id: T-0013
 title: Документировать ассеты dog/bird/gg/location в docs/ASSETS.md
-status: claimed
+status: done
 form: docs
 priority: medium
 owner: mixey1201
@@ -40,3 +40,4 @@ created: 2026-10-31
 - [ ] `pwsh -File scripts/agent/verify.ps1`
 
 ## Заметки и история
+- 2026-10-31T15:45:53Z — работа завершена владельцем mixey1201, ветка task/T-0013-assets-docs, ожидает PR
