@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/BreakableBox.gd" id="1_ph5fe"]
+[ext_resource type="Texture2D" path="res://assets/environment/tileset_spooky/box_to_dog.png" id="2_g085s"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18n8p"]
+size = Vector2(64, 64)
+
+[node name="BreakableBox" type="StaticBody2D" unique_id=1512310573]
+script = ExtResource("1_ph5fe")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=108573882]
+scale = Vector2(0.10666667, 0.10666667)
+texture = ExtResource("2_g085s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1459423576]
+shape = SubResource("RectangleShape2D_18n8p")
