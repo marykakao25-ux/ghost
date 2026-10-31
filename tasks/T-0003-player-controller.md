@@ -1,12 +1,12 @@
 ---
 id: T-0003
 title: PlayerController — CharacterBody2D, делегирование формы, коллизии
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: cursor
+lease_until: 2026-10-31T18:45:36Z
+branch: task/T-0003-player-controller
 paths:
   - scripts/PlayerController.gd
   - scenes/Player.tscn
