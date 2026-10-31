@@ -1,9 +1,3 @@
-[gd_scene load_steps=2 format=3 uid="uid://cv7qr47g7l5ej"]
-
-[ext_resource type="AudioStream" uid="uid://c8tw0hlttjo7k" path="res://assets/audio/Звук сверчков живой звук на природе.mp3" id="1_yqorp"]
+[gd_scene format=3 uid="uid://cv7qr47g7l5ej"]
 
 [node name="MainMenu" type="Node2D"]
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("1_yqorp")
-autoplay = true

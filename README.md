@@ -88,8 +88,8 @@ sense-walk/
 │   │       ├── bird_idle.png
 │   │       └── bird_fly.png
 │   ├── environment/
-│   │   ├── halloween_props
-│   │   └── tileset_spooky
+│   │   ├── halloween_props.png
+│   │   └── tileset_spooky.png
 │   └── audio/
 │       └── music/
 ├── scenes/
@@ -109,7 +109,6 @@ sense-walk/
 ├── .gitignore
 └── README.md
 ```
-размер игрового экрана 1800;800
 
 ### 1. `scripts/PlayerController.gd`
 Главный менеджер игрока (CharacterBody2D). Управляет переключением состояний движения, коллизиями и передачей ввода текущему скрипту формы.
