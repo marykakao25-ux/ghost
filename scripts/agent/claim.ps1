@@ -77,7 +77,7 @@ Write-Step '4. Обновление main'
 $startBranch = Get-CurrentBranch
 Invoke-Git -Arguments @('switch', 'main') | Out-Null
 Invoke-Git -Arguments @('pull', '--ff-only', 'origin', 'main') | Out-Null
-Write-Ok "main = $((Invoke-Git -Arguments @('rev-parse', '--short', 'HEAD')).Text)"
+Write-Ok "main = $(Invoke-Git -Arguments @('rev-parse', '--short', 'HEAD')).Text"
 
 # ---------------------------------------------------------------- шаг 5 ----
 Write-Step "5. Разбор задачи $Task и проверка лиза (слой A)"
