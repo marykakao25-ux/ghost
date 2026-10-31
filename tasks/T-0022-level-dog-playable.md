@@ -1,12 +1,12 @@
 ---
 id: T-0022
 title: Играбельный уровень пса — пол, Jump/Breakable, LevelDirector
-status: todo
+status: claimed
 form: dog
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T22:02:36Z
+branch: task/T-0022-level-dog-playable
 paths:
   - scenes/Level_Dog_Park.tscn
 depends_on: [T-0019, T-0020, T-0017, T-0018, T-0006]
