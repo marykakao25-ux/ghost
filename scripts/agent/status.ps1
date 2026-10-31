@@ -63,10 +63,10 @@ foreach ($task in $tasks) {
 
     $overlap = ''
     if ($claim) {
-        $ownPaths = @(ConvertTo-StringArray -Value (Get-TaskField -Task $claim -Key 'claimed_paths'))
+        $ownPaths = ConvertTo-StringArray -Value (Get-TaskField -Task $claim -Key 'claimed_paths')
         $conflicts = @(Get-PathConflicts -Paths $ownPaths -IgnoreTaskIds @($id) -Claims $claims)
         if ($conflicts.Count -gt 0) {
-            $overlap = '! ' + (($conflicts | ForEach-Object { $_.TaskId } | Select-Object -Unique) -join ',')
+            $overlap = '⚠ ' + (($conflicts | ForEach-Object { $_.TaskId } | Select-Object -Unique) -join ',')
         }
     }
 
