@@ -1,12 +1,12 @@
 ---
 id: T-0004
 title: ShapeShiftManager — смена формы и переход между уровнями
-status: done
+status: todo
 form: infra
 priority: high
-owner: agent-beta
-lease_until: 2026-10-31T12:37:38Z
-branch: task/T-0004-shapeshift-manager
+owner: null
+lease_until: null
+branch: null
 paths:
   - scripts/ShapeShiftManager.gd
   - project.godot
@@ -48,3 +48,5 @@ created: 2026-10-31
 
 ## Заметки и история
 - 2026-10-31T08:46:05Z — работа завершена владельцем agent-beta, ветка task/T-0004-shapeshift-manager, ожидает PR
+- 2026-10-31 — возврат в todo: статус «done» был артефактом сквозного теста claim→release (T-0001), код задачи не писался. `ShapeShiftManager.gd` по-прежнему заглушка.
+

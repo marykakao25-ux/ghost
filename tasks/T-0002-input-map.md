@@ -1,12 +1,12 @@
 ---
 id: T-0002
 title: Карта ввода и настройки проекта (input map, имя проекта, main scene)
-status: done
+status: todo
 form: infra
 priority: high
-owner: agent-alpha
-lease_until: 2026-10-31T12:36:57Z
-branch: task/T-0002-input-map
+owner: null
+lease_until: null
+branch: null
 paths:
   - project.godot
 depends_on: [T-0001]
@@ -49,3 +49,5 @@ created: 2026-10-31
 
 ## Заметки и история
 - 2026-10-31T08:45:45Z — работа завершена владельцем agent-alpha, ветка task/T-0002-input-map, ожидает PR
+- 2026-10-31 — возврат в todo: статус «done» был артефактом сквозного теста claim→release (T-0001), код задачи не писался. `project.godot` по-прежнему без секции `[input]`.
+
