@@ -1,7 +1,7 @@
 ---
 id: T-0004
 title: ShapeShiftManager — смена формы и переход между уровнями
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -50,3 +50,4 @@ created: 2026-10-31
 - 2026-10-31T08:46:05Z — работа завершена владельцем agent-beta, ветка task/T-0004-shapeshift-manager, ожидает PR
 - 2026-10-31 — возврат в todo: статус «done» был артефактом сквозного теста claim→release (T-0001), код задачи не писался. `ShapeShiftManager.gd` по-прежнему заглушка.
 
+- 2026-10-31T15:12:40Z — работа завершена владельцем mixey1201, ветка task/T-0004-shapeshift-manager, ожидает PR
