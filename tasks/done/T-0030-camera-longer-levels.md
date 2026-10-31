@@ -1,7 +1,7 @@
 ---
 id: T-0030
 title: Camera2D и удлинение уровней под крупного героя
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -46,3 +46,4 @@ created: 2026-11-01
 - [ ] `godot --path . --headless --quit` без SCRIPT/Parse Error
 
 ## Заметки и история
+- 2026-10-31T20:23:42Z — работа завершена владельцем mixey1201, ветка task/T-0030-camera-longer-levels, ожидает PR
