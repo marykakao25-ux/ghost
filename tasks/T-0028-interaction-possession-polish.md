@@ -5,7 +5,7 @@ status: claimed
 form: infra
 priority: high
 owner: opencode
-lease_until: 2026-10-31T23:00:24Z
+lease_until: 2026-10-31T23:07:10Z
 branch: task/T-0028-interaction-possession-polish
 paths:
   - scripts/PlayerController.gd
