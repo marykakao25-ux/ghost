@@ -1,12 +1,12 @@
 ---
 id: T-0006
 title: Пёс — скорость, высокий прыжок, ломание коробок (MovementDog)
-status: todo
+status: claimed
 form: dog
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: opencode
+lease_until: 2026-10-31T20:56:44Z
+branch: task/T-0006-dog-movement
 paths:
   - scripts/MovementDog.gd
 depends_on: [T-0003]
