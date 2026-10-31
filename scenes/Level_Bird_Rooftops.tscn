@@ -207,6 +207,7 @@ shape = SubResource("RectangleShape2D_checkpoint")
 [node name="LevelExit" parent="." instance=ExtResource("9_exit")]
 position = Vector2(1710, 350)
 next_scene = "res://scenes/Finale.tscn"
+host_form = 0
 exit_text = "К свету →"
 
 [node name="Presentation" type="Node2D" parent="."]

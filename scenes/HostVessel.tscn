@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/HostVessel.gd" id="1_host"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_host"]
+size = Vector2(120, 160)
+
+[node name="HostVessel" type="Area2D"]
+collision_layer = 0
+monitorable = false
+script = ExtResource("1_host")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_host")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -120.0
+offset_top = -200.0
+offset_right = 120.0
+offset_bottom = -160.0
+theme_override_font_sizes/font_size = 22
+text = "Вселиться →"
+horizontal_alignment = 1

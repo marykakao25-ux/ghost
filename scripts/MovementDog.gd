@@ -2,7 +2,7 @@ extends Node
 class_name MovementDog
 
 const SPEED: float = 360.0
-const JUMP_VELOCITY: float = -580.0
+const JUMP_VELOCITY: float = -720.0
 const ACCELERATION: float = 900.0
 const DECELERATION: float = 700.0
 const GRAVITY: float = 1400.0
@@ -70,17 +70,19 @@ func _update_animation(player: CharacterBody2D) -> void:
 		_cache_animation_frames()
 	if not is_zero_approx(player.velocity.x):
 		sprite.flip_h = player.velocity.x < 0.0
-	var animation: StringName = &"idle"
+	# dog_idle — лёжка только у HostVessel; у управляемого пса run/jump.
+	var animation: StringName = &"run"
 	if not player.is_on_floor():
 		animation = &"jump"
-	elif not is_zero_approx(player.velocity.x):
-		animation = &"run"
 	var frames: SpriteFrames = _frames.get(animation)
 	if frames == null or not frames.has_animation(&"default"):
 		return
 	if sprite.sprite_frames != frames:
 		sprite.sprite_frames = frames
-	if sprite.animation != &"default" or not sprite.is_playing():
+	if absf(player.velocity.x) <= 10.0 and player.is_on_floor():
+		sprite.pause()
+		sprite.frame = 0
+	elif sprite.animation != &"default" or not sprite.is_playing():
 		sprite.play(&"default")
 
 

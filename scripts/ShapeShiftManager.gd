@@ -72,8 +72,7 @@ func change_form(new_form: int) -> bool:
 		return false
 
 	var from_form: int = current_form
-	_spawn_flash(player)
-	_spawn_possession_ghost(player)
+	play_possession_fx(player)
 	current_form = new_form
 	_unlock_form(new_form)
 	player.set_form(new_form)
@@ -197,6 +196,11 @@ func _spawn_flash(player: Node) -> void:
 	_flash = flash
 
 
+func play_possession_fx(player: Node) -> void:
+	_spawn_flash(player)
+	_spawn_possession_ghost(player)
+
+
 func _spawn_possession_ghost(player: Node) -> void:
 	if player == null or not is_instance_valid(player):
 		return
@@ -211,10 +215,15 @@ func _spawn_possession_ghost(player: Node) -> void:
 	ghost.texture = _GHOST_TEXTURES[randi() % _GHOST_TEXTURES.size()]
 	ghost.modulate = Color(0.85, 0.95, 1.0, 0.9)
 	var tex_size: Vector2 = ghost.texture.get_size()
-	var target: float = 72.0
-	var ratio: float = target / maxf(tex_size.x, tex_size.y)
+	# Призрак ≈ 1/4 высоты экрана (800).
+	var target: float = 200.0
+	var used_h: float = tex_size.y
+	var image: Image = ghost.texture.get_image()
+	if image != null:
+		used_h = maxf(float(image.get_used_rect().size.y), 1.0)
+	var ratio: float = target / used_h
 	ghost.scale = Vector2(ratio, ratio)
-	ghost.position = Vector2(0.0, -36.0)
+	ghost.position = Vector2(0.0, -target * 0.35)
 	ghost.z_index = 20
 	pivot.add_child(ghost)
 	# Не скрываем AnimatedSprite формы — призрак поверх, затем исчезает.
