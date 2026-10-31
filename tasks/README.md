@@ -45,6 +45,17 @@ pwsh -File scripts/agent/status.ps1
 pwsh -File scripts/agent/release.ps1 -Task T-0012
 ```
 
+## Заведение новых задач
+
+Скрипты агентов умеют только брать готовые задачи; регистрации новых — нет.
+Очередь пополняется **отдельным PR, в котором меняются исключительно файлы
+`tasks/`**: ветка `chore/<slug>` от `origin/main`, файл `tasks/T-XXXX-<slug>.md`
+по `TEMPLATE.md` (`status: todo`, `owner/lease_until/branch: null`, следующий
+свободный id, точные `paths`, реальные `depends_on`), коммит и PR с названием
+`[T-XXXX] chore(tasks): ...`, squash-merge — и только затем обычный `claim.ps1`
+(прецеденты: PR #48, PR #53). Прямой push нового файла задачи в `main`
+запрещён. Канонический порядок — `AGENTS.md`, раздел 2, «Шаг 0б».
+
 ## Соглашение о `paths`
 
 `paths` в front matter — это **контракт**. Задача не имеет права менять файлы вне этого списка:
