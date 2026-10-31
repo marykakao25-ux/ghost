@@ -1,7 +1,7 @@
 ---
 id: T-0031
 title: Брёвна, коробки, лужи и овраги из tileset_spooky на кот/пёс
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -56,3 +56,4 @@ Gameplay-узлы со спрайтами из tileset (не прятать ед
 - [ ] Визуально в редакторе/игре пропы совпадают с файлами tileset
 
 ## Заметки и история
+- 2026-10-31T20:26:15Z — работа завершена владельцем mixey1201, ветка task/T-0031-cat-dog-tileset-props, ожидает PR
