@@ -45,11 +45,17 @@ foreach ($task in $tasks) {
     $id = "$(Get-TaskField -Task $task -Key 'id')"
     if ($id -eq '') { $id = ($task.Name -split '-')[0..1] -join '-' }
     $dir = "$(Get-TaskField -Task $task -Key '_dir')"
-    $status = "$(Get-TaskField -Task $task -Key 'status')"
-    $owner = "$(Get-TaskField -Task $task -Key 'owner')"
-    $branch = "$(Get-TaskField -Task $task -Key 'branch')"
 
+    # Статус берём из задачи, а из лиза — только TTL и владельца: лиз статуса не хранит.
     $claim = if ($claimsById.ContainsKey($id)) { $claimsById[$id] } else { $null }
+    $status = "$(Get-TaskField -Task $task -Key 'status')"
+    if ($status -eq '' -or $status -eq 'null') {
+        $status = if ($claim) { 'claimed' } else { 'todo' }
+    }
+    $owner = "$(Get-TaskField -Task $task -Key 'owner')"
+    if (($owner -eq '' -or $owner -eq 'null') -and $claim) {
+        $owner = "$(Get-TaskField -Task $claim -Key 'owner')"
+    }
     $ttl = if ($claim) { Get-LeaseRemaining -Claim $claim } else { '' }
     $lockRef = if ($remoteClaims -contains $id) { 'yes' } elseif ($NoRemote) { '?' } else { 'MISSING' }
     $workBranch = @($remoteTaskBranches | Where-Object { (Get-RemoteBranchSuffix -Name $_) -like "$id-*" })
