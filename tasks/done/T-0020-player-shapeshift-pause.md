@@ -1,7 +1,7 @@
 ---
 id: T-0020
 title: PlayerController — ввод shapeshift* и пауза pause
-status: claimed
+status: done
 form: infra
 priority: high
 owner: opencode
@@ -46,3 +46,4 @@ created: 2026-10-31
 - [ ] Godot headless без SCRIPT/Parse Error
 
 ## Заметки и история
+- 2026-10-31T17:44:46Z — работа завершена владельцем opencode, ветка task/T-0020-player-shapeshift-pause, ожидает PR
