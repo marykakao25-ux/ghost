@@ -1,12 +1,12 @@
 ---
 id: T-0004
 title: ShapeShiftManager — смена формы и переход между уровнями
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T18:59:25Z
+branch: task/T-0004-shapeshift-manager
 paths:
   - scripts/ShapeShiftManager.gd
   - project.godot
