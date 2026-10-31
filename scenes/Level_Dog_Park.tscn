@@ -1,10 +1,174 @@
-[gd_scene load_steps=2 format=3 uid="uid://lfw1nxo75sy"]
+[gd_scene load_steps=15 format=3 uid="uid://lfw1nxo75sy"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown (минус) (www.lightaudio.ru).mp3" id="1_mhn6r"]
+[ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="3_obstacle"]
+[ext_resource type="PackedScene" path="res://scenes/BreakableBox.tscn" id="4_box"]
+[ext_resource type="Script" path="res://scripts/LevelDirector.gd" id="5_director"]
+[ext_resource type="Texture2D" uid="uid://ba8qicf0eu73u" path="res://assets/environment/tileset_spooky/grass_to_dog.png" id="6_grass"]
+[ext_resource type="Texture2D" uid="uid://174iuerhpdyj" path="res://assets/environment/tileset_spooky/log.png" id="7_log"]
+[ext_resource type="Texture2D" uid="uid://cj4dvrw7j5sgr" path="res://assets/environment/tileset_spooky/pit.png" id="8_pit"]
 
-[node name="LevelDogBird" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(1900, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_log"]
+size = Vector2(160, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jump_sensor"]
+size = Vector2(160, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
+size = Vector2(48, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
+size = Vector2(120, 40)
+
+[sub_resource type="GDScript" id="GDScript_setup"]
+script/source = "extends Node
+
+func _ready() -> void:
+	ShapeShiftManager.unlock_form(PlayerController.Form.DOG)
+	ShapeShiftManager.set_checkpoint(Vector2.ZERO)
+	# После регистрации игрока директором — стартовать псом.
+	call_deferred(\"_start_as_dog\")
+
+func _start_as_dog() -> void:
+	ShapeShiftManager.change_form(PlayerController.Form.DOG)
+	var player: Node = ShapeShiftManager.get_player()
+	if player != null and player.has_method(\"set_form\"):
+		# change_form no-op если current_form уже DOG после load_progress.
+		if int(player.get(\"current_form\")) != PlayerController.Form.DOG:
+			player.call(\"set_form\", PlayerController.Form.DOG)
+			ShapeShiftManager.current_form = PlayerController.Form.DOG
+"
+
+[sub_resource type="GDScript" id="GDScript_checkpoint"]
+script/source = "extends Area2D
+
+@export var director_path: NodePath = ^\"../LevelDirector\"
+
+func _ready() -> void:
+	body_entered.connect(_on_body_entered)
+
+func _on_body_entered(body: Node2D) -> void:
+	if not body.is_in_group(\"player\"):
+		return
+	var director: Node = get_node_or_null(director_path)
+	if director != null and director.has_method(\"set_checkpoint\"):
+		director.call(\"set_checkpoint\", global_position)
+"
+
+[node name="LevelDogPark" type="Node2D"]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("1_mhn6r")
 volume_db = -40.0
 autoplay = true
+
+[node name="Grass1" type="Sprite2D" parent="."]
+position = Vector2(120, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Grass2" type="Sprite2D" parent="."]
+position = Vector2(360, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Grass3" type="Sprite2D" parent="."]
+position = Vector2(600, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Grass4" type="Sprite2D" parent="."]
+position = Vector2(840, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Grass5" type="Sprite2D" parent="."]
+position = Vector2(1080, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Grass6" type="Sprite2D" parent="."]
+position = Vector2(1320, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Grass7" type="Sprite2D" parent="."]
+position = Vector2(1560, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Grass8" type="Sprite2D" parent="."]
+position = Vector2(1760, 640)
+scale = Vector2(0.35, 0.28)
+texture = ExtResource("6_grass")
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(900, 560)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="LogVisual" type="Sprite2D" parent="."]
+position = Vector2(900, 500)
+scale = Vector2(0.28, 0.12)
+texture = ExtResource("7_log")
+
+[node name="LogBody" type="StaticBody2D" parent="."]
+position = Vector2(900, 500)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LogBody"]
+shape = SubResource("RectangleShape2D_log")
+
+[node name="PitDecor" type="Sprite2D" parent="."]
+position = Vector2(1500, 545)
+scale = Vector2(0.22, 0.12)
+texture = ExtResource("8_pit")
+
+[node name="SpawnMarker" type="Marker2D" parent="."]
+position = Vector2(100, 490)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(100, 490)
+
+[node name="LevelDirector" type="Node" parent="."]
+script = ExtResource("5_director")
+player_path = NodePath("../Player")
+spawn_marker = NodePath("../SpawnMarker")
+
+[node name="LevelSetup" type="Node" parent="."]
+script = SubResource("GDScript_setup")
+
+[node name="BreakableBox1" parent="." instance=ExtResource("4_box")]
+position = Vector2(420, 488)
+
+[node name="BreakableBox2" parent="." instance=ExtResource("4_box")]
+position = Vector2(520, 488)
+
+[node name="ObstacleJump" parent="." instance=ExtResource("3_obstacle")]
+position = Vector2(900, 470)
+obstacle_type = 1
+allowed_forms = Array[String](["dog"])
+
+[node name="CollisionShape2D" parent="ObstacleJump"]
+shape = SubResource("RectangleShape2D_jump_sensor")
+
+[node name="Checkpoint1" type="Area2D" parent="."]
+position = Vector2(700, 460)
+collision_layer = 0
+script = SubResource("GDScript_checkpoint")
+director_path = NodePath("../LevelDirector")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
+shape = SubResource("RectangleShape2D_checkpoint")
+
+[node name="ObstacleHazard" parent="." instance=ExtResource("3_obstacle")]
+position = Vector2(1500, 520)
+obstacle_type = 3
+allowed_forms = Array[String]([])
+
+[node name="CollisionShape2D" parent="ObstacleHazard"]
+shape = SubResource("RectangleShape2D_hazard")
