@@ -1,12 +1,12 @@
 ---
 id: T-0002
 title: Карта ввода и настройки проекта (input map, имя проекта, main scene)
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: cursor
+lease_until: 2026-10-31T18:10:25Z
+branch: task/T-0002-input-map
 paths:
   - project.godot
 depends_on: [T-0001]
