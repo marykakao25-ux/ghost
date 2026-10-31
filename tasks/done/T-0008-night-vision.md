@@ -1,7 +1,7 @@
 ---
 id: T-0008
 title: Ночное зрение кота — 2D-шейдер и маска темноты
-status: claimed
+status: done
 form: cat
 priority: medium
 owner: mixey1201
@@ -41,3 +41,4 @@ created: 2026-10-31
 - [ ] `godot --path . scenes/Level_Cat_Cemetry.tscn`
 
 ## Заметки и история
+- 2026-10-31T16:37:07Z — работа завершена владельцем mixey1201, ветка task/T-0008-night-vision, ожидает PR
