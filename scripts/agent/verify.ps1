@@ -61,13 +61,18 @@ if ($SelfTest) {
         else { Add-Error "overlap '$($case.A)' vs '$($case.B)': ожидалось $($case.Expect), получено $got"; $fail++ }
     }
 
-    # Одиночная строка вместо массива — самая частая причина ложных падений.
-    $single = @(ConvertTo-StringArray -Value 'project.godot')
-    if ($single.Count -eq 1 -and $single[0] -eq 'project.godot') { Write-Ok 'одиночная строка приведена к массиву' }
-    else { Add-Error "ConvertTo-StringArray вернул $($single.Count) элементов"; $fail++ }
-    $empty = @(ConvertTo-StringArray -Value $null)
-    if ($empty.Count -eq 0) { Write-Ok 'null приведён к пустому массиву' }
-    else { Add-Error 'ConvertTo-StringArray для $null вернул непустой массив'; $fail++ }
+    # Без внешней @(): функция сама должна вернуть массив (иначе claim.ps1 падает на .Count в pwsh).
+    $single = ConvertTo-StringArray -Value 'project.godot'
+    if ($single -is [System.Array] -and $single.Count -eq 1 -and $single[0] -eq 'project.godot') {
+        Write-Ok 'одиночная строка приведена к массиву (без внешней @())'
+    }
+    else {
+        Add-Error "ConvertTo-StringArray для строки: тип=$($single.GetType().FullName)"
+        $fail++
+    }
+    $empty = ConvertTo-StringArray -Value $null
+    if ($empty -is [System.Array] -and $empty.Count -eq 0) { Write-Ok 'null приведён к пустому массиву (без внешней @())' }
+    else { Add-Error 'ConvertTo-StringArray для $null вернул непустой массив или не массив'; $fail++ }
 
     $sample = Join-Path ([System.IO.Path]::GetTempPath()) "ghost-task-$([guid]::NewGuid().ToString('N')).md"
     @(
@@ -85,15 +90,40 @@ if ($SelfTest) {
         '## Контекст'
     ) | Set-Content -LiteralPath $sample -Encoding UTF8
     $parsed = Read-TaskFile -Path $sample
-    $paths = @(ConvertTo-StringArray -Value (Get-TaskField -Task $parsed -Key 'paths'))
-    if ($paths.Count -eq 2 -and $paths[1] -eq 'scenes/B.tscn') { Write-Ok "блочный список paths разобран: $($paths -join ', ')" }
+    $paths = ConvertTo-StringArray -Value (Get-TaskField -Task $parsed -Key 'paths')
+    if ($paths -is [System.Array] -and $paths.Count -eq 2 -and $paths[1] -eq 'scenes/B.tscn') {
+        Write-Ok "блочный список paths разобран: $($paths -join ', ')"
+    }
     else { Add-Error "блочный список paths разобран неверно: $($paths -join ', ')"; $fail++ }
-    $deps = @(ConvertTo-StringArray -Value (Get-TaskField -Task $parsed -Key 'depends_on'))
-    if ($deps.Count -eq 2) { Write-Ok "inline-список depends_on разобран: $($deps -join ', ')" }
+    $deps = ConvertTo-StringArray -Value (Get-TaskField -Task $parsed -Key 'depends_on')
+    if ($deps -is [System.Array] -and $deps.Count -eq 2) { Write-Ok "inline-список depends_on разобран: $($deps -join ', ')" }
     else { Add-Error "inline-список depends_on разобран неверно: $($deps -join ', ')"; $fail++ }
     if ($null -eq (Get-TaskField -Task $parsed -Key 'owner')) { Write-Ok 'null разобран как $null' }
     else { Add-Error "'null' не превратился в `$null"; $fail++ }
     Remove-Item -LiteralPath $sample -Force
+
+    # Одноэлементный блочный paths — как у T-0002; без @() снаружи.
+    $sampleOne = Join-Path ([System.IO.Path]::GetTempPath()) "ghost-task-$([guid]::NewGuid().ToString('N')).md"
+    @(
+        '---'
+        'id: T-0998'
+        'title: Один path'
+        'status: todo'
+        'paths:'
+        '  - project.godot'
+        '---'
+        ''
+    ) | Set-Content -LiteralPath $sampleOne -Encoding UTF8
+    $parsedOne = Read-TaskFile -Path $sampleOne
+    $onePath = ConvertTo-StringArray -Value (Get-TaskField -Task $parsedOne -Key 'paths')
+    if ($onePath -is [System.Array] -and $onePath.Count -eq 1 -and $onePath[0] -eq 'project.godot') {
+        Write-Ok 'одноэлементный блочный paths остаётся массивом'
+    }
+    else {
+        Add-Error "одноэлементный paths: тип=$($onePath.GetType().FullName), значение=$onePath"
+        $fail++
+    }
+    Remove-Item -LiteralPath $sampleOne -Force
 
     Write-Host ''
     if ($fail -gt 0) { Write-Err "Самотест провален ($fail)."; exit 1 }
@@ -118,7 +148,7 @@ foreach ($task in $tasks) {
     if ('todo', 'claimed', 'in-progress', 'review', 'done', 'blocked' -notcontains $status) {
         Add-Error "${file}: неизвестный status '$status'."
     }
-    $paths = @(ConvertTo-StringArray -Value (Get-TaskField -Task $task -Key 'paths'))
+    $paths = ConvertTo-StringArray -Value (Get-TaskField -Task $task -Key 'paths')
     if ($paths.Count -eq 0 -and $status -ne 'done') { Add-Error "${file}: пустое поле paths." }
     foreach ($p in $paths) {
         if ($p -match '^/' -or $p -match '^[A-Za-z]:') { Add-Error "${file}: путь '$p' должен быть относительным от корня репозитория." }
