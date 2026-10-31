@@ -1,7 +1,7 @@
 ---
 id: T-0006
 title: Пёс — скорость, высокий прыжок, ломание коробок (MovementDog)
-status: claimed
+status: done
 form: dog
 priority: medium
 owner: opencode
@@ -45,3 +45,4 @@ created: 2026-10-31
 - [ ] Проверка в сцене `scenes/Level_Dog_Park.tscn`
 
 ## Заметки и история
+- 2026-10-31T17:00:48Z — работа завершена владельцем opencode, ветка task/T-0006-dog-movement, ожидает PR
