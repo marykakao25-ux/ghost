@@ -1,7 +1,7 @@
 ---
 id: T-0015
 title: Синхронизировать README/ARCHITECTURE/INPUT_MAP с фактом репозитория
-status: claimed
+status: done
 form: docs
 priority: high
 owner: opencode
@@ -43,3 +43,4 @@ T-0001…T-0014 закрыты: скрипты реализованы, input map
 - [ ] Diff только по трём файлам из `paths`
 
 ## Заметки и история
+- 2026-10-31T17:32:06Z — работа завершена владельцем opencode, ветка task/T-0015-docs-sync-architecture, ожидает PR
