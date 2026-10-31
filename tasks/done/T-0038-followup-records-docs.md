@@ -1,7 +1,7 @@
 ---
 id: T-0038
 title: Докрыть T-0035/T-0037: регрессии отказа LevelExit и клика паузы; синхрон docs/ARCHITECTURE.md
-status: claimed
+status: done
 form: docs
 priority: low
 owner: mixey1201
@@ -63,3 +63,4 @@ T-0035 и T-0037 влиты (PR #58, #60), но их acceptance criteria зак�
 ## Заметки и историю
 
 <!-- Сюда агент дописывает ход работы: что сделано, что осталось, что заблокировало. -->
+- 2026-10-31T22:23:38Z — работа завершена владельцем mixey1201, ветка task/T-0038-followup-records-docs, ожидает PR
