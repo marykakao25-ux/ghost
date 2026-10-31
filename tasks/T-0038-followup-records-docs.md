@@ -1,12 +1,12 @@
 ---
 id: T-0038
 title: Докрыть T-0035/T-0037: регрессии отказа LevelExit и клика паузы; синхрон docs/ARCHITECTURE.md
-status: todo
+status: claimed
 form: docs
 priority: low
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T02:18:40Z
+branch: task/T-0038-followup-records-docs
 paths:
   - docs/ARCHITECTURE.md
   - scripts/tests/interaction_regression.gd
