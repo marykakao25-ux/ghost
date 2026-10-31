@@ -10,10 +10,10 @@ const ACCELERATION: float = 1200.0
 const FRICTION: float = 1400.0
 const GRAVITY: float = 980.0
 
-const STAND_RADIUS: float = 10.0
-const STAND_HEIGHT: float = 28.0
-const CRAWL_RADIUS: float = 7.0
-const CRAWL_HEIGHT: float = 14.0
+const STAND_RADIUS: float = 16.0
+const STAND_HEIGHT: float = 44.0
+const CRAWL_RADIUS: float = 11.0
+const CRAWL_HEIGHT: float = 22.0
 
 const _ANIM_IDLE := preload("res://assets/sprites/cat/anim_cat_idle.tscn")
 const _ANIM_WALK := preload("res://assets/sprites/cat/anim_cat_walk.tscn")
@@ -184,9 +184,16 @@ func _apply_standing_collision() -> void:
 func _try_stand(player: CharacterBody2D) -> void:
 	if not is_crawling:
 		return
-	# Верх капсулы растёт на полную разницу высот при вставании.
-	var headroom: float = STAND_HEIGHT - CRAWL_HEIGHT
-	if player.test_move(player.global_transform, Vector2(0.0, -headroom)):
+	var shape: CapsuleShape2D = CapsuleShape2D.new()
+	shape.radius = STAND_RADIUS
+	shape.height = STAND_HEIGHT
+	var query: PhysicsShapeQueryParameters2D = PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.transform = _collision.global_transform
+	query.transform.origin = player.to_global(_standing_shape_pos)
+	query.collision_mask = player.collision_mask
+	query.exclude = [player.get_rid()]
+	if not player.get_world_2d().direct_space_state.intersect_shape(query, 1).is_empty():
 		return
 	_apply_standing_collision()
 	is_crawling = false

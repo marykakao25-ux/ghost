@@ -5,11 +5,11 @@ signal form_changed(form: Form)
 
 enum Form { CAT, DOG, BIRD }
 
-const CAT_CAPSULE_RADIUS: float = 10.0
-const CAT_CAPSULE_HEIGHT: float = 28.0
-const DOG_CAPSULE_RADIUS: float = 14.0
-const DOG_CAPSULE_HEIGHT: float = 40.0
-const BIRD_CIRCLE_RADIUS: float = 12.0
+const CAT_CAPSULE_RADIUS: float = 16.0
+const CAT_CAPSULE_HEIGHT: float = 44.0
+const DOG_CAPSULE_RADIUS: float = 21.0
+const DOG_CAPSULE_HEIGHT: float = 64.0
+const BIRD_CIRCLE_RADIUS: float = 22.0
 
 const _MOVEMENT_SCRIPTS: Dictionary = {
 	Form.CAT: preload("res://scripts/MovementCat.gd"),
@@ -22,6 +22,7 @@ var current_movement: Node = null
 
 var _pause_layer: CanvasLayer = null
 var _owns_pause: bool = false
+var _texture_bounds: Dictionary[Texture2D, Rect2] = {}
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -36,6 +37,8 @@ func _ready() -> void:
 	animated_sprite.process_mode = Node.PROCESS_MODE_PAUSABLE
 	collision_shape = $CollisionShape2D
 	form_pivot = $FormPivot
+	animated_sprite.frame_changed.connect(_update_visual)
+	animated_sprite.sprite_frames_changed.connect(_update_visual)
 	set_form(current_form)
 
 
@@ -47,6 +50,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		_apply_default_gravity(delta)
 		move_and_slide()
+	_update_visual()
 
 
 func _exit_tree() -> void:
@@ -118,12 +122,67 @@ func _create_pause_overlay() -> void:
 
 func set_form(form: Form) -> void:
 	_ensure_child_refs()
+	if not can_set_form(form):
+		return
 	var feet_y: float = _get_collider_bottom_y()
 	current_form = form
 	_apply_collision_for_form(form)
 	_align_feet_to(feet_y)
 	_swap_movement(form)
+	_update_visual()
 	form_changed.emit(form)
+
+
+func can_set_form(form: int) -> bool:
+	if form < 0 or form >= Form.size():
+		return false
+	if not is_inside_tree() or collision_shape == null:
+		return true
+	var shape: Shape2D = _make_form_shape(form as Form)
+	var query: PhysicsShapeQueryParameters2D = PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.collision_mask = collision_mask
+	query.exclude = [get_rid()]
+	query.transform = global_transform
+	query.transform.origin.y = _get_collider_bottom_y() - shape.get_rect().end.y
+	return get_world_2d().direct_space_state.intersect_shape(query, 1).is_empty()
+
+
+func _update_visual() -> void:
+	if animated_sprite == null or animated_sprite.sprite_frames == null:
+		return
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	if not frames.has_animation(animated_sprite.animation):
+		return
+	var texture: Texture2D = frames.get_frame_texture(
+		animated_sprite.animation, animated_sprite.frame
+	)
+	if texture == null or collision_shape == null or collision_shape.shape == null:
+		return
+	if not _texture_bounds.has(texture):
+		var image: Image = texture.get_image()
+		_texture_bounds[texture] = Rect2(image.get_used_rect())
+	var bounds: Rect2 = _texture_bounds[texture]
+	if not bounds.has_area():
+		return
+	var target: Vector2 = Vector2(64.0, 44.0)
+	if current_form == Form.DOG:
+		target = Vector2(84.0, 64.0)
+	elif current_form == Form.BIRD:
+		target = Vector2(68.0, 48.0)
+	var ratio: float = minf(target.x / bounds.size.x, target.y / bounds.size.y)
+	animated_sprite.scale = Vector2(ratio, ratio)
+	if current_form == Form.CAT and collision_shape.shape.get_rect().size.y < 30.0:
+		animated_sprite.scale.y *= 0.5
+	# У PNG разные поля и размеры: выравниваем непрозрачные пиксели, а не весь холст.
+	var offset: Vector2 = texture.get_size() * 0.5 - bounds.get_center()
+	if animated_sprite.flip_h:
+		offset.x = -offset.x
+	animated_sprite.offset = offset
+	var bottom: float = collision_shape.position.y + collision_shape.shape.get_rect().end.y
+	animated_sprite.position = Vector2(
+		collision_shape.position.x, bottom - bounds.size.y * animated_sprite.scale.y * 0.5
+	)
 
 
 func _ensure_child_refs() -> void:
@@ -155,21 +214,27 @@ func _align_feet_to(feet_y: float) -> void:
 
 
 func _apply_collision_for_form(form: Form) -> void:
+	collision_shape.position = Vector2.ZERO
+	collision_shape.shape = _make_form_shape(form)
+
+
+func _make_form_shape(form: Form) -> Shape2D:
 	match form:
 		Form.CAT:
 			var capsule_cat := CapsuleShape2D.new()
 			capsule_cat.radius = CAT_CAPSULE_RADIUS
 			capsule_cat.height = CAT_CAPSULE_HEIGHT
-			collision_shape.shape = capsule_cat
+			return capsule_cat
 		Form.DOG:
 			var capsule_dog := CapsuleShape2D.new()
 			capsule_dog.radius = DOG_CAPSULE_RADIUS
 			capsule_dog.height = DOG_CAPSULE_HEIGHT
-			collision_shape.shape = capsule_dog
+			return capsule_dog
 		Form.BIRD:
 			var circle := CircleShape2D.new()
 			circle.radius = BIRD_CIRCLE_RADIUS
-			collision_shape.shape = circle
+			return circle
+	return null
 
 
 func _swap_movement(form: Form) -> void:

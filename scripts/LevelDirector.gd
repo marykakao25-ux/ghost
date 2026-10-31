@@ -1,6 +1,8 @@
 extends Node
 class_name LevelDirector
 
+signal player_respawned(reason: String)
+
 ## Директор добавляется дочерним узлом уровня; путь считается от директора.
 @export var player_path: NodePath = ^"../Player"
 ## Ненулевая точка старта. Если не задана, используется начальная позиция игрока.
@@ -12,6 +14,7 @@ var _player: PlayerController = null
 var _level_root: Node = null
 var _spawn_position: Vector2 = Vector2.ZERO
 var _respawn_pending: bool = false
+var _reset_reason: String = ""
 
 
 func _ready() -> void:
@@ -33,6 +36,11 @@ func _ready() -> void:
 	register_obstacles()
 
 
+func _physics_process(_delta: float) -> void:
+	if is_instance_valid(_player) and _player.global_position.y > 900.0:
+		_on_checkpoint_reset("Ты упал. Возвращаемся к последнему фонарю.")
+
+
 func _exit_tree() -> void:
 	if is_instance_valid(_player) and ShapeShiftManager.active_player == _player:
 		ShapeShiftManager.active_player = null
@@ -51,10 +59,11 @@ func set_checkpoint(position: Vector2) -> void:
 	ShapeShiftManager.set_checkpoint(position)
 
 
-func _on_checkpoint_reset(_reason: String) -> void:
+func _on_checkpoint_reset(reason: String) -> void:
 	if _respawn_pending or not is_instance_valid(_player):
 		return
 	_respawn_pending = true
+	_reset_reason = reason
 	# Сигнал приходит из физического callback: перенос выполняется после обхода коллизий.
 	_respawn.call_deferred()
 
@@ -65,6 +74,7 @@ func _respawn() -> void:
 		_player.global_position = _spawn_position if checkpoint == Vector2.ZERO else checkpoint
 		_player.velocity = Vector2.ZERO
 		_player.reset_physics_interpolation()
+		player_respawned.emit(_reset_reason)
 	_clear_respawn_pending.call_deferred()
 
 

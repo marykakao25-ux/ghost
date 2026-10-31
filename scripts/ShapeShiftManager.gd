@@ -59,6 +59,8 @@ func change_form(new_form: int) -> bool:
 		return false
 	if new_form == current_form:
 		return false
+	if player.has_method("can_set_form") and not bool(player.call("can_set_form", new_form)):
+		return false
 
 	var from_form: int = current_form
 	_spawn_flash(player)

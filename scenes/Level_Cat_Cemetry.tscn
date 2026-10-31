@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bpjnsveiytj2n"]
+[gd_scene load_steps=19 format=3 uid="uid://bpjnsveiytj2n"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown.mp3" id="1_t7pfn"]
 [ext_resource type="Texture2D" uid="uid://dw270u10it62u" path="res://assets/environment/tileset_spooky/tile.png" id="2_fcwye"]
@@ -9,21 +9,25 @@
 [ext_resource type="Texture2D" uid="uid://dllr605tvcg11" path="res://assets/environment/tileset_spooky/puddle.png" id="7_puddle"]
 [ext_resource type="Texture2D" uid="uid://c4rxiv7yff6xj" path="res://assets/environment/tileset_spooky/box_to_cat.png" id="8_box"]
 [ext_resource type="PackedScene" path="res://scenes/LevelExit.tscn" id="9_exit"]
+[ext_resource type="Script" path="res://scripts/LevelPresentation.gd" id="10_art"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(1900, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_overhang"]
-size = Vector2(140, 100)
+size = Vector2(220, 88)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_crawl_sensor"]
-size = Vector2(140, 36)
+size = Vector2(220, 26)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
 size = Vector2(48, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
-size = Vector2(96, 24)
+size = Vector2(96, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(40, 800)
 
 [sub_resource type="GDScript" id="GDScript_setup"]
 script/source = "extends Node
@@ -165,8 +169,7 @@ script = SubResource("GDScript_setup")
 script = ExtResource("6_vision")
 
 [node name="ObstacleCrawl" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(520, 502)
-scale = Vector2(4.375, 1.125)
+position = Vector2(520, 507)
 obstacle_type = 0
 allowed_forms = Array[String](["cat"])
 
@@ -197,7 +200,7 @@ scale = Vector2(0.18, 0.1)
 texture = ExtResource("7_puddle")
 
 [node name="ObstacleHazard" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(1100, 510)
+position = Vector2(1100, 514)
 obstacle_type = 3
 allowed_forms = Array[String]([])
 
@@ -205,13 +208,36 @@ allowed_forms = Array[String]([])
 shape = SubResource("RectangleShape2D_hazard")
 
 [node name="ObstacleCrawl2" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(1550, 502)
-scale = Vector2(3.5, 1.125)
+position = Vector2(1550, 507)
 obstacle_type = 0
 allowed_forms = Array[String](["cat"])
+
+[node name="CollisionShape2D" parent="ObstacleCrawl2"]
+shape = SubResource("RectangleShape2D_crawl_sensor")
+
+[node name="CrawlOverhang2" type="StaticBody2D" parent="."]
+position = Vector2(1550, 450)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CrawlOverhang2"]
+shape = SubResource("RectangleShape2D_overhang")
+
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(-20, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="WallRight" type="StaticBody2D" parent="."]
+position = Vector2(1820, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="LevelExit" parent="." instance=ExtResource("9_exit")]
 position = Vector2(1730, 460)
 next_scene = "res://scenes/Level_Dog_Park.tscn"
 unlock_form = 1
 exit_text = "В парк →"
+
+[node name="Presentation" type="Node2D" parent="."]
+script = ExtResource("10_art")
