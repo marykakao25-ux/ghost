@@ -1,12 +1,12 @@
 ---
 id: T-0021
 title: Играбельный уровень кота — пол, Player, Obstacle, зрение, LevelDirector
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T21:56:31Z
+branch: task/T-0021-level-cat-playable
 paths:
   - scenes/Level_Cat_Cemetry.tscn
 depends_on: [T-0019, T-0020, T-0005, T-0008, T-0009]
