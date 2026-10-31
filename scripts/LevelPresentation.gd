@@ -1,6 +1,7 @@
 extends Node2D
 
 const OBSTACLE_SCRIPT: GDScript = preload("res://scripts/Obstacle.gd")
+const ATMOSPHERE_SHADER: Shader = preload("res://assets/shaders/atmosphere.gdshader")
 
 const BACKGROUNDS: Array[Texture2D] = [
 	preload("res://assets/environment/halloween_props/cat_location.png"),
@@ -25,9 +26,29 @@ var _progress: ProgressBar = null
 var _form_label: Label = null
 var _message: Label = null
 var _message_seconds: float = 0.0
+var _atmosphere: ColorRect = null
+var _atmosphere_enabled: bool = true
+
+
+func _exit_tree() -> void:
+	_release_level_music()
+
+
+func _release_level_music() -> void:
+	var level: Node = get_parent()
+	if level == null:
+		return
+	var music: AudioStreamPlayer = level.get_node_or_null("AudioStreamPlayer") as AudioStreamPlayer
+	if not is_instance_valid(music):
+		return
+	music.autoplay = false
+	if music.playing:
+		music.stop()
+	music.stream = null
 
 
 func _ready() -> void:
+	add_to_group("level_presentation")
 	z_index = -10
 	var level: Node = get_parent()
 	_player = level.get_node("Player") as PlayerController
@@ -54,6 +75,7 @@ func _ready() -> void:
 	var director: Node = level.get_node("LevelDirector")
 	director.connect("player_respawned", _on_respawned)
 	_create_hud()
+	_create_atmosphere()
 	queue_redraw()
 
 
@@ -64,6 +86,22 @@ func _process(delta: float) -> void:
 		_form_label.text = names[_player.current_form] + "  /  Q · 1 · 2 · 3 — открытые формы"
 	_message_seconds = maxf(0.0, _message_seconds - delta)
 	_message.visible = _message_seconds > 0.0
+	_update_atmosphere_visibility()
+
+
+func set_atmosphere_enabled(enabled: bool) -> void:
+	_atmosphere_enabled = enabled
+	_update_atmosphere_visibility()
+
+
+func _update_atmosphere_visibility() -> void:
+	if _atmosphere == null:
+		return
+	var show_fx: bool = _atmosphere_enabled and not get_tree().paused
+	_atmosphere.visible = show_fx
+	var material: ShaderMaterial = _atmosphere.material as ShaderMaterial
+	if material != null:
+		material.set_shader_parameter("enabled", 1.0 if show_fx else 0.0)
 
 
 func _draw() -> void:
@@ -137,6 +175,24 @@ func _create_hud() -> void:
 	_message = _add_label(layer, "", Vector2(30.0, 125.0), 22)
 	_message.modulate = Color("ffb6b9")
 	_message.hide()
+
+
+func _create_atmosphere() -> void:
+	var layer: CanvasLayer = CanvasLayer.new()
+	layer.name = "AtmosphereLayer"
+	layer.layer = 15
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(layer)
+	_atmosphere = ColorRect.new()
+	_atmosphere.name = "Atmosphere"
+	_atmosphere.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_atmosphere.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_atmosphere.color = Color(1, 1, 1, 1)
+	var material := ShaderMaterial.new()
+	material.shader = ATMOSPHERE_SHADER
+	_atmosphere.material = material
+	layer.add_child(_atmosphere)
+	_update_atmosphere_visibility()
 
 
 func _add_label(parent: Node, text: String, label_position: Vector2, font_size: int) -> Label:

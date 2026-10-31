@@ -151,7 +151,7 @@ script = SubResource("GDScript_setup")
 position = Vector2(420, 488)
 
 [node name="BreakableBox2" parent="." instance=ExtResource("4_box")]
-position = Vector2(520, 488)
+position = Vector2(560, 488)
 
 [node name="ObstacleJump" parent="." instance=ExtResource("3_obstacle")]
 position = Vector2(900, 470)

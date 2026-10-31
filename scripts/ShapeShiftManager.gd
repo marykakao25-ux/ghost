@@ -14,6 +14,13 @@ const FLASH_NODE_NAME: String = "FormFlash"
 const FLASH_LIFETIME: float = 0.35
 const FLASH_AMOUNT: int = 20
 const FLASH_COLOR: Color = Color(0.62, 0.9, 1.0, 0.9)
+const GHOST_NODE_NAME: String = "PossessionGhost"
+const GHOST_LIFETIME: float = 0.55
+const _GHOST_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/sprites/gg/ghost1.png"),
+	preload("res://assets/sprites/gg/ghost2.png"),
+	preload("res://assets/sprites/gg/ghost3.png"),
+]
 
 ## Все формы, до которых игрок уже добрался.
 var unlocked_forms: Array[int] = []
@@ -40,6 +47,8 @@ func register_player(player: Node) -> void:
 	active_player = player
 	if player.has_signal("form_changed") and not player.form_changed.is_connected(_on_player_form_changed):
 		player.form_changed.connect(_on_player_form_changed)
+	# Первое вселение: показать призрака, не пряча тело формы.
+	call_deferred("_spawn_possession_ghost", player)
 
 
 func get_player() -> Node:
@@ -64,6 +73,7 @@ func change_form(new_form: int) -> bool:
 
 	var from_form: int = current_form
 	_spawn_flash(player)
+	_spawn_possession_ghost(player)
 	current_form = new_form
 	_unlock_form(new_form)
 	player.set_form(new_form)
@@ -185,6 +195,38 @@ func _spawn_flash(player: Node) -> void:
 
 	flash.emitting = true
 	_flash = flash
+
+
+func _spawn_possession_ghost(player: Node) -> void:
+	if player == null or not is_instance_valid(player):
+		return
+	var pivot: Node2D = player.get_node_or_null("FormPivot") as Node2D
+	if pivot == null:
+		return
+	var old: Node = pivot.get_node_or_null(GHOST_NODE_NAME)
+	if old != null:
+		old.queue_free()
+	var ghost := Sprite2D.new()
+	ghost.name = GHOST_NODE_NAME
+	ghost.texture = _GHOST_TEXTURES[randi() % _GHOST_TEXTURES.size()]
+	ghost.modulate = Color(0.85, 0.95, 1.0, 0.9)
+	var tex_size: Vector2 = ghost.texture.get_size()
+	var target: float = 72.0
+	var ratio: float = target / maxf(tex_size.x, tex_size.y)
+	ghost.scale = Vector2(ratio, ratio)
+	ghost.position = Vector2(0.0, -36.0)
+	ghost.z_index = 20
+	pivot.add_child(ghost)
+	# Не скрываем AnimatedSprite формы — призрак поверх, затем исчезает.
+	_fade_possession_ghost.call_deferred(ghost)
+
+
+func _fade_possession_ghost(ghost: Sprite2D) -> void:
+	if not is_instance_valid(ghost):
+		return
+	await get_tree().create_timer(GHOST_LIFETIME).timeout
+	if is_instance_valid(ghost):
+		ghost.queue_free()
 
 
 func _on_player_form_changed(form: int) -> void:

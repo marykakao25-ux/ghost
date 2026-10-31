@@ -149,6 +149,13 @@ func _normalize_anim_name(anim_name: String) -> String:
 func _update_animation(player: CharacterBody2D) -> void:
 	if is_crawling:
 		play_anim("crawl")
+		# Неподвижный ползущий кот не должен «бежать» кадрами crawl.
+		if _sprite != null:
+			if absf(player.velocity.x) <= 10.0:
+				_sprite.pause()
+				_sprite.frame = 0
+			elif not _sprite.is_playing():
+				_sprite.play("default")
 		return
 	if not player.is_on_floor():
 		play_anim("jump")
