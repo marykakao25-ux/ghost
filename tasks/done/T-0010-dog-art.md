@@ -1,7 +1,7 @@
 ---
 id: T-0010
 title: Графика пса — спрайты и SpriteFrames (4 анимации)
-status: claimed
+status: done
 form: art
 priority: medium
 owner: mixey1201
@@ -42,3 +42,4 @@ created: 2026-10-31
 - [ ] `godot --path . assets/sprites/dog/anim_dog_idle.tscn`
 
 ## Заметки и история
+- 2026-10-31T15:37:11Z — работа завершена владельцем mixey1201, ветка task/T-0010-dog-art, ожидает PR
