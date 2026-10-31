@@ -1,7 +1,7 @@
 ---
 id: T-0019
 title: LevelDirector — регистрация игрока и респавн по checkpoint_reset
-status: claimed
+status: done
 form: infra
 priority: high
 owner: opencode
@@ -44,3 +44,4 @@ created: 2026-10-31
 - [ ] Godot headless без SCRIPT/Parse Error
 
 ## Заметки и история
+- 2026-10-31T17:41:29Z — работа завершена владельцем opencode, ветка task/T-0019-level-director, ожидает PR
