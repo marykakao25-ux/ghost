@@ -263,12 +263,25 @@ find_task() {
 	printf '%s' "${found[0]}"
 }
 
+try_find_task() {
+	# Как find_task, но без выхода: печатает путь к первой задаче или ничего.
+	local id="${1-}"
+	id="$(printf '%s' "$id" | tr '[:lower:]' '[:upper:]')"
+	[[ "$id" =~ ^T-[0-9]{4}$ ]] || return 1
+	local file
+	for file in "$TASKS_DIR/$id"-*.md; do
+		if [[ -e "$file" ]]; then
+			printf '%s' "$file"
+			return 0
+		fi
+	done
+	return 1
+}
+
 initialize_task_system() {
 	# Git не хранит пустые каталоги — без них проверки падают на первом запуске.
 	mkdir -p "$TASKS_DIR" "$CLAIMS_DIR" "$DONE_DIR"
 }
-
-# ------------------------------------------------------------- ЛИЗЫ / TTL ----
 
 iso_to_epoch() {
 	# ISO-8601 UTC -> epoch. GNU date первым, затем BSD (macOS).
