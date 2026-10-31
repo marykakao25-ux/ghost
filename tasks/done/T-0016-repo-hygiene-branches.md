@@ -1,7 +1,7 @@
 ---
 id: T-0016
 title: Гигиена веток — чеклист удаления stale task/* после squash
-status: claimed
+status: done
 form: infra
 priority: medium
 owner: opencode
@@ -43,3 +43,4 @@ created: 2026-10-31
 - [ ] `git ls-remote origin 'refs/heads/task/*'` — нет веток закрытых задач без открытого PR
 
 ## Заметки и история
+- 2026-10-31T17:34:16Z — работа завершена владельцем opencode, ветка task/T-0016-repo-hygiene-branches, ожидает PR
