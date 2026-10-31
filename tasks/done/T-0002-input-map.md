@@ -1,7 +1,7 @@
 ---
 id: T-0002
 title: Карта ввода и настройки проекта (input map, имя проекта, main scene)
-status: claimed
+status: done
 form: infra
 priority: high
 owner: cursor
@@ -51,3 +51,4 @@ created: 2026-10-31
 - 2026-10-31T08:45:45Z — работа завершена владельцем agent-alpha, ветка task/T-0002-input-map, ожидает PR
 - 2026-10-31 — возврат в todo: статус «done» был артефактом сквозного теста claim→release (T-0001), код задачи не писался. `project.godot` по-прежнему без секции `[input]`.
 
+- 2026-10-31T14:14:30Z — работа завершена владельцем cursor, ветка task/T-0002-input-map, ожидает PR
