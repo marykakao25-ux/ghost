@@ -1,12 +1,12 @@
 ---
 id: T-0011
 title: Графика ворона — спрайты и SpriteFrames
-status: todo
+status: claimed
 form: art
 priority: medium
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-10-31T19:40:14Z
+branch: task/T-0011-bird-art
 paths:
   - assets/sprites/bird
 depends_on: []
