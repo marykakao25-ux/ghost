@@ -1,12 +1,12 @@
 ---
 id: T-0030
 title: Camera2D и удлинение уровней под крупного героя
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T00:20:52Z
+branch: task/T-0030-camera-longer-levels
 paths:
   - scripts/LevelDirector.gd
   - scripts/LevelPresentation.gd
