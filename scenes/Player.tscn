@@ -35,3 +35,6 @@ autoplay = "idle"
 shape = SubResource("CapsuleShape2D_cat")
 
 [node name="FormPivot" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true

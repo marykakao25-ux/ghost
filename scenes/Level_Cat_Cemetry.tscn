@@ -12,7 +12,7 @@
 [ext_resource type="Script" path="res://scripts/LevelPresentation.gd" id="10_art"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
-size = Vector2(1900, 80)
+size = Vector2(3700, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_overhang"]
 size = Vector2(360, 400)
@@ -135,7 +135,7 @@ scale = Vector2(0.414167, 0.35125)
 texture = ExtResource("2_fcwye")
 
 [node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2(900, 560)
+position = Vector2(1800, 560)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 shape = SubResource("RectangleShape2D_floor")
@@ -186,7 +186,7 @@ director_path = NodePath("../LevelDirector")
 shape = SubResource("RectangleShape2D_checkpoint")
 
 [node name="Checkpoint2" type="Area2D" parent="."]
-position = Vector2(1400, 460)
+position = Vector2(2400, 460)
 collision_layer = 0
 script = SubResource("GDScript_checkpoint")
 director_path = NodePath("../LevelDirector")
@@ -195,12 +195,12 @@ director_path = NodePath("../LevelDirector")
 shape = SubResource("RectangleShape2D_checkpoint")
 
 [node name="PuddleDecor" type="Sprite2D" parent="."]
-position = Vector2(1100, 530)
+position = Vector2(1900, 530)
 scale = Vector2(0.18, 0.1)
 texture = ExtResource("7_puddle")
 
 [node name="ObstacleHazard" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(1100, 514)
+position = Vector2(1900, 514)
 obstacle_type = 3
 allowed_forms = Array[String]([])
 
@@ -208,7 +208,7 @@ allowed_forms = Array[String]([])
 shape = SubResource("RectangleShape2D_hazard")
 
 [node name="ObstacleCrawl2" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(1550, 500)
+position = Vector2(2800, 500)
 obstacle_type = 0
 allowed_forms = Array[String](["cat"])
 
@@ -216,7 +216,7 @@ allowed_forms = Array[String](["cat"])
 shape = SubResource("RectangleShape2D_crawl_sensor")
 
 [node name="CrawlOverhang2" type="StaticBody2D" parent="."]
-position = Vector2(1550, 200)
+position = Vector2(2800, 200)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CrawlOverhang2"]
 shape = SubResource("RectangleShape2D_overhang")
@@ -228,13 +228,13 @@ position = Vector2(-20, 400)
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="WallRight" type="StaticBody2D" parent="."]
-position = Vector2(1820, 400)
+position = Vector2(3620, 400)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="LevelExit" parent="." instance=ExtResource("9_exit")]
-position = Vector2(1730, 460)
+position = Vector2(3480, 460)
 next_scene = "res://scenes/Level_Dog_Park.tscn"
 unlock_form = 1
 host_form = 1

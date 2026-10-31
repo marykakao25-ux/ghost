@@ -9,6 +9,8 @@ signal player_respawned(reason: String)
 @export var spawn_point: Vector2 = Vector2.ZERO
 ## Маркер имеет приоритет над spawn_point, включая начало координат.
 @export var spawn_marker: Marker2D = null
+@export var level_width: float = 3600.0
+@export var level_height: float = 800.0
 
 var _player: PlayerController = null
 var _level_root: Node = null
@@ -35,6 +37,25 @@ func _ready() -> void:
 	if is_instance_valid(spawn_marker):
 		_spawn_position = spawn_marker.global_position
 	register_obstacles()
+	_setup_camera()
+
+
+func _setup_camera() -> void:
+	if not is_instance_valid(_player):
+		return
+	var camera: Camera2D = _player.get_node_or_null("Camera2D") as Camera2D
+	if camera == null:
+		camera = Camera2D.new()
+		camera.name = "Camera2D"
+		_player.add_child(camera)
+	camera.enabled = true
+	camera.make_current()
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = int(level_width)
+	camera.limit_bottom = int(level_height)
+	camera.position_smoothing_enabled = true
+	camera.position_smoothing_speed = 8.0
 
 
 func _physics_process(_delta: float) -> void:
