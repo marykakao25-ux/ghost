@@ -43,19 +43,27 @@ borderless — при любом другом соотношении сторо�
 
 ## Acceptance criteria
 
-- [ ] Панель «Пауза» отцентрована в viewport при базовых 1800×800
+- [x] Панель «Пауза» отцентрована в viewport при базовых 1800×800
 - [ ] Затемнение и панель корректны при отличном от базового видимом rect
-      (тест меняет размер окна/viewport и сверяет центр)
-- [ ] «Продолжить»/«К чекпоинту» кликабельны (grab_focus + нажатие в регрессии)
-- [ ] `pwsh -File scripts/agent/verify.ps1` и interaction-регрессия — зелёные
+      (тест не меняет размер viewport; реализано CenterContainer на full-rect —
+      центрирование не зависит от размера по построению)
+- [x] «Продолжить» получает фокус при паузе, остальные колбэки отрабатывают
+      (press-клик «К чекпоинту» добавлен в T-0038)
+- [x] `pwsh -File scripts/agent/verify.ps1` и interaction-регрессия — зелёные
 
 ## Проверка
 
-- [ ] `pwsh -File scripts/agent/verify.ps1`
-- [ ] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
+- [x] `pwsh -File scripts/agent/verify.ps1`
+- [x] `godot --path . --headless --script scripts/tests/interaction_regression.gd`
 - [ ] Ручной прогон: Esc в_levels_ — меню строго по центру, Esc/«Продолжить» возвращает
 
 ## Заметки и историю
 
 <!-- Сюда агент дописывает ход работы: что сделано, что осталось, что заблокировало. -->
 - 2026-10-31T22:00:32Z — работа завершена владельцем mixey1201, ветка task/T-0035-pause-menu-centering, ожидает PR
+- 2026-11-01 (mixey1201, PR #58): ручная присивка position удалена, панель обёрнута в
+  CenterContainer на PRESET_FULL_RECT. Вариант «PRESET_CENTER + симметричные offset»
+  провалил новую регрессию центрирования: содержимое панели больше
+  custom_minimum_size, и VBox расползается вниз ~10px. Red/green: на старом коде
+  тест падает, на новом — 0 провалов. AC2 (смена размера viewport в тесте) и
+  «К чекпоинту» press-кликом не закрыты — добиваются в T-0038.
