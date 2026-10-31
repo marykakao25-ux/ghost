@@ -1,7 +1,7 @@
 ---
 id: T-0023
 title: Играбельный уровень ворона — границы, WindZone, Obstacle, LevelDirector
-status: claimed
+status: done
 form: bird
 priority: high
 owner: mixey1201
@@ -41,3 +41,4 @@ created: 2026-10-31
 - [ ] Ручной smoke: ветер + полёт
 
 ## Заметки и история
+- 2026-10-31T18:07:12Z — работа завершена владельцем mixey1201, ветка task/T-0023-level-bird-playable, ожидает PR
