@@ -1,7 +1,7 @@
 ---
 id: T-0007
 title: Ворон — полёт и сопротивление ветру (MovementBird, WindZone)
-status: claimed
+status: done
 form: bird
 priority: medium
 owner: mixey1201
@@ -47,3 +47,4 @@ created: 2026-10-31
 - [ ] Проверка в сцене `scenes/Level_Bird_Rooftops.tscn`
 
 ## Заметки и история
+- 2026-10-31T17:06:28Z — работа завершена владельцем mixey1201, ветка task/T-0007-bird-flight, ожидает PR
