@@ -44,7 +44,7 @@ size = Vector2(145, 800)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3oh1a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n5mlk"]
-size = Vector2(1.154854, 91.53728)
+size = Vector2(240, 24)
 
 [node name="Bench" type="Node2D" unique_id=1371070387]
 
@@ -153,14 +153,10 @@ position = Vector2(1545.0001, 526)
 scale = Vector2(0.6716667, 0.50333333)
 texture = ExtResource("10_3oh1a")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Bench" unique_id=519005290]
-position = Vector2(-13.953491, -19.780426)
-scale = Vector2(24.720907, 2.5824256)
+[node name="BenchBody" type="StaticBody2D" parent="." unique_id=519005290]
+position = Vector2(1545, 492)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Bench/StaticBody2D" unique_id=613803584]
-position = Vector2(1.8893993, -28.499163)
-rotation = 3.0411134
-scale = Vector2(0.9999997, 0.99999964)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BenchBody" unique_id=613803584]
 shape = SubResource("RectangleShape2D_n5mlk")
 
 [node name="BoxProp3" type="Sprite2D" parent="." unique_id=214735542]
