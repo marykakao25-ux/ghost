@@ -1,7 +1,7 @@
 ---
 id: T-0049
 title: Откат исключения T-0047 и отмена очереди T-0048
-status: claimed
+status: done
 form: infra
 priority: high
 owner: mixey1201
@@ -45,3 +45,4 @@ T-0047 уже в `tasks/done/` — файл задачи не удалять.
 ## Заметки и история
 
 Поставлена для отката сессии переписи cursoragent.
+- 2026-11-01T14:46:31Z — работа завершена владельцем mixey1201, ветка task/T-0049-revert-attribution-work, ожидает PR
