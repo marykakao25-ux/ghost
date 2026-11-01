@@ -1,12 +1,12 @@
 ---
 id: T-0046
 title: Заменить сложные коллизии кошачьих коробок на прямоугольники
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:36:29Z
+branch: task/T-0046-simplify-cat-box-colliders
 paths:
   - scenes/Level_Cat_Cemetry.tscn
 depends_on: []
