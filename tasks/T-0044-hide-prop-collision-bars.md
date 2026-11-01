@@ -1,12 +1,12 @@
 ---
 id: T-0044
 title: Не рисовать служебные поверхности поверх скамейки и брёвен
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:29:20Z
+branch: task/T-0044-hide-prop-collision-bars
 paths:
   - scripts/LevelPresentation.gd
 depends_on: []
