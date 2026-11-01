@@ -11,7 +11,9 @@ const CAT_CAPSULE_HEIGHT: float = 88.0
 const DOG_CAPSULE_RADIUS: float = 40.0
 const DOG_CAPSULE_HEIGHT: float = 80.0
 const BIRD_CIRCLE_RADIUS: float = 66.0
-const SCREEN_HEIGHT: float = 800.0
+const CAT_VISUAL_HEIGHT: float = 128.0
+const DOG_VISUAL_HEIGHT: float = 160.0
+const BIRD_VISUAL_HEIGHT: float = 800.0 / 6.0
 const MAIN_MENU_PATH: String = "res://scenes/MainMenu.tscn"
 
 const _MOVEMENT_SCRIPTS: Dictionary = {
@@ -249,10 +251,13 @@ func _update_visual() -> void:
 	var bounds: Rect2 = _texture_bounds[texture]
 	if not bounds.has_area():
 		bounds = Rect2(Vector2.ZERO, texture.get_size())
-	var target_h: float = SCREEN_HEIGHT / 5.0
-	if current_form == Form.BIRD:
-		target_h = SCREEN_HEIGHT / 6.0
-	# Масштаб по высоте силуэта — доля экрана (кот/пёс 1/5, ворон 1/6).
+	var target_h: float = DOG_VISUAL_HEIGHT
+	match current_form:
+		Form.CAT:
+			target_h = CAT_VISUAL_HEIGHT
+		Form.BIRD:
+			target_h = BIRD_VISUAL_HEIGHT
+	# У каждой формы своя целевая высота силуэта; физические формы не масштабируются.
 	var ratio: float = target_h / maxf(bounds.size.y, 1.0)
 	var width_ratio: float = 0.88 if current_form == Form.CAT else 1.0
 	animated_sprite.scale = Vector2(ratio * width_ratio, ratio)
