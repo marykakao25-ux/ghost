@@ -121,7 +121,7 @@ func _normalize_anim_name(anim_name: String) -> String:
 
 
 func _update_animation(player: CharacterBody2D) -> void:
-	if absf(player.velocity.y) > FLY_ANIM_THRESHOLD:
+	if player.velocity.length() > FLY_ANIM_THRESHOLD:
 		play_anim("bird_fly")
 	else:
 		play_anim("bird_idle")
