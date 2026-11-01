@@ -21,6 +21,26 @@ var _reset_pending: bool = false
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	if obstacle_type == ObstacleType.JUMP_OVER:
+		_add_solid_blocker()
+
+
+func _add_solid_blocker() -> void:
+	var trigger_shape: CollisionShape2D = get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if trigger_shape == null or trigger_shape.shape == null:
+		push_warning("Obstacle: для JUMP_OVER не задан CollisionShape2D.")
+		return
+
+	var blocker: StaticBody2D = StaticBody2D.new()
+	blocker.name = "SolidBlocker"
+	blocker.collision_layer = 1
+	blocker.collision_mask = 0
+
+	var blocker_shape: CollisionShape2D = CollisionShape2D.new()
+	blocker_shape.shape = trigger_shape.shape.duplicate()
+	blocker_shape.transform = trigger_shape.transform
+	blocker.add_child(blocker_shape)
+	add_child(blocker)
 
 
 func _on_body_entered(body: Node2D) -> void:

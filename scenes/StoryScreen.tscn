@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://df5yhwewmck63"]
+
+[ext_resource type="Script" uid="uid://cnq717k0nmlip" path="res://scripts/tests/StoryScreen.gd" id="1_r0xdr"]
+[ext_resource type="Texture2D" uid="uid://ckrcq5qhvlruy" path="res://assets/sprites/gg/ghost1.png" id="2_hc7eg"]
+
+[node name="StoryScreen" type="Control" unique_id=965468058]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r0xdr")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1457816933]
+layout_mode = 0
+offset_right = 1796.0
+offset_bottom = 821.0
+color = Color(0.07058824, 0.09411765, 0.14901961, 1)
+
+[node name="GhostPortrait" type="TextureRect" parent="." unique_id=593549223]
+layout_mode = 0
+offset_left = 574.0
+offset_top = 33.0
+offset_right = 1302.0
+offset_bottom = 728.0
+texture = ExtResource("2_hc7eg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DialoguePanel" type="PanelContainer" parent="." unique_id=381644759]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 493.0
+offset_right = 1541.0
+offset_bottom = 708.0
+
+[node name="Content" type="VBoxContainer" parent="DialoguePanel" unique_id=1794887410]
+layout_mode = 2
+
+[node name="DialogueText" type="RichTextLabel" parent="DialoguePanel/Content" unique_id=1159674431]
+layout_mode = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="DialoguePanel/Content" unique_id=1455212740]
+custom_minimum_size = Vector2(500, 80)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="DialoguePanel/Content/ButtonRow" unique_id=340195946]
+layout_mode = 2
+
+[node name="NextButton" type="Button" parent="DialoguePanel/Content/ButtonRow" unique_id=1095355469]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Дальше"
+
+[node name="Fade" type="ColorRect" parent="." unique_id=1334064600]
+layout_mode = 0
+offset_left = -7.0
+offset_top = 6.0
+offset_right = 1797.0
+offset_bottom = 828.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

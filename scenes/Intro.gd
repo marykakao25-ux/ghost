@@ -18,18 +18,21 @@ var _possessing: bool = false
 var _hint: Label = null
 var _ghost_half_w: float = 100.0
 var _cat_half_w: float = 80.0
+var _fade: ColorRect
 
 
 func _ready() -> void:
 	_build_world()
+	_create_fade()
 	_hint = Label.new()
-	_hint.text = "Призрак хочет снова почувствовать себя живым.\nПодойди к кошке (A/D или ←/→)."
+	_hint.text = "Подойди к кошке (A/D или ←/→)."
 	_hint.position = Vector2(40.0, 40.0)
 	_hint.add_theme_font_size_override("font_size", 28)
 	_hint.add_theme_color_override("font_shadow_color", Color.BLACK)
 	_hint.add_theme_constant_override("shadow_offset_x", 2)
 	_hint.add_theme_constant_override("shadow_offset_y", 2)
 	add_child(_hint)
+	await _fade_to(0.0, 0.8)
 
 
 func _build_world() -> void:
@@ -116,11 +119,70 @@ func _process(delta: float) -> void:
 func _possess() -> void:
 	if _possessing:
 		return
+
 	_possessing = true
-	_hint.text = "Вселение… Тепло жизни возвращается."
-	_ghost.modulate.a = 0.35
+	_hint.text = "Призрак вселяется в кота..."
+	_spawn_possession_effect()
+
 	ShapeShiftManager.unlock_form(PlayerController.Form.CAT)
 	ShapeShiftManager.current_form = PlayerController.Form.CAT
 	ShapeShiftManager.set_checkpoint(Vector2.ZERO)
-	await get_tree().create_timer(0.55).timeout
+
+	var ghost_tween: Tween = create_tween()
+	ghost_tween.tween_property(_ghost, "modulate:a", 0.0, 0.8)
+
+	await get_tree().create_timer(1.0).timeout
+	await _fade_to(1.0, 0.8)
 	get_tree().change_scene_to_file(CAT_LEVEL_PATH)
+
+
+func _spawn_possession_effect() -> void:
+	for particle_index in range(18):
+		var radius: float = randf_range(3.0, 7.0)
+		var points := PackedVector2Array()
+
+		for point_index in range(10):
+			var angle: float = TAU * float(point_index) / 10.0
+			points.append(Vector2(cos(angle), sin(angle)) * radius)
+
+		var particle := Polygon2D.new()
+		particle.polygon = points
+		particle.color = Color.WHITE
+		add_child(particle)
+
+		particle.global_position = _cat.global_position + Vector2(
+			randf_range(-35.0, 35.0),
+			randf_range(-30.0, 30.0)
+		)
+
+		var tween: Tween = create_tween().set_parallel(true)
+		tween.tween_property(
+			particle,
+			"position",
+			particle.position + Vector2(
+				randf_range(-25.0, 25.0),
+				randf_range(-70.0, -25.0)
+			),
+			0.8
+		)
+		tween.tween_property(particle, "modulate:a", 0.0, 0.8)
+		tween.tween_property(particle, "scale", Vector2.ZERO, 0.8)
+		tween.finished.connect(particle.queue_free)
+
+
+func _create_fade() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 100
+	add_child(layer)
+
+	_fade = ColorRect.new()
+	_fade.color = Color.BLACK
+	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(_fade)
+
+
+func _fade_to(alpha: float, duration: float) -> void:
+	var tween: Tween = create_tween()
+	tween.tween_property(_fade, "color:a", alpha, duration)
+	await tween.finished

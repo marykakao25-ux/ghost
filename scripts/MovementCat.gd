@@ -4,7 +4,7 @@ class_name MovementCat
 signal night_vision_toggled(enabled: bool)
 
 const SPEED: float = 220.0
-const JUMP_VELOCITY: float = -420.0
+const JUMP_VELOCITY: float = -560.0
 const CRAWL_SPEED: float = 90.0
 const ACCELERATION: float = 1200.0
 const FRICTION: float = 1400.0

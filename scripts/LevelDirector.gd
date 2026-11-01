@@ -1,6 +1,8 @@
 extends Node
 class_name LevelDirector
 
+const _OBSTACLE_SCENE: PackedScene = preload("res://scenes/Obstacle.tscn")
+
 signal player_respawned(reason: String)
 
 ## Директор добавляется дочерним узлом уровня; путь считается от директора.
@@ -36,8 +38,44 @@ func _ready() -> void:
 	_spawn_position = _player.global_position if spawn_point == Vector2.ZERO else spawn_point
 	if is_instance_valid(spawn_marker):
 		_spawn_position = spawn_marker.global_position
+	_register_box_obstacle()
 	register_obstacles()
 	_setup_camera()
+
+
+func _register_box_obstacle() -> void:
+	if not is_instance_valid(_level_root):
+		return
+	var box: Sprite2D = _level_root.get_node_or_null("BoxProp") as Sprite2D
+	if box == null or box.texture == null:
+		return
+
+	var image: Image = box.texture.get_image()
+	var used_rect: Rect2 = Rect2(image.get_used_rect()) if image != null else Rect2()
+	if not used_rect.has_area():
+		used_rect = Rect2(Vector2.ZERO, box.texture.get_size())
+
+	var obstacle: Obstacle = _OBSTACLE_SCENE.instantiate() as Obstacle
+	if obstacle == null:
+		push_warning("LevelDirector: не удалось создать препятствие для коробки.")
+		return
+	obstacle.name = "BoxObstacle"
+	obstacle.obstacle_type = Obstacle.ObstacleType.JUMP_OVER
+	obstacle.allowed_forms = ["cat"]
+
+	var trigger_shape: CollisionShape2D = obstacle.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if trigger_shape == null:
+		obstacle.free()
+		push_warning("LevelDirector: у препятствия для коробки нет CollisionShape2D.")
+		return
+	var box_scale: Vector2 = box.global_scale.abs()
+	var rectangle: RectangleShape2D = RectangleShape2D.new()
+	rectangle.size = used_rect.size * box_scale
+	trigger_shape.shape = rectangle
+
+	_level_root.add_child(obstacle)
+	var center_offset: Vector2 = used_rect.get_center() - box.texture.get_size() * 0.5
+	obstacle.global_position = box.to_global(center_offset)
 
 
 func _setup_camera() -> void:

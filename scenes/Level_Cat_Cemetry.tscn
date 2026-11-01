@@ -1,33 +1,18 @@
-[gd_scene load_steps=19 format=3 uid="uid://bpjnsveiytj2n"]
+[gd_scene format=3 uid="uid://bpjnsveiytj2n"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown.mp3" id="1_t7pfn"]
-[ext_resource type="Texture2D" uid="uid://dw270u10it62u" path="res://assets/environment/tileset_spooky/tile.png" id="2_fcwye"]
-[ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="3_player"]
-[ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
-[ext_resource type="Script" path="res://scripts/LevelDirector.gd" id="5_director"]
+[ext_resource type="PackedScene" uid="uid://bm1uo3gg21jlp" path="res://scenes/Player.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://dy6lujg3v6kdn" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
+[ext_resource type="Script" uid="uid://c42fv47vco744" path="res://scripts/LevelDirector.gd" id="5_director"]
 [ext_resource type="Script" uid="uid://cxgdsjtbgi67p" path="res://scripts/GhostVisionShader.gd" id="6_vision"]
 [ext_resource type="Texture2D" uid="uid://dllr605tvcg11" path="res://assets/environment/tileset_spooky/puddle.png" id="7_puddle"]
 [ext_resource type="Texture2D" uid="uid://c4rxiv7yff6xj" path="res://assets/environment/tileset_spooky/box_to_cat.png" id="8_box"]
 [ext_resource type="PackedScene" path="res://scenes/LevelExit.tscn" id="9_exit"]
-[ext_resource type="Script" path="res://scripts/LevelPresentation.gd" id="10_art"]
+[ext_resource type="Texture2D" uid="uid://df3bm3ner30ic" path="res://assets/environment/tileset_spooky/bench.png" id="10_3oh1a"]
+[ext_resource type="Script" uid="uid://c7k1lcxxgn61" path="res://scripts/LevelPresentation.gd" id="10_art"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(3700, 80)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_overhang"]
-size = Vector2(360, 400)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_crawl_sensor"]
-size = Vector2(280, 40)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
-size = Vector2(48, 120)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
-size = Vector2(96, 12)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
-size = Vector2(40, 800)
 
 [sub_resource type="GDScript" id="GDScript_setup"]
 script/source = "extends Node
@@ -53,205 +38,188 @@ func _on_body_entered(body: Node2D) -> void:
 		director.call(\"set_checkpoint\", global_position)
 "
 
-[node name="LevelCatCemetry" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(145, 800)
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3oh1a"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n5mlk"]
+size = Vector2(1.154854, 91.53728)
+
+[node name="Bench" type="Node2D" unique_id=1371070387]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=894402236]
 stream = ExtResource("1_t7pfn")
 volume_db = -40.0
 autoplay = true
 
-[node name="Tile" type="Sprite2D" parent="."]
-position = Vector2(56, 636)
-scale = Vector2(0.390833, 0.3675)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile2" type="Sprite2D" parent="."]
-position = Vector2(199, 639)
-rotation = -0.139626
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile3" type="Sprite2D" parent="."]
-position = Vector2(345, 636)
-rotation = -0.0680678
-scale = Vector2(0.415417, 0.357292)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile4" type="Sprite2D" parent="."]
-position = Vector2(489, 642)
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile5" type="Sprite2D" parent="."]
-position = Vector2(636, 654)
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile6" type="Sprite2D" parent="."]
-position = Vector2(781, 664)
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile7" type="Sprite2D" parent="."]
-position = Vector2(920, 667)
-rotation = -0.13439
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile8" type="Sprite2D" parent="."]
-position = Vector2(1067, 660)
-rotation = -0.13439
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile9" type="Sprite2D" parent="."]
-position = Vector2(1216, 653)
-rotation = -0.13439
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile10" type="Sprite2D" parent="."]
-position = Vector2(1363, 647)
-rotation = -0.13439
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile11" type="Sprite2D" parent="."]
-position = Vector2(1508, 644)
-rotation = -0.0733038
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile12" type="Sprite2D" parent="."]
-position = Vector2(1654, 646)
-rotation = -0.0733038
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Tile13" type="Sprite2D" parent="."]
-position = Vector2(1800, 649)
-rotation = -0.0733038
-scale = Vector2(0.414167, 0.35125)
-texture = ExtResource("2_fcwye")
-
-[node name="Floor" type="StaticBody2D" parent="."]
+[node name="Floor" type="StaticBody2D" parent="." unique_id=1383027384]
 position = Vector2(1800, 560)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor" unique_id=1071124259]
+position = Vector2(-5, 68)
 shape = SubResource("RectangleShape2D_floor")
 
-[node name="CrawlOverhang" type="StaticBody2D" parent="."]
+[node name="CrawlOverhang" type="StaticBody2D" parent="." unique_id=1599415429]
 position = Vector2(520, 200)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CrawlOverhang"]
-shape = SubResource("RectangleShape2D_overhang")
-
-[node name="CrawlDecor" type="Sprite2D" parent="CrawlOverhang"]
-position = Vector2(0, 120)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("8_box")
-
-[node name="SpawnMarker" type="Marker2D" parent="."]
+[node name="SpawnMarker" type="Marker2D" parent="." unique_id=771499605]
 position = Vector2(120, 490)
 
-[node name="Player" parent="." instance=ExtResource("3_player")]
-position = Vector2(120, 490)
+[node name="Player" parent="." unique_id=134513699 instance=ExtResource("3_player")]
+y_sort_enabled = true
+position = Vector2(110, 555)
 
-[node name="LevelDirector" type="Node" parent="."]
+[node name="LevelDirector" type="Node" parent="." unique_id=1138432527]
 script = ExtResource("5_director")
-player_path = NodePath("../Player")
-spawn_marker = NodePath("../SpawnMarker")
 
-[node name="LevelSetup" type="Node" parent="."]
+[node name="LevelSetup" type="Node" parent="." unique_id=1294849245]
 script = SubResource("GDScript_setup")
 
-[node name="GhostVision" type="CanvasLayer" parent="."]
+[node name="GhostVision" type="CanvasLayer" parent="." unique_id=968543956]
 script = ExtResource("6_vision")
 
-[node name="ObstacleCrawl" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(520, 500)
-obstacle_type = 0
-allowed_forms = Array[String](["cat"])
-
-[node name="CollisionShape2D" parent="ObstacleCrawl"]
-shape = SubResource("RectangleShape2D_crawl_sensor")
-
-[node name="Checkpoint1" type="Area2D" parent="."]
+[node name="Checkpoint1" type="Area2D" parent="." unique_id=1034525785]
 position = Vector2(780, 460)
 collision_layer = 0
 script = SubResource("GDScript_checkpoint")
-director_path = NodePath("../LevelDirector")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
-shape = SubResource("RectangleShape2D_checkpoint")
-
-[node name="Checkpoint2" type="Area2D" parent="."]
+[node name="Checkpoint2" type="Area2D" parent="." unique_id=1811242278]
 position = Vector2(2400, 460)
 collision_layer = 0
 script = SubResource("GDScript_checkpoint")
-director_path = NodePath("../LevelDirector")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
-shape = SubResource("RectangleShape2D_checkpoint")
-
-[node name="PuddleDecor" type="Sprite2D" parent="."]
-position = Vector2(1900, 530)
-scale = Vector2(0.35, 0.22)
+[node name="PuddleDecor" type="Sprite2D" parent="." unique_id=1180702409]
+z_index = 2
+position = Vector2(1031, 556)
+scale = Vector2(0.49999985, 0.26500008)
 texture = ExtResource("7_puddle")
-z_index = 2
 
-[node name="BoxProp" type="Sprite2D" parent="."]
-position = Vector2(980, 500)
-scale = Vector2(0.28, 0.28)
-texture = ExtResource("8_box")
-z_index = 2
-
-[node name="PuddleDecor2" type="Sprite2D" parent="."]
-position = Vector2(2200, 530)
-scale = Vector2(0.32, 0.2)
-texture = ExtResource("7_puddle")
-z_index = 2
-
-[node name="ObstacleHazard" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(1900, 514)
+[node name="ObstacleHazard" parent="PuddleDecor" unique_id=511304847 instance=ExtResource("4_obstacle")]
+position = Vector2(15.999981, 7.5471563)
+scale = Vector2(5.1632595, 5.7471447)
 obstacle_type = 3
-allowed_forms = Array[String]([])
 
-[node name="CollisionShape2D" parent="ObstacleHazard"]
-shape = SubResource("RectangleShape2D_hazard")
-
-[node name="ObstacleCrawl2" parent="." instance=ExtResource("4_obstacle")]
-position = Vector2(2800, 500)
-obstacle_type = 0
-allowed_forms = Array[String](["cat"])
-
-[node name="CollisionShape2D" parent="ObstacleCrawl2"]
-shape = SubResource("RectangleShape2D_crawl_sensor")
-
-[node name="CrawlOverhang2" type="StaticBody2D" parent="."]
+[node name="CrawlOverhang2" type="StaticBody2D" parent="." unique_id=1904904897]
 position = Vector2(2800, 200)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CrawlOverhang2"]
-shape = SubResource("RectangleShape2D_overhang")
-
-[node name="WallLeft" type="StaticBody2D" parent="."]
+[node name="WallLeft" type="StaticBody2D" parent="." unique_id=1048630761]
 position = Vector2(-20, 400)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft" unique_id=399827669]
 shape = SubResource("RectangleShape2D_wall")
 
-[node name="WallRight" type="StaticBody2D" parent="."]
+[node name="WallRight" type="StaticBody2D" parent="." unique_id=1312962392]
 position = Vector2(3620, 400)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
-shape = SubResource("RectangleShape2D_wall")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight" unique_id=368363998]
+position = Vector2(52.5, 0)
+shape = SubResource("RectangleShape2D_3oh1a")
 
-[node name="LevelExit" parent="." instance=ExtResource("9_exit")]
-position = Vector2(3480, 460)
+[node name="LevelExit" parent="." unique_id=1844222496 instance=ExtResource("9_exit")]
+position = Vector2(3462, 482)
 next_scene = "res://scenes/Level_Dog_Park.tscn"
 unlock_form = 1
-host_form = 1
 exit_text = "Вселиться в пса →"
 
-[node name="Presentation" type="Node2D" parent="."]
+[node name="Presentation" type="Node2D" parent="." unique_id=1461739155]
 script = ExtResource("10_art")
+
+[node name="BoxProp2" type="Sprite2D" parent="." unique_id=1349284133]
+z_index = 2
+position = Vector2(492, 562)
+scale = Vector2(0.5620832, 0.49083334)
+texture = ExtResource("8_box")
+
+[node name="Obstacle" parent="BoxProp2" unique_id=423417102 instance=ExtResource("4_obstacle")]
+position = Vector2(-8.895488, -12.224148)
+rotation = -0.019597888
+scale = Vector2(6.859588, -3.8597126)
+skew = 0.05818522
+
+[node name="Obstacle2" parent="BoxProp2" unique_id=1802019550 instance=ExtResource("4_obstacle")]
+position = Vector2(-897.4716, -1165.7455)
+rotation = -0.022441842
+scale = Vector2(12.2045965, -9.536201)
+skew = 0.056141734
+
+[node name="Obstacle3" parent="BoxProp2" unique_id=20812387 instance=ExtResource("4_obstacle")]
+position = Vector2(76.50113, 48.896446)
+rotation = -0.4367374
+scale = Vector2(3.3388457, 6.9745064)
+
+[node name="Bench" type="Sprite2D" parent="." unique_id=860287817]
+position = Vector2(1545.0001, 526)
+scale = Vector2(0.6716667, 0.50333333)
+texture = ExtResource("10_3oh1a")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Bench" unique_id=519005290]
+position = Vector2(-13.953491, -19.780426)
+scale = Vector2(24.720907, 2.5824256)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bench/StaticBody2D" unique_id=613803584]
+position = Vector2(1.8893993, -28.499163)
+rotation = 3.0411134
+scale = Vector2(0.9999997, 0.99999964)
+shape = SubResource("RectangleShape2D_n5mlk")
+
+[node name="BoxProp3" type="Sprite2D" parent="." unique_id=214735542]
+z_index = 2
+position = Vector2(492, 562)
+scale = Vector2(0.5620832, 0.49083334)
+texture = ExtResource("8_box")
+
+[node name="Obstacle" parent="BoxProp3" unique_id=262673229 instance=ExtResource("4_obstacle")]
+position = Vector2(-8.895488, -12.224148)
+rotation = -0.019597888
+scale = Vector2(6.859588, -3.8597126)
+skew = 0.05818522
+
+[node name="Obstacle2" parent="BoxProp3" unique_id=86536509 instance=ExtResource("4_obstacle")]
+position = Vector2(-897.4716, -1165.7455)
+rotation = -0.022441842
+scale = Vector2(12.2045965, -9.536201)
+skew = 0.056141734
+
+[node name="Obstacle3" parent="BoxProp3" unique_id=1426507149 instance=ExtResource("4_obstacle")]
+position = Vector2(76.50113, 48.896446)
+rotation = -0.4367374
+scale = Vector2(3.3388457, 6.9745064)
+
+[node name="BoxProp4" type="Sprite2D" parent="." unique_id=1797173126]
+z_index = 2
+position = Vector2(2370, 559)
+scale = Vector2(0.5620832, 0.49083334)
+texture = ExtResource("8_box")
+
+[node name="Obstacle" parent="BoxProp4" unique_id=1943373409 instance=ExtResource("4_obstacle")]
+position = Vector2(-8.895488, -12.224148)
+rotation = -0.019597888
+scale = Vector2(6.859588, -3.8597126)
+skew = 0.05818522
+
+[node name="Obstacle2" parent="BoxProp4" unique_id=10286874 instance=ExtResource("4_obstacle")]
+position = Vector2(-897.4716, -1165.7455)
+rotation = -0.022441842
+scale = Vector2(12.2045965, -9.536201)
+skew = 0.056141734
+
+[node name="Obstacle3" parent="BoxProp4" unique_id=1018534447 instance=ExtResource("4_obstacle")]
+position = Vector2(76.50113, 48.896446)
+rotation = -0.4367374
+scale = Vector2(3.3388457, 6.9745064)
+
+[node name="PuddleDecor2" type="Sprite2D" parent="." unique_id=669582713]
+z_index = 2
+position = Vector2(2974.0002, 569)
+scale = Vector2(0.49999985, 0.26500008)
+texture = ExtResource("7_puddle")
+
+[node name="ObstacleHazard" parent="PuddleDecor2" unique_id=233109808 instance=ExtResource("4_obstacle")]
+position = Vector2(15.999981, 7.5471563)
+scale = Vector2(5.1632595, 5.7471447)
+obstacle_type = 3
+
+[node name="Obstacle" parent="." unique_id=224468248 instance=ExtResource("4_obstacle")]
+position = Vector2(1453, 455)
+scale = Vector2(11.67276, -2.5183342)

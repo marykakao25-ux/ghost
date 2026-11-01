@@ -1,6 +1,6 @@
 extends Node2D
 
-const INTRO_PATH: String = "res://scenes/Intro.tscn"
+const INTRO_PATH: String = "res://scenes/StoryScreen.tscn"
 
 @onready var _music: AudioStreamPlayer = $AudioStreamPlayer
 @onready var _play_button: Button = $CanvasLayer/UI/Center/Buttons/PlayButton

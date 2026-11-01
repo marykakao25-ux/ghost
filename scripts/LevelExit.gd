@@ -25,7 +25,8 @@ func _ready() -> void:
 	collision_layer = 0
 	collision_mask = 1
 	body_entered.connect(_on_body_entered)
-	_build_host_visual()
+	if next_scene != "res://scenes/Finale.tscn":
+		_build_host_visual()
 	_ensure_large_hitbox()
 	var label: Label = get_node_or_null("Label") as Label
 	if label != null:

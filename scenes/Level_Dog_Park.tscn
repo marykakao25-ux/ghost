@@ -1,33 +1,20 @@
-[gd_scene load_steps=18 format=3 uid="uid://lfw1nxo75sy"]
+[gd_scene format=3 uid="uid://lfw1nxo75sy"]
 
 [ext_resource type="AudioStream" uid="uid://b0w34kqsj1wnr" path="res://assets/audio/The Stranglers — Golden Brown.mp3" id="1_mhn6r"]
-[ext_resource type="PackedScene" uid="uid://dplayer0003scn" path="res://scenes/Player.tscn" id="2_player"]
-[ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="3_obstacle"]
+[ext_resource type="PackedScene" uid="uid://bm1uo3gg21jlp" path="res://scenes/Player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://dy6lujg3v6kdn" path="res://scenes/Obstacle.tscn" id="3_obstacle"]
 [ext_resource type="PackedScene" path="res://scenes/BreakableBox.tscn" id="4_box"]
-[ext_resource type="Script" path="res://scripts/LevelDirector.gd" id="5_director"]
-[ext_resource type="Texture2D" uid="uid://ba8qicf0eu73u" path="res://assets/environment/tileset_spooky/grass_to_dog.png" id="6_grass"]
+[ext_resource type="Script" uid="uid://c42fv47vco744" path="res://scripts/LevelDirector.gd" id="5_director"]
 [ext_resource type="Texture2D" uid="uid://174iuerhpdyj" path="res://assets/environment/tileset_spooky/log.png" id="7_log"]
 [ext_resource type="Texture2D" uid="uid://cj4dvrw7j5sgr" path="res://assets/environment/tileset_spooky/pit.png" id="8_pit"]
 [ext_resource type="PackedScene" path="res://scenes/LevelExit.tscn" id="9_exit"]
-[ext_resource type="Script" path="res://scripts/LevelPresentation.gd" id="10_art"]
+[ext_resource type="Script" uid="uid://c7k1lcxxgn61" path="res://scripts/LevelPresentation.gd" id="10_art"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(3700, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_log"]
-size = Vector2(160, 36)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jump_sensor"]
-size = Vector2(160, 80)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
-size = Vector2(48, 120)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hazard"]
-size = Vector2(120, 12)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
-size = Vector2(40, 800)
+size = Vector2(112, 36)
 
 [sub_resource type="GDScript" id="GDScript_setup"]
 script/source = "extends Node
@@ -63,142 +50,140 @@ func _on_body_entered(body: Node2D) -> void:
 		director.call(\"set_checkpoint\", global_position)
 "
 
-[node name="LevelDogPark" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
+size = Vector2(48, 120)
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(40, 800)
+
+[node name="LevelDogPark" type="Node2D" unique_id=836818376]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1070665017]
 stream = ExtResource("1_mhn6r")
 volume_db = -40.0
 autoplay = true
 
-[node name="Grass1" type="Sprite2D" parent="."]
-position = Vector2(120, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Grass2" type="Sprite2D" parent="."]
-position = Vector2(360, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Grass3" type="Sprite2D" parent="."]
-position = Vector2(600, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Grass4" type="Sprite2D" parent="."]
-position = Vector2(840, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Grass5" type="Sprite2D" parent="."]
-position = Vector2(1080, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Grass6" type="Sprite2D" parent="."]
-position = Vector2(1320, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Grass7" type="Sprite2D" parent="."]
-position = Vector2(1560, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Grass8" type="Sprite2D" parent="."]
-position = Vector2(1760, 640)
-scale = Vector2(0.35, 0.28)
-texture = ExtResource("6_grass")
-
-[node name="Floor" type="StaticBody2D" parent="."]
+[node name="Floor" type="StaticBody2D" parent="." unique_id=1227741107]
 position = Vector2(1800, 560)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor" unique_id=10333576]
 shape = SubResource("RectangleShape2D_floor")
 
-[node name="LogVisual" type="Sprite2D" parent="."]
-position = Vector2(1600, 500)
+[node name="LogVisual" type="Sprite2D" parent="." unique_id=657316506]
+z_index = 2
+position = Vector2(1706, 496)
 scale = Vector2(0.4, 0.22)
 texture = ExtResource("7_log")
-z_index = 2
 
-[node name="LogBody" type="StaticBody2D" parent="."]
-position = Vector2(1600, 500)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LogBody"]
-shape = SubResource("RectangleShape2D_log")
-
-[node name="PitDecor" type="Sprite2D" parent="."]
-position = Vector2(2600, 545)
-scale = Vector2(0.4, 0.24)
-texture = ExtResource("8_pit")
-z_index = 2
-
-[node name="SpawnMarker" type="Marker2D" parent="."]
-position = Vector2(100, 490)
-
-[node name="Player" parent="." instance=ExtResource("2_player")]
-position = Vector2(100, 490)
-
-[node name="LevelDirector" type="Node" parent="."]
-script = ExtResource("5_director")
-player_path = NodePath("../Player")
-spawn_marker = NodePath("../SpawnMarker")
-
-[node name="LevelSetup" type="Node" parent="."]
-script = SubResource("GDScript_setup")
-
-[node name="BreakableBox1" parent="." instance=ExtResource("4_box")]
-position = Vector2(420, 488)
-
-[node name="BreakableBox2" parent="." instance=ExtResource("4_box")]
-position = Vector2(560, 488)
-
-[node name="ObstacleJump" parent="." instance=ExtResource("3_obstacle")]
-position = Vector2(1600, 470)
+[node name="ObstacleJump" parent="LogVisual" unique_id=1649576142 instance=ExtResource("3_obstacle")]
+position = Vector2(-62.5, -90.90918)
+scale = Vector2(2.5, 4.5454545)
 monitoring = false
-obstacle_type = 1
 allowed_forms = Array[String](["dog"])
 
-[node name="CollisionShape2D" parent="ObstacleJump"]
-shape = SubResource("RectangleShape2D_jump_sensor")
+[node name="LogBody" type="StaticBody2D" parent="LogVisual" unique_id=363885596]
+position = Vector2(-330, 18.181885)
+scale = Vector2(2.5, 4.5454545)
 
-[node name="Checkpoint1" type="Area2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LogVisual/LogBody" unique_id=2006484420]
+position = Vector2(137, 8)
+shape = SubResource("RectangleShape2D_log")
+
+[node name="PitDecor" type="Sprite2D" parent="." unique_id=649253766]
+z_index = 2
+position = Vector2(2593, 509)
+scale = Vector2(0.4, 0.25919998)
+texture = ExtResource("8_pit")
+
+[node name="SpawnMarker" type="Marker2D" parent="." unique_id=990694923]
+position = Vector2(100, 490)
+
+[node name="Player" parent="." unique_id=1161350490 instance=ExtResource("2_player")]
+position = Vector2(100, 490)
+
+[node name="LevelDirector" type="Node" parent="." unique_id=540622069]
+script = ExtResource("5_director")
+
+[node name="LevelSetup" type="Node" parent="." unique_id=1728241701]
+script = SubResource("GDScript_setup")
+
+[node name="BreakableBox1" parent="." unique_id=657708153 instance=ExtResource("4_box")]
+position = Vector2(633, 489.99997)
+scale = Vector2(3.0952022, 1.7777791)
+
+[node name="Checkpoint1" type="Area2D" parent="." unique_id=593093689]
 position = Vector2(1200, 460)
 collision_layer = 0
 script = SubResource("GDScript_checkpoint")
-director_path = NodePath("../LevelDirector")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1" unique_id=591270412]
 shape = SubResource("RectangleShape2D_checkpoint")
 
-[node name="ObstacleHazard" parent="." instance=ExtResource("3_obstacle")]
-position = Vector2(2600, 514)
+[node name="ObstacleHazard" parent="." unique_id=1721856309 instance=ExtResource("3_obstacle")]
+position = Vector2(2595, 508)
+scale = Vector2(1, 1.08)
 obstacle_type = 3
 allowed_forms = Array[String]([])
 
-[node name="CollisionShape2D" parent="ObstacleHazard"]
-shape = SubResource("RectangleShape2D_hazard")
-
-[node name="LevelExit" parent="." instance=ExtResource("9_exit")]
+[node name="LevelExit" parent="." unique_id=360140965 instance=ExtResource("9_exit")]
 position = Vector2(3480, 460)
 next_scene = "res://scenes/Level_Bird_Rooftops.tscn"
 unlock_form = 2
 host_form = 2
 exit_text = "Вселиться в ворона →"
 
-[node name="WallLeft" type="StaticBody2D" parent="."]
+[node name="WallLeft" type="StaticBody2D" parent="." unique_id=365764564]
 position = Vector2(-20, 400)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft" unique_id=2077041096]
 shape = SubResource("RectangleShape2D_wall")
 
-[node name="WallRight" type="StaticBody2D" parent="."]
+[node name="WallRight" type="StaticBody2D" parent="." unique_id=1019485221]
 position = Vector2(3620, 400)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight" unique_id=689046304]
 shape = SubResource("RectangleShape2D_wall")
 
-[node name="Presentation" type="Node2D" parent="."]
+[node name="Presentation" type="Node2D" parent="." unique_id=1264677723]
 script = ExtResource("10_art")
 location = 1
+
+[node name="LogVisual2" type="Sprite2D" parent="." unique_id=1790601454]
+z_index = 2
+position = Vector2(3001, 509)
+scale = Vector2(0.4, 0.22)
+texture = ExtResource("7_log")
+
+[node name="ObstacleJump" parent="LogVisual2" unique_id=511304847 instance=ExtResource("3_obstacle")]
+position = Vector2(-62.5, -90.90918)
+scale = Vector2(2.5, 4.5454545)
+monitoring = false
+allowed_forms = Array[String](["dog"])
+
+[node name="LogBody" type="StaticBody2D" parent="LogVisual2" unique_id=1179013804]
+position = Vector2(-330, 18.181885)
+scale = Vector2(2.5, 4.5454545)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LogVisual2/LogBody" unique_id=296299917]
+position = Vector2(137, 8)
+shape = SubResource("RectangleShape2D_log")
+
+[node name="LogVisual3" type="Sprite2D" parent="." unique_id=1862084776]
+z_index = 2
+position = Vector2(959, 513)
+scale = Vector2(0.4, 0.22)
+texture = ExtResource("7_log")
+
+[node name="ObstacleJump" parent="LogVisual3" unique_id=1973535863 instance=ExtResource("3_obstacle")]
+position = Vector2(-62.5, -90.90918)
+scale = Vector2(2.5, 4.5454545)
+monitoring = false
+allowed_forms = Array[String](["dog"])
+
+[node name="LogBody" type="StaticBody2D" parent="LogVisual3" unique_id=877326217]
+position = Vector2(-330, 18.181885)
+scale = Vector2(2.5, 4.5454545)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LogVisual3/LogBody" unique_id=782854369]
+position = Vector2(137, 8)
+shape = SubResource("RectangleShape2D_log")

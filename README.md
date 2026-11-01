@@ -116,14 +116,14 @@ ghost/
 │   ├── Level_Dog_Park.tscn
 │   └── Level_Bird_Rooftops.tscn
 └── scripts/
-    ├── PlayerController.gd
-    ├── MovementCat.gd
-    ├── MovementDog.gd
-    ├── MovementBird.gd
-    ├── ShapeShiftManager.gd
-    ├── GhostVisionShader.gd
-    ├── Obstacle.gd
-    └── WindZone.gd
+	├── PlayerController.gd
+	├── MovementCat.gd
+	├── MovementDog.gd
+	├── MovementBird.gd
+	├── ShapeShiftManager.gd
+	├── GhostVisionShader.gd
+	├── Obstacle.gd
+	└── WindZone.gd
 ```
 
 Игровой экран — **1800×800** (`project.godot`, `window/size/viewport_width/height`, растяжение `canvas_items`).
@@ -251,8 +251,8 @@ pwsh -File scripts/agent/release.ps1 -Task T-0012 -Owner <имя>       # зак
   * `obstacle_type: Enum` (`CRAWL_UNDER`, `JUMP_OVER`, `FLY_AROUND`, `HAZARD`)
 * **Функционал:**
   * `_on_body_entered(body)` — проверяет форму PlayerController по `allowed_forms` (cat/dog/bird).
-    HAZARD опасен для всех форм. Эмитит `checkpoint_reset(reason)` с защитой от рекурсии;
-    сам не перезапускает сцену, обработчик подключается отдельно.
+	HAZARD опасен для всех форм. Эмитит `checkpoint_reset(reason)` с защитой от рекурсии;
+	сам не перезапускает сцену, обработчик подключается отдельно.
 
 ### 8. `scripts/WindZone.gd`
 Скрипт для зон с порывами ветра на уровне Ворона (Area2D).

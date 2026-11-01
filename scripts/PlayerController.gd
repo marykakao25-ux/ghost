@@ -254,7 +254,8 @@ func _update_visual() -> void:
 		target_h = SCREEN_HEIGHT / 6.0
 	# Масштаб по высоте силуэта — доля экрана (кот/пёс 1/5, ворон 1/6).
 	var ratio: float = target_h / maxf(bounds.size.y, 1.0)
-	animated_sprite.scale = Vector2(ratio, ratio)
+	var width_ratio: float = 0.88 if current_form == Form.CAT else 1.0
+	animated_sprite.scale = Vector2(ratio * width_ratio, ratio)
 	# Ползущий кот ниже стоячего коллайдера — слегка прижимаем спрайт.
 	if current_form == Form.CAT and collision_shape.shape.get_rect().size.y < 100.0:
 		animated_sprite.scale.y *= 0.55
