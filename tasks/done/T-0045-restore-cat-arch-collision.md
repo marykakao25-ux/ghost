@@ -1,7 +1,7 @@
 ---
 id: T-0045
 title: Восстановить твёрдые части арок на уровне кота
-status: claimed
+status: done
 form: cat
 priority: high
 owner: codex
@@ -41,3 +41,4 @@ created: 2026-11-01
 ## Заметки и история
 
 <!-- Сюда агент дописывает ход работы. -->
+- 2026-11-01T06:32:00Z — работа завершена владельцем codex, ветка task/T-0045-restore-cat-arch-collision, ожидает PR
