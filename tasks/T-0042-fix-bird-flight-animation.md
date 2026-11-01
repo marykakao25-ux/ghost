@@ -1,12 +1,12 @@
 ---
 id: T-0042
 title: Включать анимацию полёта вороны при движении в любом направлении
-status: todo
+status: claimed
 form: bird
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:20:42Z
+branch: task/T-0042-fix-bird-flight-animation
 paths:
   - scripts/MovementBird.gd
 depends_on: []
