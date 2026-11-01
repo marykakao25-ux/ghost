@@ -1,12 +1,12 @@
 ---
 id: T-0041
 title: Исправить прохождение кота сквозь брёвна
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:16:43Z
+branch: task/T-0041-fix-log-collision
 paths:
   - scenes/Level_Dog_Park.tscn
 depends_on: []
