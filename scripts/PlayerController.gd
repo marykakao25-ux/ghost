@@ -257,7 +257,7 @@ func _update_visual() -> void:
 	var width_ratio: float = 0.88 if current_form == Form.CAT else 1.0
 	animated_sprite.scale = Vector2(ratio * width_ratio, ratio)
 	# Ползущий кот ниже стоячего коллайдера — слегка прижимаем спрайт.
-	if current_form == Form.CAT and collision_shape.shape.get_rect().size.y < 100.0:
+	if current_form == Form.CAT and _movement_is_crawling():
 		animated_sprite.scale.y *= 0.55
 	# У PNG разные поля и размеры: выравниваем непрозрачные пиксели, а не весь холст.
 	var offset: Vector2 = texture.get_size() * 0.5 - bounds.get_center()
