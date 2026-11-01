@@ -1,12 +1,12 @@
 ---
 id: T-0043
 title: Уменьшить визуальный размер кота относительно пса
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:22:32Z
+branch: task/T-0043-reduce-cat-visual-size
 paths:
   - scripts/PlayerController.gd
 depends_on: []
