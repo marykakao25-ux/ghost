@@ -1,12 +1,12 @@
 ---
 id: T-0040
 title: Исправить застревание кота в коллайдере скамейки
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:14:42Z
+branch: task/T-0040-fix-bench-collision
 paths:
   - scenes/Level_Cat_Cemetry.tscn
 depends_on: []
