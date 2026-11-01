@@ -1,12 +1,12 @@
 ---
 id: T-0049
 title: Откат исключения T-0047 и отмена очереди T-0048
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T18:45:10Z
+branch: task/T-0049-revert-attribution-work
 paths:
   - AGENTS.md
   - tasks/T-0048-strip-cursoragent-trailers.md
