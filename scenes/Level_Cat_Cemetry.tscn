@@ -136,17 +136,20 @@ position = Vector2(-8.895488, -12.224148)
 rotation = -0.019597888
 scale = Vector2(6.859588, -3.8597126)
 skew = 0.05818522
+obstacle_type = 1
 
 [node name="Obstacle2" parent="BoxProp2" unique_id=1802019550 instance=ExtResource("4_obstacle")]
 position = Vector2(-897.4716, -1165.7455)
 rotation = -0.022441842
 scale = Vector2(12.2045965, -9.536201)
 skew = 0.056141734
+obstacle_type = 1
 
 [node name="Obstacle3" parent="BoxProp2" unique_id=20812387 instance=ExtResource("4_obstacle")]
 position = Vector2(76.50113, 48.896446)
 rotation = -0.4367374
 scale = Vector2(3.3388457, 6.9745064)
+obstacle_type = 1
 
 [node name="Bench" type="Sprite2D" parent="." unique_id=860287817]
 position = Vector2(1545.0001, 526)
@@ -159,29 +162,6 @@ position = Vector2(1545, 492)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BenchBody" unique_id=613803584]
 shape = SubResource("RectangleShape2D_n5mlk")
 
-[node name="BoxProp3" type="Sprite2D" parent="." unique_id=214735542]
-z_index = 2
-position = Vector2(492, 562)
-scale = Vector2(0.5620832, 0.49083334)
-texture = ExtResource("8_box")
-
-[node name="Obstacle" parent="BoxProp3" unique_id=262673229 instance=ExtResource("4_obstacle")]
-position = Vector2(-8.895488, -12.224148)
-rotation = -0.019597888
-scale = Vector2(6.859588, -3.8597126)
-skew = 0.05818522
-
-[node name="Obstacle2" parent="BoxProp3" unique_id=86536509 instance=ExtResource("4_obstacle")]
-position = Vector2(-897.4716, -1165.7455)
-rotation = -0.022441842
-scale = Vector2(12.2045965, -9.536201)
-skew = 0.056141734
-
-[node name="Obstacle3" parent="BoxProp3" unique_id=1426507149 instance=ExtResource("4_obstacle")]
-position = Vector2(76.50113, 48.896446)
-rotation = -0.4367374
-scale = Vector2(3.3388457, 6.9745064)
-
 [node name="BoxProp4" type="Sprite2D" parent="." unique_id=1797173126]
 z_index = 2
 position = Vector2(2370, 559)
@@ -193,17 +173,20 @@ position = Vector2(-8.895488, -12.224148)
 rotation = -0.019597888
 scale = Vector2(6.859588, -3.8597126)
 skew = 0.05818522
+obstacle_type = 1
 
 [node name="Obstacle2" parent="BoxProp4" unique_id=10286874 instance=ExtResource("4_obstacle")]
 position = Vector2(-897.4716, -1165.7455)
 rotation = -0.022441842
 scale = Vector2(12.2045965, -9.536201)
 skew = 0.056141734
+obstacle_type = 1
 
 [node name="Obstacle3" parent="BoxProp4" unique_id=1018534447 instance=ExtResource("4_obstacle")]
 position = Vector2(76.50113, 48.896446)
 rotation = -0.4367374
 scale = Vector2(3.3388457, 6.9745064)
+obstacle_type = 1
 
 [node name="PuddleDecor2" type="Sprite2D" parent="." unique_id=669582713]
 z_index = 2
