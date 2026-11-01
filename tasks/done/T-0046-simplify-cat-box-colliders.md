@@ -1,7 +1,7 @@
 ---
 id: T-0046
 title: Заменить сложные коллизии кошачьих коробок на прямоугольники
-status: claimed
+status: done
 form: cat
 priority: high
 owner: codex
@@ -41,3 +41,4 @@ created: 2026-11-01
 ## Заметки и история
 
 <!-- Сюда агент дописывает ход работы. -->
+- 2026-11-01T06:37:38Z — работа завершена владельцем codex, ветка task/T-0046-simplify-cat-box-colliders, ожидает PR
