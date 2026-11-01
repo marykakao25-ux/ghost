@@ -1,12 +1,12 @@
 ---
 id: T-0047
 title: Одноразовое исключение для исправления соавторства в истории
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T18:27:57Z
+branch: task/T-0047-history-attribution-exception
 paths:
   - AGENTS.md
 depends_on: []
