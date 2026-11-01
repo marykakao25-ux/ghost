@@ -1,7 +1,7 @@
 ---
 id: T-0044
 title: Не рисовать служебные поверхности поверх скамейки и брёвен
-status: claimed
+status: done
 form: infra
 priority: high
 owner: codex
@@ -39,3 +39,4 @@ created: 2026-11-01
 ## Заметки и история
 
 <!-- Сюда агент дописывает ход работы. -->
+- 2026-11-01T06:30:00Z — работа завершена владельцем codex, ветка task/T-0044-hide-prop-collision-bars, ожидает PR
