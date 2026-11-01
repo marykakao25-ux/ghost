@@ -1,12 +1,12 @@
 ---
 id: T-0045
 title: Восстановить твёрдые части арок на уровне кота
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:31:18Z
+branch: task/T-0045-restore-cat-arch-collision
 paths:
   - scenes/Level_Cat_Cemetry.tscn
 depends_on: []
