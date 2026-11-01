@@ -64,6 +64,9 @@ func _ready() -> void:
 				continue
 			var rect: Rect2 = collider.global_transform * collider.shape.get_rect()
 			if node is StaticBody2D:
+				var body_name: String = str(node.name)
+				if body_name.begins_with("BenchBody") or body_name.begins_with("LogBody"):
+					continue
 				_surfaces.append(rect)
 			elif node.name.begins_with("Checkpoint"):
 				_checkpoints.append((node as Node2D).position)
