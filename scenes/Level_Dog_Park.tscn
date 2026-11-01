@@ -14,7 +14,7 @@
 size = Vector2(3700, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_log"]
-size = Vector2(112, 36)
+size = Vector2(128, 54)
 
 [sub_resource type="GDScript" id="GDScript_setup"]
 script/source = "extends Node
@@ -81,12 +81,10 @@ scale = Vector2(2.5, 4.5454545)
 monitoring = false
 allowed_forms = Array[String](["dog"])
 
-[node name="LogBody" type="StaticBody2D" parent="LogVisual" unique_id=363885596]
-position = Vector2(-330, 18.181885)
-scale = Vector2(2.5, 4.5454545)
+[node name="LogBody1" type="StaticBody2D" parent="." unique_id=363885596]
+position = Vector2(1706, 493)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LogVisual/LogBody" unique_id=2006484420]
-position = Vector2(137, 8)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LogBody1" unique_id=2006484420]
 shape = SubResource("RectangleShape2D_log")
 
 [node name="PitDecor" type="Sprite2D" parent="." unique_id=649253766]
@@ -160,12 +158,10 @@ scale = Vector2(2.5, 4.5454545)
 monitoring = false
 allowed_forms = Array[String](["dog"])
 
-[node name="LogBody" type="StaticBody2D" parent="LogVisual2" unique_id=1179013804]
-position = Vector2(-330, 18.181885)
-scale = Vector2(2.5, 4.5454545)
+[node name="LogBody2" type="StaticBody2D" parent="." unique_id=1179013804]
+position = Vector2(3001, 493)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LogVisual2/LogBody" unique_id=296299917]
-position = Vector2(137, 8)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LogBody2" unique_id=296299917]
 shape = SubResource("RectangleShape2D_log")
 
 [node name="LogVisual3" type="Sprite2D" parent="." unique_id=1862084776]
@@ -180,10 +176,8 @@ scale = Vector2(2.5, 4.5454545)
 monitoring = false
 allowed_forms = Array[String](["dog"])
 
-[node name="LogBody" type="StaticBody2D" parent="LogVisual3" unique_id=877326217]
-position = Vector2(-330, 18.181885)
-scale = Vector2(2.5, 4.5454545)
+[node name="LogBody3" type="StaticBody2D" parent="." unique_id=877326217]
+position = Vector2(959, 493)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LogVisual3/LogBody" unique_id=782854369]
-position = Vector2(137, 8)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LogBody3" unique_id=782854369]
 shape = SubResource("RectangleShape2D_log")
