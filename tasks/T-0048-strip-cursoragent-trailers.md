@@ -1,12 +1,12 @@
 ---
 id: T-0048
 title: Удалить трейлеры cursoragent из истории main
-status: claimed
+status: todo
 form: infra
 priority: high
-owner: mixey1201
-lease_until: 2026-11-01T18:32:11Z
-branch: task/T-0048-strip-cursoragent-trailers
+owner: null
+lease_until: null
+branch: null
 paths:
   - AGENTS.md
 depends_on:
@@ -55,3 +55,4 @@ GitHub показывает `cursoragent` как соавтора из-за 26 �
 
 Открытые PR/клоны коллег нужно будет пересинхронизировать (`git fetch && git reset --hard origin/main`).
 `refs/pull/*` не переписываются — старые SHA могут ещё показывать cursoragent на страницах PR.
+- 2026-11-01T14:42:56Z — лок снят принудительно (был owner=mixey1201): откат по запросу владельца
