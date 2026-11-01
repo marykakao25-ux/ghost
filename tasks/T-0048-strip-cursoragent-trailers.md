@@ -1,12 +1,12 @@
 ---
 id: T-0048
 title: Удалить трейлеры cursoragent из истории main
-status: todo
+status: claimed
 form: infra
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: mixey1201
+lease_until: 2026-11-01T18:32:11Z
+branch: task/T-0048-strip-cursoragent-trailers
 paths:
   - AGENTS.md
 depends_on:
