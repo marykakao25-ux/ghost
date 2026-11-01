@@ -1,12 +1,12 @@
 ---
 id: T-0039
 title: Исправить постоянно сплющенный спрайт кота
-status: todo
+status: claimed
 form: cat
 priority: high
-owner: null
-lease_until: null
-branch: null
+owner: codex
+lease_until: 2026-11-01T10:12:41Z
+branch: task/T-0039-fix-cat-squashed-visual
 paths:
   - scripts/PlayerController.gd
 depends_on: []
